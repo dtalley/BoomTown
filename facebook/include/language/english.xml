@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<phrases>
+
+  <global>
+    <title>Global</title>
+  </global>
+
+	<main>
+		<tables_error>
+			<title>Tables Error</title>
+			<body>The tables XML document could not be located.</body>
+		</tables_error>
+		
+		<settings_error>
+			<title>Database Settings Error</title>
+			<body>There was a problem retrieving the '%1' setting '%2' from the database.%lb%lb%3%lb%4</body>
+		</settings_error>
+		
+		<setting_not_found>The '%1' setting '%2' could not be found in the database.</setting_not_found>
+		
+		<extensions_error>
+			<title>Extensions Error</title>
+			<body>There was a problem retrieving the extensions list from the database.%lb%lb%1%lb%2</body>
+		</extensions_error>
+		
+		<extension_missing>
+			<title>Extension Missing</title>
+			<body>Your installation requires an extension that appears to be missing.  Please upload the %1 install files and then install the extension in the database.</body>
+		</extension_missing>
+		
+		<template_not_found>
+			<title>Template Not Found</title>
+			<body>A template for the page you have requested (%1) could not be found.</body>
+		</template_not_found>
+		
+		<missing_action_error>
+			<title>Missing Extension or Action</title>
+			<body>You did not provide an extension or an action to perform.</body>
+		</missing_action_error>
+		
+		<invalid_path_error>
+			<title>Invalid Action Path</title>
+			<body>You have requested an invalid action path (%1).</body>
+		</invalid_path_error>
+		
+		<return_main>Click here to return to the main page.</return_main>
+    <return_previous>Click here to return to the previous page.</return_previous>
+
+    <period>
+      <second_ago>Second Age</second_ago>
+      <seconds_ago>Seconds Ago</seconds_ago>
+      <minute_ago>Minute Ago</minute_ago>
+      <minutes_ago>Minutes Ago</minutes_ago>
+      <hour_ago>Hour Ago</hour_ago>
+      <hours_ago>Hours Ago</hours_ago>
+      <day_ago>Day Ago</day_ago>
+      <days_ago>Days Ago</days_ago>
+      <week_ago>Week Ago</week_ago>
+      <weeks_ago>Weeks Ago</weeks_ago>
+      <month_ago>Month Ago</month_ago>
+      <months_ago>Months Ago</months_ago>
+      <year_ago>Year Ago</year_ago>
+      <years_ago>Years Ago</years_ago>
+      <just_now>Just Now</just_now>
+    </period>
+	</main>
+	
+	<account>
+		<title>User Accounts</title>
+		<main>
+			<session_error>
+				<title>Session Error</title>
+				<body>There was a problem retrieving the session from the database.%lb%lb%1%lb%2</body>
+			</session_error>
+			
+			<update_session_error>
+				<title>Update Session Error</title>
+				<body>There was a problem updating the current session.%lb%lb%1%lb%2</body>
+			</update_session_error>
+			
+			<delete_session_error>
+				<title>Delete Session Error</title>
+				<body>There was a problem deleting a session from the database.%lb%lb%1%lb%2</body>
+			</delete_session_error>
+			
+			<create_session_error>
+				<title>Create Session Error</title>
+				<body>There was a problem creating a new session.%lb%lb%1%lb%2</body>
+			</create_session_error>
+			
+			<create_account_error>
+				<title>Account Creation Error</title>
+				<body>There was a problem storing your account information.%lb%lb%1%lb%2</body>
+			</create_account_error>
+			
+			<activation_required>
+				<title>Account Activation Required</title>
+				<body>Your account has been created, but further action on your part is required in order to activate it.  An e-mail has been dispatched to you at %1 with further instructions.</body>
+			</activation_required>
+			
+			<account_created>
+				<title>Registration Successful</title>
+				<body>Your account has been created and is ready to use.  An e-mail has been sent to %2 as a confirmation.</body>
+			</account_created>
+			
+			<logged_in>
+				<title>Logged In Successfully</title>
+				<body>You are now logged in and may view the site as a registered member.</body>
+			</logged_in>
+			
+			<access_denied>Access Denied</access_denied>
+			
+			<unknown_user>That account could not be found.</unknown_user>
+			
+			<return_login>Click here to return to the login page.</return_login>
+		</main>
+		<login>
+			<user_name_required>You did not enter a username.</user_name_required>
+			<user_password_required>You did not enter a password.</user_password_required>
+			<login_incomplete>You did not fill out the login form completely.</login_incomplete>
+			<wrong_password>You did not provide the correct password for that account.</wrong_password>
+                        <account_not_found>An account with that username could not be found.</account_not_found>
+                        <login_failed>Login Failed</login_failed>
+		</login>
+    <log_out>
+      <success>
+        <title>Logged Out Succesfully</title>
+        <body>You have been logged out of your account.</body>
+      </success>
+    </log_out>
+		<reset>
+			<reset_incomplete>You did not provide an e-mail address.</reset_incomplete>
+			<user_email_required>You did not provide an e-mail address.</user_email_required>
+		</reset>
+    <disable>
+      <success>
+        <return>Return to the home page.</return>
+        <title>Account Disabled</title>
+        <body>Your account has been disabled successfuly.</body>
+      </success>
+    </disable>
+		<register>
+			<user_name_required>You must enter a username.</user_name_required>
+			<user_name_format_nospecial>Usernames can only contain letters and numbers.</user_name_format_nospecial>
+			<user_name_minchars>Your username must be at least %1 characters.</user_name_minchars>
+			<user_email_required>You must enter a valid e-mail address.</user_email_required>
+			<user_password_required>You must enter a password.</user_password_required>
+			<user_password_format_nospecial>Passwords can only contain letters and numbers.</user_password_format_nospecial>
+			<user_password_minchars>Your password must be at least %1 characters.</user_password_minchars>
+			<user_confirm_email_confirm>You did not enter the same e-mail address twice.</user_confirm_email_confirm>
+			<user_confirm_password_confirm>You did not enter the same password twice.</user_confirm_password_confirm>
+			<user_agree_required>You must agree to the terms and conditions before creating an account.</user_agree_required>
+			<user_email_format_email>You did not enter a valid e-mail address.</user_email_format_email>
+			<register_incomplete>You did not fill out the registration form completely.</register_incomplete>
+			<user_name_exists>The username "%1" is unavailable.</user_name_exists>
+			<user_email_exists>An account with this e-mail address already exists.</user_email_exists>
+			<user_name_available>"%1" is currently available.</user_name_available>
+			<user_email_available>That e-mail has not been used yet.</user_email_available>
+			<registration_successful>Thank you for creating an account at %1</registration_successful>
+      <user_terms_agree_required>You must agree to the Terms of Service.</user_terms_agree_required>
+      <user_privacy_agree_required>You must read and understand the Privacy Policy.</user_privacy_agree_required>
+      <user_community_agree_required>You must agree to the Community Rules.</user_community_agree_required>
+      <user_birthdate_wrong_format>The birthdate you enter must be in the form MM/DD/YYYY.</user_birthdate_wrong_format>
+      <user_birthdate_missing>You must enter your birthdate.</user_birthdate_missing>
+      <invalid_postal_code>You entered an invalid postal code.</invalid_postal_code>
+      <user_too_young>You do not meet the age requirements to create an account.</user_too_young>
+      <user_name_minlength>Your username must be at least %1 characters long.</user_name_minlength>
+      <user_name_maxlength>Your username cannot be longer than %1 characters.</user_name_maxlength>
+      <user_password_minlength>Your password must be at least %1 characters long.</user_password_minlength>
+		</register>
+    <edit>
+      <success>Your account was updated successfully.</success>
+    </edit>
+    <registration_completed>
+      <success>
+        <title>Registration Completed!</title>
+        <body>Your account information is up to date and you may now browse the site freely.</body>
+        <return>Click here to access your Control Panel and fill out your community profile</return>
+      </success>
+    </registration_completed>
+    <reset>
+      <success>
+        <title>Darth Hater Password Reset Requested</title>
+        <body>A new password has been created for your account and e-mailed to you.</body>
+      </success>
+    </reset>
+	</account>
+	
+	<database>
+		<db_error>
+			<title>Database Error</title>
+			<body>The database could not be accessed.</body>
+		</db_error>
+		<query_error>
+			<title>Database Query Error</title>
+			<body>There was a problem with a query made to the database.%lb%lb%1%lb%2</body>
+		</query_error>
+	</database>
+	
+	<authentication>
+		<no_description>This permission has no description.</no_description>
+		<denied>Access Denied</denied>
+		<update_permissions>
+			<success>Permissions for this item have successfully been updated.</success>
+		</update_permissions>
+		<account>
+			<title>User Account</title>
+		</account>
+		<global>
+			<title>Global</title>
+			<view_admin>
+				<denied>You do not have sufficient priviledges to access the administration system.</denied>
+				<title>View Admin</title>
+				<description>Determines if a user can access the administration system.</description>
+			</view_admin>
+			<change_settings>
+				<denied>You do not have sufficient priviledges to edit site settings.</denied>
+				<title>Change Settings</title>
+				<description>Determines if a user can change global site settings.</description>
+			</change_settings>
+			<manage_styles>
+				<denied>You do not have sufficient priviledges to edit site styles.</denied>
+				<title>Manage Styles</title>
+				<description>Determines if a user can manage site styles.</description>
+			</manage_styles>
+			<manage_users>
+				<denied>You do not have sufficient priviledges to manage users.</denied>
+				<title>Manage Users</title>
+				<description>Determines if a user can manage the site users.</description>
+			</manage_users>
+			<manage_user_roles>
+				<denied>You do not have sufficient priviledges to manage user roles.</denied>
+				<title>Manage User Roles</title>
+				<description>Determines if a user can manage user roles.</description>
+			</manage_user_roles>
+			<manage_permissions>
+				<denied>You do not have sufficient priviledges to manage permissions.</denied>
+				<title>Manage Permissions</title>
+				<description>Determines if a user can manage permissions.</description>
+			</manage_permissions>
+      <bypass_maintenance>
+        <title>Bypass Maintenance Page</title>
+        <description>Allows a user to bypass the maintenance page.</description>
+      </bypass_maintenance>
+		</global>
+		<error>
+		  <title>Authentication Extension Error</title>
+		  <missing_tier_name>You did not provide a tier name.</missing_tier_name>
+		  <missing_group_name>You did not provide a permission group.</missing_group_name>
+		  <missing_target>You did not provide a permission target.</missing_target>
+		  <missing_bit>You did not provide the bit value for the permission you are editing.</missing_bit>
+		</error>
+	</authentication>
+	
+	<settings>
+		<no_description>This setting has no description.</no_description>
+		<global>
+			<title>Global</title>
+			<debug_mode>
+				<title>Debug Mode</title>
+				<description>When activated, errors give more detail.</description>
+			</debug_mode>
+			<default_style>
+				<title>Default Style</title>
+				<description>The default style that users see when they view the site as a guest.</description>
+			</default_style>
+			<override_style>
+				<title>Override User Style</title>
+				<description>When activated, all user preferred styles are overridden with the site's default style.</description>
+			</override_style>
+			<cookie_name>
+				<title>Cookie Name</title>
+				<description>The name that cookies are stored as on the user's computer.</description>
+			</cookie_name>
+			<cookie_domain>
+				<title>Cookie Domain</title>
+				<description>The domain to store cookies under.  May affect the site's ability to access cookies if improperly entered.</description>
+			</cookie_domain>
+			<cookie_path>
+				<title>Cookie Path</title>
+				<description>The path on the user's computer to store the cookies.</description>
+			</cookie_path>
+			<admin_email>
+				<title>Administrator E-mail Address</title>
+				<description>The e-mail address that all administrator related e-mails are sent to.</description>
+			</admin_email>
+			<default_timezone>
+				<title>Default Timezone</title>
+				<description>The hour offset that all times on the site are displayed.  Example: -5 means UTC-5.</description>
+			</default_timezone>
+			<admin_directory>
+				<title>Administration Directory</title>
+				<description>The path from the root that the administration can be reached at.  If you change this here, you must also rename the actual directory.</description>
+			</admin_directory>
+		</global>
+		<account>
+			<title>User Accounts</title>
+			<unsecure_session_length>
+				<title>Unsecure Session Length</title>
+				<description>The amount of time - in seconds - to keep unsecure sessions open.</description>
+			</unsecure_session_length>
+			<secure_session_length>
+				<title>Secure Session Length</title>
+				<description>The amount of time - in seconds - to keep secure sessions open.</description>
+			</secure_session_length>
+			<ip_security>
+				<title>IP Security</title>
+				<description>Double check user IPs against their last recorded IP for added security.</description>
+			</ip_security>
+			<password_minlength>
+				<title>Minimum Password Length</title>
+				<description>The minimum number of characters a user's password may contain.</description>
+			</password_minlength>
+			<name_minlength>
+				<title>Minimum Username Length</title>
+				<description>The minimum number of characters a username may contain.</description>
+			</name_minlength>
+			<activation_required>
+				<title>Activation Required</title>
+				<description>When activated, users are sent an e-mail containing an activation code, and they must endure a process to get their account activated.</description>
+			</activation_required>
+		</account>
+	</settings>
+
+  <error>
+    <authentication>
+      <authenticate_all_with_permission>
+        <title>Default Permissions Error</title>
+        <body>There was a problem populating the default permissions for this item.%lb%lb%1</body>
+      </authenticate_all_with_permission>
+    </authentication>
+    <account>
+      <reset>
+        <unknown_user>That user could not be found.</unknown_user>
+      </reset>
+    </account>
+    <template>
+      <not_found>
+        <title>Your Force Sight Fails You</title>
+        <body>Stop digging around where you don't belong, Acolyte.</body>
+      </not_found>
+    </template>
+    <xsl>
+      <template_not_found>
+        <title>Template Not Found</title>
+        <body>The template '%1' could not be found.</body>
+      </template_not_found>
+    </xsl>
+  </error>
+
+  <preferences>
+    <update_preferences>
+      <success>Your preferences were successfully updated.</success>
+    </update_preferences>
+    <account>
+      <global>
+        <title>Global</title>
+        <timezone>
+          <title>Timezone (UTC Offset)</title>
+          <description>Your home timezone's offset from %lta href="http://en.wikipedia.org/wiki/List_of_time_zones_by_UTC_offset" target="_blank"%gtUTC%lt/a%gt (The default, EST, is -5)</description>
+        </timezone>
+        <show_email>
+          <title>Show E-mail Address</title>
+          <description>Allow other users to see your e-mail address.</description>
+        </show_email>
+        <show_birthdate>
+          <title>Show Birthdate</title>
+          <description>Allow other users to see your birthdate in your profile.</description>
+        </show_birthdate>
+        <online_status>
+          <title>Show Online Status</title>
+          <description>Allow other users to see when you are online.</description>
+        </online_status>
+      </global>
+    </account>
+  </preferences>
+
+</phrases>

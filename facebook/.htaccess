@@ -1,0 +1,9 @@
+RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^www\.boomtowngame\.com$ [NC]
+RewriteRule ^(.*)$ http://boomtowngame.com/$1 [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(.+) - [PT,L]
+
+RewriteRule ^(.*) index.php

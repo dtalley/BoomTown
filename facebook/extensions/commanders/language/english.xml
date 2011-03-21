@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<phrases>
+	
+	<comics>
+		<title>Comics</title>
+    <categories>
+      <uncategorized>Uncategorized</uncategorized>
+    </categories>
+	</comics>
+	
+	<error>
+		<comics>
+			<get_comic>
+        <not_found>
+          <title>Comic Not Found</title>
+          <body>The comic you're looking for does not exist.</body>
+        </not_found>
+      </get_comic>
+		</comics>
+	</error>
+	
+	<authentication>
+		<comics>
+			<title>Comics</title>
+		</comics>
+	</authentication>
+
+</phrases>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="design_document.xsl"?>
+
+<design_document>
+	
+	<information>
+		<title>Boomtown</title>
+		<graphic>http://boomtowngame.com/facebook/styles/boomtown/images/main_header.jpg</graphic>
+		
+		<!-- BEGIN DESCRIPTION		*** Should be a fairly short but informative blurb about the game on a grand scale *** -->
+		<description>BoomTown is an online, social strategy game where players assume control of a Mobile Command Center and a standing army and wage war against other factions.</description>
+		<!-- END DESCRIPTION -->
+		
+	</information>
+	
+	<feature>
+		<title>Player</title>
+		<id>player</id>
+		
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>mobile_command_center</id>
+					<title>Mobile Command Center</title>
+				</section>
+				<section>
+					<id>faction</id>
+					<title>Faction</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+		
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide an overarching role that the player can assume.</description>
+			</goal>
+			<goal>
+				<description>Provide the player with a 'side' to work for.</description>
+			</goal>
+			<goal>
+				<description>Each player in the game should be functionally identical in the beginning of the game.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+		
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			Each Player is represented in the game by a Commander, which gives them a physical embodiment within the game.
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			Each player begins at the same level when they sign up for the game.
+		</impact>
+		<!-- END IMPACT -->
+		
+		<tasks>
+			
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+			
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Design the database schema to represent a player.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create a basic Player class in ActionScript that will represent the player on the client side.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create the PHP methods for accessing and changing data about the current player.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+			
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Design the player's "Commander Card" that serves as their profile picture.  It should include a photo submitted by them, along with their rank insignia over it.</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+			
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+			
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+			
+		</tasks>
+	</feature>
+	
+	<feature>
+		<title>Commander</title>
+		<id>commander</id>
+		
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>mobile_command_center</id>
+					<title>Mobile Command Center</title>
+				</section>
+				<section>
+					<id>faction</id>
+					<title>Faction</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+		
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide an overarching role that the player can assume.</description>
+			</goal>
+			<goal>
+				<description>Provide the player with a 'side' to work for.</description>
+			</goal>
+			<goal>
+				<description>Each player in the game should be functionally identical in the beginning of the game.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+		
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			Each player is represented in the game by their assets, which include established infrastructure and active arbiters.  The player interacts with the game world through their user interface, which provides actions for them to perform during their turn.
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			Each player is essentially no different as far as the game is concerned, which means skill and tact play a large part in the player's success.
+		</impact>
+		<!-- END IMPACT -->
+		
+		<tasks>
+			
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+			
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Design the database schema to represent a player.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create a basic Player class in ActionScript that will represent the player on the client side.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create the PHP methods for accessing and changing data about the current player.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+			
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Design the player's "Commander Card" that serves as their profile picture.  It should include a photo submitted by them, along with their rank insignia over it.</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+			
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+			
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+			
+		</tasks>
+	</feature>
+	
+	<feature>
+		<title>Faction</title>
+		<id>faction</id>
+
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>player</id>
+					<title>Player</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide a 'side' for the Player to fight for.</description>
+			</goal>
+			<goal>
+				<description>Allow friends to join the same team and play towards the same goals.</description>
+			</goal>
+			<goal>
+				<description>Allow anyone to distinguish easily between the different sides based on color, pattern, logo silhouette, or any combination.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			There are three (3) Factions within the game, and upon signing up the Player must choose one to join.  The decision is permanent, so the Player cannot switch Factions later on.  Each Faction is distinguished by a color, a pattern, and a logo, where each color is easily discernable from the next, more than likely Red, Blue, and Yellow for the most accessibility.  Each logo should also be easily recognizable by its silhouette alone.  When a Faction's color is painted anywhere, it should be painted in that Faction's pattern, for example dashed lines, curvy lines, circles, etc.  Each pattern should also be easily distinguishable.<br /><br />
+			
+			The three (3) Factions are (Placeholder names):<br />
+			Norman-McDowell Industries, or the acronym NOMAD, Blue, Diamonds<br />
+			The Environmental Liberation Force, or the acronym ELF, Yellow, Circles/Dots<br />
+			The Global Defense and Assault Movement, or the acronym GDAM, Red, Irregular Shapes
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+		
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			Factions provide animosity for players, meaning a Player from one Faction wants to defeat Players from other Factions, so it gives all Players on one Faction a unified goal: to promote and progress their Faction while hindering enemy Factions.
+		</impact>
+		<!-- END IMPACT -->
+
+		<tasks>
+
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Design the database schema to represent a Faction</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Provide for the functionality for a Player to be assigned to one and only one Faction</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Create a logo and pattern for NOMAD, should be blue based with diamonds</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create a logo and pattern for ELF, should be yellow based with circles/dots</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create a logo and pattern for GDAM, should be red based with irregular shapes</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+
+		</tasks>
+	</feature>
+
+	<feature>
+		<title>Mobile Command Center</title>
+		<id>mobile_command_center</id>
+
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>player</id>
+					<title>Player</title>
+				</section>
+				<section>
+					<id>world_map</id>
+					<title>World Map</title>
+				</section>
+				<section>
+					<id>war_room</id>
+					<title>War Room</title>
+				</section>
+				<section>
+					<id>factory</id>
+					<title>Factory</title>
+				</section>
+				<section>
+					<id>soldier</id>
+					<title>Soldier</title>
+				</section>
+				<section>
+					<id>equipment</id>
+					<title>Equipment</title>
+				</section>
+				<section>
+					<id>vehicle</id>
+					<title>Vehicle</title>
+				</section>
+				<section>
+					<id>resource</id>
+					<title>Resource</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide a staging area for the Player to perform all available actions.</description>
+			</goal>
+			<goal>
+				<description>Provide a representation in game for the Player's location.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			A Mobile Command Center (MCC) can either be 'Flying' or 'Rolling', which is to say one flies through the air and one rolls over the ground.  The Player chooses which MCC they would like to control when they first sign up.  The MCC is also what holds all of the Player's Soldiers, Equipment, Vehicles, and Resources.<br /><br />
+			
+			The MCC has a Bridge, which contains a World Map and doorways to the War Room and the Factory.
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+		
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			The Mobile Command Center (MCC) provides the Player with a base of operations.  It has a bridge where they can access all of the different rooms of the MCC and perform all of the actions available to them.  The MCC also provides a physical manifestation of the player on the World Map.  The MCC serves as the central hub of almost all of the game actions, which means a lot of the Player's time is spent within the MCC managing their assets.
+		</impact>
+		<!-- END IMPACT -->
+
+		<tasks>
+
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Design a database schema to represent a Mobile Command Center in the database.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Design a database schema to attach one of the Mobile Command Center (MCC) types to a Player.  Players can only have one type of MCC assigned to them.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Create a design for the "Rolling" Mobile Command Center</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Create a design for the "Flying" Mobile Command Center</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>9</priority>
+					<description>None.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+
+		</tasks>
+	</feature>
+	
+</design_document>
