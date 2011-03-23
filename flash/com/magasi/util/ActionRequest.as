@@ -56,7 +56,7 @@
       
       try {
         var response:XML = new XML( loader.data );
-      } catch ( e:Error ) { KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): XML document was malformed.", 0xFF0000 ) }
+      } catch ( e:Error ) { KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): XML document was malformed.\n\n" + loader.data, 0xFF0000 ) }
       
       KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): Response from extension " + extension + " for action " + action + " was properly returned.", 0x00FF00 );
       
@@ -76,8 +76,8 @@
         types[NOTFOUND_ERROR] = MagasiErrorEvent.NOTFOUND_ERROR;
       }
       for ( var i:int = 0; i < totalMessages; i++ ) {
-        var message:XML = response.message[i];
-        var code:int = int( message.code.toString() );
+        var messagexml:XML = response.message[i];
+        var code:int = int( messagexml.code.toString() );
         var evt:MagasiMessageEvent = null;
         switch( code ) {
           case SYSTEM_ERROR:
@@ -89,20 +89,20 @@
             evt = new MagasiErrorEvent( 
               types[code],
               String(code), 
-              message.title.toString(), 
-              message.body.toString(), 
-              message.file.toString(), 
-              message.line.toString(), 
-              message["function"].toString(), 
-              message["class"].toString() 
+              messagexml.title.toString(), 
+              messagexml.body.toString(), 
+              messagexml.file.toString(), 
+              messagexml.line.toString(), 
+              messagexml["function"].toString(), 
+              messagexml["class"].toString() 
             );
             break;
           case USER_MESSAGE:
             evt = new MagasiMessageEvent(
               types[code],
               String(code),
-              message.title.toString(),
-              message.body.toString()
+              messagexml.title.toString(),
+              messagexml.body.toString()
             );
             break;
         }
@@ -117,15 +117,15 @@
        */
       var totalActions:int = response.actions.action.length();
       for ( i = 0; i < totalActions; i++ ) {
-        var action:XML = response.actions.action[i];
+        var actionxml:XML = response.actions.action[i];
         var act:MagasiActionEvent = new MagasiActionEvent( 
           MagasiActionEvent.MAGASI_ACTION,
-          action.extension.toString(),
-          action.action.toString(),
-          action.title.toString(),
-          action.name.toString(),
-          action.message.toString(),
-          Boolean( action.success.toString() ) 
+          actionxml.extension.toString(),
+          actionxml.action.toString(),
+          actionxml.title.toString(),
+          actionxml.name.toString(),
+          actionxml.message.toString(),
+          Boolean( actionxml.success.toString() ) 
         );
         dispatcher.dispatchEvent( act );
       }

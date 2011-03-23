@@ -14,111 +14,6 @@
 	</information>
 	
 	<feature>
-		<title>Player</title>
-		<id>player</id>
-		
-		<!-- BEGIN CONTACT -->
-		<contact>
-			<author>David Talley</author>
-			<email>dtalley@gmail.com</email>
-			<related_sections>
-				<section>
-					<id>mobile_command_center</id>
-					<title>Mobile Command Center</title>
-				</section>
-				<section>
-					<id>faction</id>
-					<title>Faction</title>
-				</section>
-			</related_sections>
-		</contact>
-		<!-- END CONTACT -->
-		
-		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
-		<goals>
-			<goal>
-				<description>Provide an overarching role that the player can assume.</description>
-			</goal>
-			<goal>
-				<description>Provide the player with a 'side' to work for.</description>
-			</goal>
-			<goal>
-				<description>Each player in the game should be functionally identical in the beginning of the game.</description>
-			</goal>
-		</goals>
-		<!-- END GOALS -->
-		
-		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
-		<implementation>
-			Each Player is represented in the game by a Commander, which gives them a physical embodiment within the game.
-		</implementation>
-		<!-- END IMPLEMENTATION -->
-
-		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
-		<impact>
-			Each player begins at the same level when they sign up for the game.
-		</impact>
-		<!-- END IMPACT -->
-		
-		<tasks>
-			
-			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
-			<design>
-				<task>
-					<priority>9</priority>
-					<description>None.</description>
-				</task>
-			</design>
-			<!-- END DESIGN TASKS -->
-			
-			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
-			<code>
-				<task>
-					<priority>0</priority>
-					<description>Design the database schema to represent a player.</description>
-				</task>
-				<task>
-					<priority>0</priority>
-					<description>Create a basic Player class in ActionScript that will represent the player on the client side.</description>
-				</task>
-				<task>
-					<priority>0</priority>
-					<description>Create the PHP methods for accessing and changing data about the current player.</description>
-				</task>
-			</code>
-			<!-- END CODE TASKS -->
-			
-			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
-			<art>
-				<task>
-					<priority>0</priority>
-					<description>Design the player's "Commander Card" that serves as their profile picture.  It should include a photo submitted by them, along with their rank insignia over it.</description>
-				</task>
-			</art>
-			<!-- END ART TASKS -->
-			
-			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
-			<animation>
-				<task>
-					<priority>9</priority>
-					<description>None.</description>
-				</task>
-			</animation>
-			<!-- END ANIMATION TASKS -->
-			
-			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
-			<sound>
-				<task>
-					<priority>9</priority>
-					<description>None.</description>
-				</task>
-			</sound>
-			<!-- END SOUND TASKS -->
-			
-		</tasks>
-	</feature>
-	
-	<feature>
 		<title>Commander</title>
 		<id>commander</id>
 		
@@ -145,23 +40,23 @@
 				<description>Provide an overarching role that the player can assume.</description>
 			</goal>
 			<goal>
-				<description>Provide the player with a 'side' to work for.</description>
+				<description>Provide an embodiment for the player within the game.</description>
 			</goal>
 			<goal>
-				<description>Each player in the game should be functionally identical in the beginning of the game.</description>
+				<description>Provide a means to represent one player to another player in a recognizable form.</description>
 			</goal>
 		</goals>
 		<!-- END GOALS -->
 		
 		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
 		<implementation>
-			Each player is represented in the game by their assets, which include established infrastructure and active arbiters.  The player interacts with the game world through their user interface, which provides actions for them to perform during their turn.
+			The Commander is the representation of the Player within the game.  The Player creates a "Commander Card" when they first sign up, providing a standard, recongizable way to represent their individualism to themselves and other players.  The Commander Card includes a photo provided by the Player, as well as a visible rank insignia so other players viewing the commander card can instantly tell what rank the Commander is.  The Commander controls a single Mobile Command Center at a time, and a Commander fights for a single Faction.
 		</implementation>
 		<!-- END IMPLEMENTATION -->
 
 		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
 		<impact>
-			Each player is essentially no different as far as the game is concerned, which means skill and tact play a large part in the player's success.
+			All actions the player wants to take will be carried out by their commander.  This serves to separate the player from their counterpart in the game, just in case future versions include the ability to use more than one commander.  The commander also helps other players identify the player, because each commander will be unique in name and appearance (both of which are provided by the player).
 		</impact>
 		<!-- END IMPACT -->
 		
@@ -180,15 +75,15 @@
 			<code>
 				<task>
 					<priority>0</priority>
-					<description>Design the database schema to represent a player.</description>
+					<description>Design the database schema to represent a commander.</description>
 				</task>
 				<task>
 					<priority>0</priority>
-					<description>Create a basic Player class in ActionScript that will represent the player on the client side.</description>
+					<description>Create a basic Commander class in ActionScript that will represent the player on the client side.</description>
 				</task>
 				<task>
 					<priority>0</priority>
-					<description>Create the PHP methods for accessing and changing data about the current player.</description>
+					<description>Create the PHP methods for accessing and changing data about the current commander.</description>
 				</task>
 			</code>
 			<!-- END CODE TASKS -->
@@ -233,8 +128,8 @@
 			<email>dtalley@gmail.com</email>
 			<related_sections>
 				<section>
-					<id>player</id>
-					<title>Player</title>
+					<id>commander</id>
+					<title>Commander</title>
 				</section>
 			</related_sections>
 		</contact>
@@ -343,8 +238,12 @@
 			<email>dtalley@gmail.com</email>
 			<related_sections>
 				<section>
-					<id>player</id>
-					<title>Player</title>
+					<id>commander</id>
+					<title>Commander</title>
+				</section>
+				<section>
+					<id>bridge</id>
+					<title>Bridge</title>
 				</section>
 				<section>
 					<id>world_map</id>
@@ -460,5 +359,348 @@
 
 		</tasks>
 	</feature>
+	
+	<!-- BEGIN FEATURE -->
+	<feature>
+		<title>Bridge</title>
+		<id>bridge</id>
+
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>mobile_command_center</id>
+					<title>Mobile Command Center</title>
+				</section>
+				<section>
+					<id>world_map</id>
+					<title>World Map</title>
+				</section>
+				<section>
+					<id>war_room</id>
+					<title>War Room</title>
+				</section>
+				<section>
+					<id>factory</id>
+					<title>Factory</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide a central menu screen that either directly contains or contains links to all of the actions a player can perform.</description>
+			</goal>
+			<goal>
+				<description>Provide an easy way for players to take all actions available to them.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			From the player's perspective, the Bridge is the center of their Mobile Command Center.  When the game loads and their account is verified, they are brought to the Bridge, and from the Bridge they have access to all of the actions available to them.  The Bridge has a link to the World Map, the War Room, and the Factory.
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+		
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			The Bridge is the center of action for the player.  All of the actions they take will originate from the Bridge.
+		</impact>
+		<!-- END IMPACT -->
+
+		<tasks>
+
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>0</priority>
+					<description>Design a layout for the Bridge's user interface.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Implement the Bridge's user interface layout.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Develop a look and feel for the Bridge.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Build off of the user interface design and apply the developed look and feel.</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>0</priority>
+					<description>Work off of the artist's rendition of the Bridge and make it feel alive through ambient animations.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create the different sound affects that areas of the Bridge might make.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create an atmospheric ambient sound loop for the Bridge.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+
+		</tasks>
+	</feature>
+	<!-- END FEATURE -->
+	
+	<!-- BEGIN FEATURE -->
+	<feature>
+		<title>World Map</title>
+		<id>world_map</id>
+
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>faction</id>
+					<title>Faction</title>
+				</section>
+				<section>
+					<id>mobile_command_center</id>
+					<title>Mobile Command Center</title>
+				</section>
+				<section>
+					<id>bridge</id>
+					<title>Bridge</title>
+				</section>
+				<section>
+					<id>territories_and_zones</id>
+					<title>Territories and Zones</title>
+				</section>
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide a global scale for the game.</description>
+			</goal>
+			<goal>
+				<description>Allow the player to easily see the entire game map, and the major events taking place within it.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			The World Map is where the player manages the locations of all of their actions.  They can see a full view off all of the Territories in the game, which ones are disputed, which ones their Faction is defending, and which ones their Faction is attacking.  Each of the Territories is color coded, depending on which Faction currently holds the Territory.  Some Territories may not be occupied, in which case their color will not reflect any of the Factions.<br /><br />
+			
+			The player can mouse over each Territory and view a tool tip with relevant information about it, specifically:
+			<ul>
+				<li>Whether or not it is disputed</li>
+				<li>The number of battles occuring within it</li>
+				<li>The number of friendly command centers stationed within it</li>
+				<li>The number of enemy command centers stationed within it</li>
+			</ul>
+			
+			
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+		
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			The World Map is the center of the global conflict in the game.  It allows the player to easily see where the action is, and allows them to easily jump into it.
+		</impact>
+		<!-- END IMPACT -->
+
+		<tasks>
+
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>0</priority>
+					<description>Design a layout for the World Map's interface.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Implement the World Map's user interface layout.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Develop a look and feel for the World Map.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Build off of the user interface design and apply the developed look and feel.</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>0</priority>
+					<description>Work off of the artist's rendition of the Bridge and make it feel alive through ambient animations.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create the different sound affects that areas of the Bridge might make.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create an atmospheric ambiant sound loop for the Bridge.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+
+		</tasks>
+	</feature>
+	<!-- END FEATURE -->
+	
+	<!-- BEGIN FEATURE -->
+	<feature>
+		<title>Territories and Zones</title>
+		<id>territories_and_zones</id>
+
+		<!-- BEGIN CONTACT -->
+		<contact>
+			<author>David Talley</author>
+			<email>dtalley@gmail.com</email>
+			<related_sections>
+				<section>
+					<id>mobile_command_center</id>
+					<title>Mobile Command Center</title>
+				</section>
+				<section>
+					<id>bridge</id>
+					<title>Bridge</title>
+				</section>
+				<section>
+					<id>territories_and_zones</id>
+					<title>Territories and Zones</title>
+				</section>
+				
+			</related_sections>
+		</contact>
+		<!-- END CONTACT -->
+
+		<!-- BEGIN GOALS			*** What is this feature meant to do for the player within the game? *** -->
+		<goals>
+			<goal>
+				<description>Provide a global scale for the game.</description>
+			</goal>
+			<goal>
+				<description>Allow the player to easily see the entire game map, and the major events taking place within it.</description>
+			</goal>
+		</goals>
+		<!-- END GOALS -->
+
+		<!-- BEGIN IMPLEMENTATION 	*** How should this feature work from the player's perspective? *** -->
+		<implementation>
+			The World Map is where the player manages the locations of all of their actions.  They can see a full view off all of the Territories in the game, which ones are disputed, which ones their Faction is defending, and which ones their Faction is attacking.
+		</implementation>
+		<!-- END IMPLEMENTATION -->
+		
+		<!-- BEGIN IMPACT			*** What effect will this feature have on the way players will play the game? *** -->
+		<impact>
+			The World Map is the center of the global conflict in the game.  It allows the player to easily see where the action is, and allows them to easily jump into it, as well as manage their participation.  From the World Map they can relocate their Mobile Command Center, dispatch Squads, participate in invasions with other members of their Faction, and other global scale things.
+		</impact>
+		<!-- END IMPACT -->
+
+		<tasks>
+
+			<!-- BEGIN DESIGN TASKS 	*** List tasks in order of priority *** -->
+			<design>
+				<task>
+					<priority>0</priority>
+					<description>Design a layout for the World Map's interface.</description>
+				</task>
+			</design>
+			<!-- END DESIGN TASKS -->
+
+			<!-- BEGIN CODE TASKS		*** List tasks in order of priority *** -->
+			<code>
+				<task>
+					<priority>0</priority>
+					<description>Implement the World Map's user interface layout.</description>
+				</task>
+			</code>
+			<!-- END CODE TASKS -->
+
+			<!-- BEGIN ART TASKS		*** List tasks in order of priority *** -->
+			<art>
+				<task>
+					<priority>0</priority>
+					<description>Develop a look and feel for the World Map.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Build off of the user interface design and apply the developed look and feel.</description>
+				</task>
+			</art>
+			<!-- END ART TASKS -->
+
+			<!-- BEGIN ANIMATION TASKS	*** List tasks in order of priority *** -->
+			<animation>
+				<task>
+					<priority>0</priority>
+					<description>Work off of the artist's rendition of the Bridge and make it feel alive through ambient animations.</description>
+				</task>
+			</animation>
+			<!-- END ANIMATION TASKS -->
+
+			<!-- BEGIN SOUND TASKS		*** List tasks in order of priority *** -->
+			<sound>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create the different sound affects that areas of the Bridge might make.</description>
+				</task>
+				<task>
+					<priority>0</priority>
+					<description>Seek out or create an atmospheric ambiant sound loop for the Bridge.</description>
+				</task>
+			</sound>
+			<!-- END SOUND TASKS -->
+
+		</tasks>
+	</feature>
+	<!-- END FEATURE -->
 	
 </design_document>

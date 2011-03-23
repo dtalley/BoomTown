@@ -80,29 +80,25 @@
         fontList.push( list.pop() );
       }
       var loader:Sprite = new Sprite();
-      beginLoadingFonts(null, loader);
+      beginLoadingFonts(loader);
       return loader;
     }
     
-    private static function beginLoadingFonts( e:Event, holder:Sprite = null ):void {
-      if ( e ) {
-        e.target.removeEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        e.target.removeEventListener( Event.COMPLETE, beginLoadingFonts );
+    private static function beginLoadingFonts( holder:Sprite = null, loader:Sprite = null ):void {
+      if ( loader ) {
+        loader.removeEventListener( ProgressEvent.PROGRESS, fontListProgress );
+        KuroExpress.removeListener( loader, Event.COMPLETE, beginLoadingFonts );
       }
       if ( currentFont < fontList.length ) {
         var loader:Sprite = loadFont( fontList[currentFont] );
         loader.addEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        loader.addEventListener( Event.COMPLETE, beginLoadingFonts );
+        KuroExpress.addListener( loader, Event.COMPLETE, beginLoadingFonts, holder, loader );
         currentFont++;
-        if ( holder ) {
-          holder.addChild( loader );
-        } else if ( e ) {
-          Sprite( e.target.parent ).addChild( loader );
-        }
-      } else if ( e ) {
+        holder.addChild( loader );
+      } else if( holder ) {
         fontList = null;
         currentFont = undefined;
-        Sprite( e.target.parent ).dispatchEvent( new Event( Event.COMPLETE ) );
+        holder.dispatchEvent( new Event( Event.COMPLETE ) );
       }
     }
     
@@ -139,7 +135,6 @@
 			var fontClass:Class = getDefinitionByName( loadingFont ) as Class;
 			Font.registerFont( fontClass );
       loadingFont = null;
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
       var fontList:Array = Font.enumerateFonts(false);
       trace( "Current Font List: ---------------------------------------" );
       for ( var i:int = 0; i < fontList.length; i++ ) {
@@ -147,6 +142,7 @@
       }
       trace( "----------------------------------------------------------" );
       trace( "" );
+      Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
 		}
     
     private static function fontError( e:IOErrorEvent ):void {
@@ -158,32 +154,33 @@
      * used to track the file's load progress.
      */
 		public static function loadAssetsFile( file:String ):Sprite {
+      KuroExpress.broadcast( { }, "Loading assets file: " + file );
 			var request:URLRequest = new URLRequest( file );
 			var loader:Loader = new Loader();
 			var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
 			loader.load( request, context );
 			var loadDispatcher:Sprite = new Sprite();
 			loadDispatcher.addChild( loader );
-			loader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, assetsProgress );
-			loader.contentLoaderInfo.addEventListener( Event.COMPLETE, assetsComplete );
-      loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, assetsError );
+      KuroExpress.addFullListener( loader.contentLoaderInfo, ProgressEvent.PROGRESS, assetsProgress, loadDispatcher );
+			KuroExpress.addListener( loader.contentLoaderInfo, Event.COMPLETE, assetsComplete, loader, loadDispatcher );
+      KuroExpress.addListener( loader.contentLoaderInfo, IOErrorEvent.IO_ERROR, assetsError, file );
 			return loadDispatcher;
 		}
 		
     
-		private static function assetsProgress( e:ProgressEvent ):void {
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, e.bytesLoaded, e.bytesTotal ) );
+		private static function assetsProgress( dispatcher:Sprite, e:ProgressEvent ):void {
+			dispatcher.dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, e.bytesLoaded, e.bytesTotal ) );
 		}
 		
-		private static function assetsComplete( e:Event ):void {
-			e.target.removeEventListener( ProgressEvent.PROGRESS, assetsProgress );
-			e.target.removeEventListener( Event.COMPLETE, assetsComplete );
-      e.target.removeEventListener( IOErrorEvent.IO_ERROR, assetsError );
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
+		private static function assetsComplete( loader:Loader, dispatcher:Sprite ):void {
+			KuroExpress.removeListener( loader.contentLoaderInfo, ProgressEvent.PROGRESS, assetsProgress );
+			KuroExpress.removeListener( loader.contentLoaderInfo, Event.COMPLETE, assetsComplete );
+      KuroExpress.removeListener( loader.contentLoaderInfo, IOErrorEvent.IO_ERROR, assetsError );
+			dispatcher.dispatchEvent( new Event( Event.COMPLETE ) );
 		}
     
-    private static function assetsError( e:IOErrorEvent ):void {
-      throw new Error( "A requested assets file could not be loaded because it is either missing or corrupt." );
+    private static function assetsError( file:String ):void {
+      throw new Error( "A requested assets file (" + file + ") could not be loaded because it is either missing or corrupt." );
     }
 		
 		public static function createComment( comment:String ):void {
@@ -325,7 +322,16 @@
     private static var listeners:Object = {};
     
     public static function addListener( obj:IEventDispatcher, event:String, listener:Function, ... params ):void {
-      var delFunction:Function = delegate( obj, listener, params );
+      var delFunction:Function = delegate( obj, listener, params, false );
+      if ( !listeners[event] ) {
+        listeners[event] = [];
+      }
+      listeners[event].push( { object:obj, delegate:delFunction, listener:listener } );
+      obj.addEventListener( event, delFunction );
+    }
+    
+    public static function addFullListener( obj:IEventDispatcher, event:String, listener:Function, ... params ):void {
+      var delFunction:Function = delegate( obj, listener, params, true );
       if ( !listeners[event] ) {
         listeners[event] = [];
       }
@@ -338,14 +344,24 @@
       for ( var i:int = 0; i < total; i++ ) {
         if ( listeners[event][i].object == obj && listeners[event][i].listener == listener ) {
           obj.removeEventListener( event, listeners[event][i].delegate );
+          listeners[event].splice( i, 1 );
           return true;
         }
       }
       return false;
     }
     
-    private static function delegate( obj:IEventDispatcher, listener:Function, params:Array ):Function {
-      var f:Function = function():void { listener.apply( obj, params ) };
+    private static function delegate( obj:IEventDispatcher, listener:Function, params:Array, addEvent:Boolean ):Function {
+      var f:Function;
+      if( addEvent ) {
+        f = function( e:Event ):void {
+          listener.apply( obj, params.concat(e) ); 
+        };
+      } else {
+        f = function( e:Event ):void {
+          listener.apply( obj, params ); 
+        };
+      }
       return f;
     }
     

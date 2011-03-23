@@ -103,7 +103,7 @@
         return action::get( "settings/" . $code );
       } else {
         $setting = NULL;
-        if( DATABASE_ENABLED ) {
+        /*if( DATABASE_ENABLED ) {
           db::open( TABLE_SETTINGS );
             db::where( "setting_name", $code );
             db::open( TABLE_SETTING_GROUPS );
@@ -114,7 +114,7 @@
         } else {
           echo "Setting " . $group . "/" . $code . " could not be found.";
           exit();
-        }
+        }*/
         if( $setting ) {
           if( $setting['setting_type'] ) {
             $return_code = "\$return_value = (" . $setting['setting_type'] . ") \$setting['setting_value'];";

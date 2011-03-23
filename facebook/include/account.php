@@ -15,17 +15,12 @@
       }
 
       $code = sys::input( "code", null );
+      $access_token = sys::input( "access_token", null );
       $app_id = sys::setting( "facebook", "fbapp_id" );
       $api_key = sys::setting( "facebook", "fbapi_key" );
       $app_secret = sys::setting( "facebook", "fbapp_secret" );
       $canvas = urlencode( sys::setting( "facebook", "fbcanvas" ) );
       $current_datetime = sys::create_datetime( time() );
-
-      action::resume( "facebook" );
-        action::add( "app_id", $app_id );
-        action::add( "api_key", $api_key );
-        action::add( "canvas", $canvas );
-      action::end();
 
       $auth_url = "http://www.facebook.com/dialog/oauth?client_id=";
       $auth_url .= $app_id;
@@ -60,34 +55,22 @@
       }
 
       action::resume( "account" );
-        action::add( "auth_url", $auth_url );
+      
         action::add( "logged_in", ( empty( $data['user_id'] ) || !$code ) ? 0 : 1 );
+
         if( !empty( $data['user_id'] ) && $code ) {
           db::open( TABLE_USERS );
-            db::where( "user_id", $data['user_id'] );
+            db::where( "user_id", trim( $data['user_id'] ) );
           $user = db::result();
           db::clear_result();
-          if( !$user ) {
-            $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=";
-            $token_url .= $app_id;
-            $token_url .= "&redirect_uri=" . $canvas;
-            $token_url .= "&client_secret=" . $app_secret;
-            $token_url .= "&code=" . $code;
-            $access_token = facebook::graph_call( $token_url );
+          if( !$user ) {            
             $user_url = "https://graph.facebook.com/me?" . $access_token;
             $user = json_decode( facebook::graph_call( $user_url ), true );
 
             db::open( TABLE_USERS );
-              db::set( "user_id", $data['user_id'] );
+              db::set( "user_id", trim( $data['user_id'] ) );
               db::set( "user_created", $current_datetime );
               db::set( "user_activity", $current_datetime );
-              db::set( "user_timezone", $user['timezone'] );
-              db::set( "user_name", $user['name'] );
-              db::set( "user_first_name", $user['first_name'] );
-              db::set( "user_last_name", $user['last_name'] );
-              db::set( "user_birthday", $user['birthday'] );
-              db::set( "user_email", $user['email'] );
-              db::set( "user_updated", $current_datetime );
             if( !db::insert() ) {
               sys::message(
                 USER_ERROR,
@@ -96,7 +79,7 @@
               );
             }
             db::open( TABLE_USERS );
-              db::where( "user_id", $data['user_id'] );
+              db::where( "user_id", trim( $data['user_id'] ) );
             $user = db::result();
             db::clear_result();
           }
@@ -107,6 +90,35 @@
               lang::phrase( "account/error/unknown_account_creation_error/body" )
             );
           }
+
+          /**
+           * Check the user's last facebook update time, and if their information
+           * hasn't been pulled from Facebook in a while, pull it and update
+           * their database entry.
+           */
+          $user_updated = strtotime( $user['user_updated'] );
+          if( $user_updated + 60 * 60 * 24 * 2 < time() ) {
+            $user_url = "https://graph.facebook.com/me?" . $access_token;
+            $user_data = json_decode( facebook::graph_call( $user_url ), true );
+
+            db::open( TABLE_USERS );
+              db::set( "user_timezone", $user_data['timezone'] );
+              db::set( "user_name", $user_data['name'] );
+              db::set( "user_first_name", $user_data['first_name'] );
+              db::set( "user_last_name", $user_data['last_name'] );
+              db::set( "user_birthday", $user_data['birthday'] );
+              db::set( "user_email", $user_data['email'] );
+              db::set( "user_updated", $current_datetime );
+              db::where( "user_id", $user['user_id'] );
+            if( !db::update() ) {
+              sys::message(
+                USER_ERROR,
+                lang::phrase( "account/error/could_not_update_user/title" ),
+                lang::phrase( "account/error/could_not_update_user/body" )
+              );
+            }
+          }
+          
           action::add( "id", $user['user_id'] );
           action::start( "name" );
             action::add( "full", $user['user_name'] );
@@ -115,14 +127,17 @@
           action::end();
           action::add( "email", $user['user_email'] );
           action::add( "birthday", $user['user_birthday'] );
-          action::start( "created" );
-            action::add( "datetime", $user['user_created'] );
-            $timestamp = strtotime( $user['user_created'] );
-            action::add( "timestamp", $timestamp );
-            $timestamp += sys::timezone( empty( $user['user_timezone'] ) ? -5 : $user['user_timezone'] ) * 60 * 60;
-            action::add( "altered_datetime", sys::create_datetime( $timestamp ) );
-            action::add( "altered_timestamp", $timestamp );
-          action::end();
+          
+        }
+      action::end();
+
+      action::resume( "facebook" );
+        action::add( "app_id", $app_id );
+        action::add( "api_key", $api_key );
+        action::add( "canvas", $canvas );
+        action::add( "auth_url", $auth_url );
+        if( $access_token ) {
+          action::add( "token", $access_token );
         }
       action::end();
 

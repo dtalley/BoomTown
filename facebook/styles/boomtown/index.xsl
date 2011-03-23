@@ -27,16 +27,28 @@
       <body>
         <xsl:choose>
           <xsl:when test="account/logged_in = 0">
-            <script type="text/javascript">top.location.href = "<xsl:value-of select="account/auth_url" />";</script>
+            <script type="text/javascript">top.location.href = "<xsl:value-of select="facebook/auth_url" />";</script>
           </xsl:when>
           <xsl:otherwise>
             <!--<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fapps.facebook.com%2Fboomtowngame&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe><br />-->
             <img src="{$style_dir}/images/main_header.jpg" id="header" /><br />
             <div id="content">
+              <xsl:variable name="flashvars">
+                <xsl:text>token=</xsl:text>
+                <xsl:value-of select="facebook/token" />
+                <xsl:text>&amp;app_id=</xsl:text>
+                <xsl:value-of select="facebook/app_id" />
+                <xsl:text>&amp;canvas=</xsl:text>
+                <xsl:value-of select="facebook/canvas" />
+                <xsl:text>&amp;user_id=</xsl:text>
+                <xsl:value-of select="account/id" />
+                <xsl:text>&amp;style_dir=</xsl:text>
+                <xsl:value-of select="$style_dir" />
+              </xsl:variable>
               <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="760" height="600" id="gameflash">
-                <param name="movie" value="{$style_dir}/flash/main.swf" />
+                <param name="movie" value="{$style_dir}/flash/main.swf?{$flashvars}" />
                 <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="{$style_dir}/flash/main.swf" width="760" height="600">
+                <object type="application/x-shockwave-flash" data="{$style_dir}/flash/main.swf?{$flashvars}" width="760" height="600">
                 <!--<![endif]-->
                   <a href="http://www.adobe.com/go/getflashplayer">
                     <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />

@@ -15,10 +15,14 @@
 		<setting id="email_dir">email</setting>
 
     <setting id="default_style">boomtown</setting>
-
     <setting id="maintenance_mode">0</setting>
-
     <setting id="enable_accounts">1</setting>
+
+  <!-- FACEBOOK SETTINGS -->
+    <setting id="fbapp_id">202115116472856</setting>
+    <setting id="fbapi_key">56fbe73cdb545cdbcf9491b59e40c54b</setting>
+    <setting id="fbapp_secret">44b647d943f1a1a23ef9b4f770e84e1f</setting>
+    <setting id="fbcanvas">http://apps.facebook.com/boomtowngame/</setting>
 
   <!-- STATIC FILE SETTINGS -->
     <setting id="static_fileserv">1</setting>

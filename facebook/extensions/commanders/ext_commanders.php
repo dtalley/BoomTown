@@ -31,14 +31,14 @@
             if( $user_id ) {
               db::where( "user_id", $user_id );
             }
-            db::open( TABLE_COMMAND_FACTIONS );
+            db::open( TABLE_COMMAND_FACTIONS, LEFT );
               db::link( "commander_id" );
               db::where( "command_faction_active", true );
               db::open( TABLE_FACTIONS );
                 db::link( "faction_id" );
               db::close();
             db::close();
-            db::open( TABLE_COMMAND_BASES );
+            db::open( TABLE_COMMAND_BASES, LEFT );
               db::link( "commander_id" );
               db::where( "command_base_active", true );
               db::open( TABLE_BASES );
@@ -48,8 +48,30 @@
             db::open( TABLE_COMMAND_RANKS );
               db::link( "commander_id" );
               db::where( "command_rank_active", true );
-              db::open( TABLE_RANKS );
+              $alias = db::open( TABLE_RANKS );
                 db::link( "rank_id" );
+                db::open( TABLE_RANKS, LEFT );
+                  db::select_as( "next_rank_id" );
+                  db::select( "rank_id" );
+                  db::select_as( "next_rank_level" );
+                  db::select( "rank_level" );
+                  db::select_as( "next_rank_title" );
+                  db::select( "rank_title" );
+                  db::select_as( "next_rank_name" );
+                  db::select( "rank_name" );
+                  db::where( "rank_order", $alias . ".rank_order + 1", NULL, NULL, false );
+                db::close();
+                db::open( TABLE_RANKS, LEFT );
+                  db::select_as( "previous_rank_id" );
+                  db::select( "rank_id" );
+                  db::select_as( "previous_rank_level" );
+                  db::select( "rank_level" );
+                  db::select_as( "previous_rank_title" );
+                  db::select( "rank_title" );
+                  db::select_as( "previous_rank_name" );
+                  db::select( "rank_name" );
+                  db::where( "rank_order", $alias . ".rank_order - 1", NULL, NULL, false );
+                db::close();
               db::close();
             db::close();
           $commander = db::result();
@@ -75,19 +97,41 @@
                 action::add( "description", $commander['faction_description'] );
                 action::add( "population", $commander['faction_population'] );
                 action::add( "acronym", $commander['faction_acronym'] );
+                action::start( "dropships" );
+                  action::add( "max", $commander['command_faction_dropship_max'] );
+                  action::add( "current", $commander['command_faction_dropships'] );
+                action::end();
               action::end();
               action::start( "base" );
                 action::add( "association", $commander['command_base_id'] );
                 action::add( "id", $commander['base_id'] );
                 action::add( "title", $commander['base_title'] );
                 action::add( "name", $commander['base_name'] );
+                action::add( "bandwidth", $commander['command_base_bandwidth'] );
               action::end();
               action::start( "rank" );
                 action::add( "association", $commander['command_rank_id'] );
                 action::add( "id", $commander['rank_id'] );
                 action::add( "title", $commander['rank_title'] );
                 action::add( "name", $commander['rank_name'] );
+                action::add( "level", $commander['rank_level'] );
                 action::add( "order", $commander['rank_order'] );
+                if( $commander['next_rank_id'] ) {
+                  action::start( "next" );
+                    action::add( "id", $commander['next_rank_id'] );
+                    action::add( "title", $commander['next_rank_title'] );
+                    action::add( "name", $commander['next_rank_name'] );
+                    action::add( "level", $commander['next_rank_level'] );
+                  action::end();
+                }
+                if( $commander['previous_rank_id'] ) {
+                  action::start( "previous" );
+                    action::add( "id", $commander['previous_rank_id'] );
+                    action::add( "title", $commander['previous_rank_title'] );
+                    action::add( "name", $commander['previous_rank_name'] );
+                    action::add( "level", $commander['previous_rank_level'] );
+                  action::end();
+                }
               action::end();
             action::end();
           action::end();

@@ -90,7 +90,7 @@
         self::$top_query = self::$current_query = new dbquery( NULL, NONE, $encased );
         self::$query_open = true;
       }
-      self::$current_query->open( $table, $join );
+      return self::$current_query->open( $table, $join );
 		}
 
     public static function open_subquery( $join = NONE ) {
@@ -696,6 +696,7 @@
 			}
 			$this->level++;
 			$this->current_alias++;
+      return $alias;
 		}
 
     public function open_blank() {
@@ -1015,23 +1016,23 @@
 		private function parse_update( $index, &$update, &$set, &$where ) {
 			$total_children = count( $index );
 			for( $i = 0; $i < $total_children; $i++ ) {
-				$this->parse_from( $index[$i], $update );
+				$this->parse_from( $index[$i], $update, true );
 				$total_values = count( $index[$i]['values'] );
 				for( $j = 0; $j < $total_values; $j++ ) {
 					if( $set != " SET " ) {
 						$set .= ", ";
 					}
-					$set .= $index[$i]['alias'] . "." . $index[$i]['values'][$j]['column'] . " = " . $index[$i]['values'][$j]['value'];
+					$set .= $index[$i]['values'][$j]['column'] . " = " . $index[$i]['values'][$j]['value'];
 				}
 				$this->parse_update( $this->children[$index[$i]['index']], $update, $set, $where );
 				if( !isset( $index[$i]['parent'] ) ) {
-					self::parse_where( $index[$i], $where );
+					self::parse_where( $index[$i], $where, true );
 				} else {
 					if( count( $this->children[$index[$i]['index']] ) ) {
 						$update .= " )";
 					}
 					$update .= " ON ";
-					$this->parse_where( $index[$i], $update );
+					$this->parse_where( $index[$i], $update, true );
 				}
 			}
 		}
@@ -1071,7 +1072,7 @@
 			}
 		}
 
-		private function parse_from( $tbl, &$from ) {
+		private function parse_from( $tbl, &$from, $ignore_alias = false ) {
       if( isset( $tbl['parent'] ) ) {
         switch( $tbl['join'] ) {
           case NONE:
@@ -1096,12 +1097,12 @@
       } else {
         $from .= $tbl['table'];
       }
-      if( $tbl['alias'] ) {
+      if( $tbl['alias'] && !$ignore_alias ) {
         $from .= " AS " . $tbl['alias'];
       }
 		}
 
-		private function parse_where( $index, &$where ) {
+		private function parse_where( $index, &$where, $ignore_alias = false ) {
 			$total_wheres = count( $index['wheres'] );
 			$current_block = 0;
 			for( $i = 0; $i < $total_wheres; $i++ ) {
@@ -1124,7 +1125,7 @@
         if( !is_bool( $index['wheres'][$i]['subquery'] ) && $index['wheres'][$i]['column'] == NULL ) {
           $where .= "( " . $index['wheres'][$i]['subquery']->select_sql() . " ) ";
         } else {
-          $where .= $index['alias'] . "." . $index['wheres'][$i]['column'] . " ";
+          $where .= ( $ignore_alias ? "" : $index['alias'] . "." ) . $index['wheres'][$i]['column'] . " ";
         }
         if( $index['wheres'][$i]['function'] ) {
           $where .= ") ";

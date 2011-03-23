@@ -88,22 +88,6 @@ if( action::get( "settings/cdn_type" ) ) {
 }
 
 if( DATABASE_ENABLED ) {
-  //Load all global settings from the database
-  db::open( TABLE_SETTINGS );
-    db::open( TABLE_SETTING_GROUPS );
-      db::link( "setting_group_id" );
-  action::resume( "settings" );
-  while( $row = db::result() ) {
-    if( $row['setting_group_name'] == "global" ) {
-      action::add( $row['setting_name'], $row['setting_value'] );
-    } else {
-      action::resume( "settings/" . $row['setting_group_name'] );
-      action::add( $row['setting_name'], $row['setting_value'] );
-      action::end();
-    }
-  }
-  action::end();
-
   //Load all of the installed extensions
   sys::list_extensions();
   $total_extensions = action::total( "extension_list/extension" );
