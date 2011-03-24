@@ -11,7 +11,11 @@
     private var _next:Rank;
     private var _previous:Rank;
     
-    public function Rank( data:Object ):void {      
+    public function Rank( data:Object = null ):void {      
+      update( data );
+    }
+    
+    public function update( data:Object ):void {
       if ( data.association ) {
         _association = data.association;
       }
@@ -33,6 +37,34 @@
       if ( data.previous ) {
         _next = data.previous;
       }
+    }
+    
+    public function get association():String {
+      return _association;
+    }
+    
+    public function get id():String {
+      return _id;
+    }
+    
+    public function get title():String {
+      return _title;
+    }
+    
+    public function get name():String {
+      return _name;
+    }
+    
+    public function get level():uint {
+      return _level;
+    }
+    
+    public function get next():Rank {
+      return _next;
+    }
+    
+    public function get previous():Rank {
+      return _previous;
     }
     
   }

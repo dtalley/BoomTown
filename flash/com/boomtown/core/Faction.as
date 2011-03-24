@@ -16,7 +16,11 @@
     private var _maxDropships:uint;
     private var _currentDropships:uint;
     
-    public function Faction( data:Object ):void {      
+    public function Faction( data:Object = null ):void {      
+      update( data );
+    }
+    
+    public function update( data:Object ):void {
       if ( data.association ) {
         _association = data.association;
       }
@@ -43,7 +47,43 @@
       }
       if ( data.currentDropships ) {
         _currentDropships = data.currentDropships;
-      }      
+      }
+    }
+    
+    public function get association():String {
+      return _association;
+    }
+    
+    public function get id():String {
+      return _id;
+    }
+    
+    public function get title():String {
+      return _title;
+    }
+    
+    public function get name():String {
+      return _name;
+    }
+    
+    public function get description():String {
+      return _description;
+    }
+    
+    public function get population():uint {
+      return _population;
+    }
+    
+    public function get acronym():String {
+      return _acronym;
+    }
+    
+    public function get maxDropships():uint {
+      return _maxDropships;
+    }
+    
+    public function get currentDropships():uint {
+      return _currentDropships;
     }
     
   }

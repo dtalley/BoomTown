@@ -8,7 +8,7 @@
   import flash.events.Event;
   import flash.events.MouseEvent;
   import flash.text.TextField;
-  import md.core.Module;
+  import com.boomtown.modules.core.Module;
   import nl.demonsters.debugger.MonsterDebugger;
   
   
@@ -91,11 +91,10 @@
       if ( !currentModule || currentModule.id != id ) {
         var newModule:Module = Module( KuroExpress.createAsset( id ) );
         if ( currentModule ) {
-          KuroExpress.addListener( currentModule,=
-          \]]]]]]]]y6777777777777777777utEvent.CLOSE, moduleClosed, currentModule, newModule );
+          KuroExpress.addListener( currentModule, Event.CLOSE, moduleClosed, currentModule, newModule );
         } else {
           addChild( newModule );
-          newModule.open();
+          newModule.open( _commander );
         }
         currentModule = newModule;
       }
@@ -106,7 +105,7 @@
         removeChild( oldModule );
       }
       addChild( newModule );
-      newModule.open();
+      newModule.open(_commander);
     }
     
   }

@@ -12,7 +12,11 @@
     private var _name:String;
     private var _bandwidth:uint;
     
-    public function CommandCenter( data:Object ):void {      
+    public function CommandCenter( data:Object = null ):void {      
+      update( data );
+    }
+    
+    public function update( data:Object ):void {
       if ( data.association ) {
         _association = data.association;
       }
@@ -28,6 +32,26 @@
       if ( data.bandwidth ) {
         _bandwidth = data.bandwidth;
       }
+    }
+    
+    public function get association():String {
+      return _association;
+    }
+    
+    public function get id():String {
+      return _id;
+    }
+    
+    public function get title():String {
+      return _title;
+    }
+    
+    public function get name():String {
+      return _name;
+    }
+    
+    public function get bandwidth():uint {
+      return _bandwidth;
     }
     
   }
