@@ -154,8 +154,8 @@
      * used to track the file's load progress.
      */
 		public static function loadAssetsFile( file:String ):Sprite {
-      KuroExpress.broadcast( { }, "Loading assets file: " + file );
-			var request:URLRequest = new URLRequest( file );
+      KuroExpress.broadcast( { }, "Loading assets file: " + fullURL + file );
+			var request:URLRequest = new URLRequest( fullURL + file );
 			var loader:Loader = new Loader();
 			var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
 			loader.load( request, context );

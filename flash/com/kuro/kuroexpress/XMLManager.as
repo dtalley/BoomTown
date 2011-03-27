@@ -4,10 +4,6 @@
   import flash.net.URLLoader;
   import flash.net.URLRequest;
   
-  /**
-   * ...
-   * @author ...
-   */
   public class XMLManager {
     
     private static var _xml:Object = {};

@@ -7,18 +7,16 @@
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.MouseEvent;
+  import flash.external.ExternalInterface;
   import flash.text.TextField;
   import com.boomtown.modules.core.Module;
   import nl.demonsters.debugger.MonsterDebugger;
-  
   
   public class Main extends MovieClip {
     
     private var _commander:Commander;
     
     public function Main():void {
-      var debugger:MonsterDebugger = new MonsterDebugger(this);
-      MonsterDebugger.enabled = true;
       addEventListener( Event.ADDED_TO_STAGE, init );
     }
     
@@ -32,26 +30,56 @@
     }
     
     private function settingsLoaded():void {
+      if ( int( XMLManager.getFile("settings").debug.toString() ) == 1 ) {
+        var debugger:MonsterDebugger = new MonsterDebugger(this);
+        MonsterDebugger.enabled = true;
+      }
       ActionRequest.saveAddress( XMLManager.getFile("settings").magasi_url.toString() );
       loadFonts();
     }
     
-    private function loadFonts():void {
-      
+    private function loadFonts():void {      
       var loaderFonts:XMLList = XMLManager.getFile("settings").loader_fonts;
       var total:int = loaderFonts.font.length();
+      if ( total == 0 ) {
+        loaderFontsLoaded(null);
+      }
       var fonts:Array = [];
       for ( var i:int = 0; i < total; i++ ) {
         fonts.push( loaderFonts.font[i].toString() );
       }
       var fontLoader:Sprite = KuroExpress.loadFonts(fonts);
-      fontLoader.addEventListener( Event.COMPLETE, fontsLoaded );
+      fontLoader.addEventListener( Event.COMPLETE, loaderFontsLoaded );
     }
     
-    private function fontsLoaded( e:Event ):void {
-      e.target.removeEventListener( Event.COMPLETE, fontsLoaded );
+    private function loaderFontsLoaded( e:Event ):void {
+      if( e ) {
+        e.target.removeEventListener( Event.COMPLETE, loaderFontsLoaded );
+      }
       
-      _commander = new Commander();
+      var allFonts:XMLList = XMLManager.getFile("settings").all_fonts;
+      var total:int = allFonts.font.length();
+      if ( total == 0 ) {
+        allFontsLoaded(null);
+      }
+      var fonts:Array = [];
+      for ( var i:int = 0; i < total; i++ ) {
+        fonts.push( allFonts.font[i].toString() );
+      }
+      var fontLoader:Sprite = KuroExpress.loadFonts(fonts);
+      fontLoader.addEventListener( Event.COMPLETE, allFontsLoaded );
+    }
+    
+    private function allFontsLoaded( e:Event ):void {
+      if( e ) {
+        e.target.removeEventListener( Event.COMPLETE, allFontsLoaded );
+      }
+      
+      loadCommander();
+    }
+    
+    private function loadCommander():void {
+      _commander = new Commander( loaderInfo.parameters.token );
       _commander.addEventListener( Event.COMPLETE, commanderReady );
       if ( loaderInfo.parameters.user_id ) {
         _commander.init( loaderInfo.parameters.user_id );

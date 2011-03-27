@@ -21,13 +21,14 @@
           var fbAppId = "<xsl:value-of select="facebook/app_id" />";
           var fbApiKey = "<xsl:value-of select="facebook/api_key" />";
           var fbCanvas = "<xsl:value-of select="facebook/canvas" />";
+          var authURL = "<xsl:value-of select="facebook/auth_url" />";
         </script>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       </head>
       <body>
         <xsl:choose>
           <xsl:when test="account/logged_in = 0">
-            <script type="text/javascript">top.location.href = "<xsl:value-of select="facebook/auth_url" />";</script>
+            <script type="text/javascript">top.location.href = authURL;</script>
           </xsl:when>
           <xsl:otherwise>
             <!--<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fapps.facebook.com%2Fboomtowngame&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe><br />-->
@@ -59,12 +60,19 @@
               </object>
             </div>
 
-            <div id="fb-root"></div>
-            <script src="http://connect.facebook.net/en_US/all.js"></script>
-
             <script type="text/javascript" src="{$style_dir}/scripts/jquery.js"></script>
             <script type="text/javascript" src="{$style_dir}/scripts/swfobject.js"></script>
             <script type="text/javascript" src="{$style_dir}/scripts/index.js"></script>
+            <script type="text/javascript">
+              $(document).ready(function(){
+                docReady();
+              });
+              window.fbAsyncInit = function() {
+                fbReady();
+              }
+            </script>
+            <div id="fb-root"></div>
+            <script src="http://connect.facebook.net/en_US/all.js"></script>
             <script type="text/javascript">
               swfobject.registerObject("gameflash", "10.1.0", "expressInstall.swf");
             </script>

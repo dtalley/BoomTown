@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <settings>
+  <debug>1</debug>
   <magasi_url>http://boomtowngame.com/facebook/index.php</magasi_url>
+  <default_user>804640510</default_user>
+  <default_token>2227470867|2.S91LmiMVMeMJmM73RqZ3pw__.3600.1301011200-804640510|a6B5HJ9iBmGOteK2VeOX0liJWks</default_token>
 
   <loader_fonts>
     <font>BorisBlackBloxx</font>
   </loader_fonts>
 
-  <all_fonts>
-    
+  <all_fonts>    
   </all_fonts>
-
-  <default_user>804640510</default_user>
-
-  
 </settings>

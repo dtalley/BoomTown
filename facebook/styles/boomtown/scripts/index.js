@@ -1,47 +1,46 @@
 var fbready = false;
 var docready = false;
 
-window.fbAsyncInit = function() {
+function fbReady() {
   fbready = true;
   if( docready ) {
     init();
   }
-};
+}
 
-$(document).ready(function(){
+function docReady() {
   docready = true;
   if( fbready ) {
     init();
   }
-});
+}
 
+var fbinitialized = false;
+var refreshtoken = false;
 function init() {
   FB.init({appId: fbAppId, status: true, cookie: true});
+  fbinitialized = true;
   FB.Canvas.setAutoResize();
   setTimeout( function(){
     FB.Canvas.setAutoResize(false);
   }, 2000 );
+  if( refreshtoken ) {
+    refreshtoken = false;
+    refreshToken();
+  }
+}
 
-  $("#credits_test").click(function(){
-    var obj = {
-      method: 'pay',
-      credits_purchase: true
-    };
-    FB.ui( obj, function(){
-      
+function refreshToken() {
+  if( !fbinitialized ) {
+    refreshtoken = true;
+  } else {
+    FB.getLoginStatus(function(response){
+      if( response.session ) {
+        swfobject.getObjectById( "gameflash" ).tokenRefreshed( response.session.access_token );
+      } else {
+        window.top.url = authURL;
+      }
     });
-    return false;
-  });
-
-  $("#other_test").click(function(){
-    var obj = {
-      method: 'pay',
-      order_info: '12345',
-      purchase_type: 'item'
-    };
-    FB.ui( obj, function(){
-
-    });
-    return false;
-  });
+  }
+  return true;
 }

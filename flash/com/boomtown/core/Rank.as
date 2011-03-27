@@ -1,4 +1,5 @@
 ﻿package com.boomtown.core {
+  import flash.display.Bitmap;
   
   public class Rank {
     
@@ -7,6 +8,7 @@
     private var _title:String;
     private var _name:String;
     private var _level:uint;
+    private var _image:Bitmap;
     
     private var _next:Rank;
     private var _previous:Rank;
@@ -30,6 +32,9 @@
       }
       if ( data.level ) {
         _level = data.level;
+      }
+      if ( data.image ) {
+        _image = data.image;
       }
       if ( data.next ) {
         _next = data.next; 
@@ -57,6 +62,10 @@
     
     public function get level():uint {
       return _level;
+    }
+    
+    public function get image():Bitmap {
+      return _image;
     }
     
     public function get next():Rank {

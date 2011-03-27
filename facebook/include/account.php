@@ -22,6 +22,15 @@
       $canvas = urlencode( sys::setting( "facebook", "fbcanvas" ) );
       $current_datetime = sys::create_datetime( time() );
 
+      if( $code && !$access_token ) {
+        $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=";
+        $token_url .= $app_id;
+        $token_url .= "&redirect_uri=" . $canvas;
+        $token_url .= "&client_secret=" . $app_secret;
+        $token_url .= "&code=" . $code;
+        $access_token = facebook::graph_call( $token_url );
+      }
+
       $auth_url = "http://www.facebook.com/dialog/oauth?client_id=";
       $auth_url .= $app_id;
       $auth_url .= "&redirect_uri=";
@@ -56,14 +65,14 @@
 
       action::resume( "account" );
       
-        action::add( "logged_in", ( empty( $data['user_id'] ) || !$code ) ? 0 : 1 );
+        action::add( "logged_in", ( empty( $data['user_id'] ) ) ? 0 : 1 );
 
-        if( !empty( $data['user_id'] ) && $code ) {
+        if( !empty( $data['user_id'] ) ) {
           db::open( TABLE_USERS );
             db::where( "user_id", trim( $data['user_id'] ) );
           $user = db::result();
           db::clear_result();
-          if( !$user ) {            
+          if( !$user ) {
             $user_url = "https://graph.facebook.com/me?" . $access_token;
             $user = json_decode( facebook::graph_call( $user_url ), true );
 
@@ -100,22 +109,24 @@
           if( $user_updated + 60 * 60 * 24 * 2 < time() ) {
             $user_url = "https://graph.facebook.com/me?" . $access_token;
             $user_data = json_decode( facebook::graph_call( $user_url ), true );
-
-            db::open( TABLE_USERS );
-              db::set( "user_timezone", $user_data['timezone'] );
-              db::set( "user_name", $user_data['name'] );
-              db::set( "user_first_name", $user_data['first_name'] );
-              db::set( "user_last_name", $user_data['last_name'] );
-              db::set( "user_birthday", $user_data['birthday'] );
-              db::set( "user_email", $user_data['email'] );
-              db::set( "user_updated", $current_datetime );
-              db::where( "user_id", $user['user_id'] );
-            if( !db::update() ) {
-              sys::message(
-                USER_ERROR,
-                lang::phrase( "account/error/could_not_update_user/title" ),
-                lang::phrase( "account/error/could_not_update_user/body" )
-              );
+            $facebook_updated = strtotime( $user_data['updated_time'] );
+            if( $facebook_updated > $user_updated ) {
+              db::open( TABLE_USERS );
+                db::set( "user_timezone", $user_data['timezone'] );
+                db::set( "user_name", $user_data['name'] );
+                db::set( "user_first_name", $user_data['first_name'] );
+                db::set( "user_last_name", $user_data['last_name'] );
+                db::set( "user_birthday", $user_data['birthday'] );
+                db::set( "user_email", $user_data['email'] );
+                db::set( "user_updated", $current_datetime );
+                db::where( "user_id", $user['user_id'] );
+              if( !db::update() ) {
+                sys::message(
+                  USER_ERROR,
+                  lang::phrase( "account/error/could_not_update_user/title" ),
+                  lang::phrase( "account/error/could_not_update_user/body" )
+                );
+              }
             }
           }
           
@@ -142,6 +153,31 @@
       action::end();
 
 		}
+
+    public static function update_token() {
+
+      $code = sys::input( "code", null );
+      $response = sys::input( "response", null );
+      $user_id = sys::input( "user_id", null );
+      $app_id = sys::setting( "facebook", "fbapp_id" );
+      $app_secret = sys::setting( "facebook", "fbapp_secret" );
+      $canvas = urlencode( sys::setting( "facebook", "fbcanvas" ) );
+
+      if( $code && !$access_token ) {
+        $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=";
+        $token_url .= $app_id;
+        $token_url .= "&redirect_uri=" . $canvas;
+        $token_url .= "&client_secret=" . $app_secret;
+        $token_url .= "&code=" . $code;
+        $access_token = facebook::graph_call( $token_url );
+      }
+
+      if( $response = "token_only" ) {
+        echo $access_token;
+        exit();
+      }
+
+    }
 		
 	}
 

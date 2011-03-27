@@ -4,38 +4,49 @@
   import com.magasi.events.MagasiErrorEvent;
   import com.magasi.events.MagasiRequestEvent;
   import com.magasi.util.ActionRequest;
+  import flash.display.Bitmap;
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.EventDispatcher;
+  import flash.external.ExternalInterface;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
   import flash.net.URLVariables;
   
-  /**
-   * ...
-   * @author ...
-   */
   public class Commander extends EventDispatcher {
     
     private var _complete:Boolean = true;
+    private var _initialized:Boolean = false;
     
     private var _id:String;
+    private var _uid:String;
     private var _name:String;
     private var _experience:uint;
     private var _balance:uint;
+    private var _token:String;
     
     private var _faction:Faction;
     private var _rank:Rank;
     private var _commandCenter:CommandCenter;
     
-    public function Commander():void {
-      
+    private var _image:Bitmap;
+    
+    public function Commander( token:String ):void {
+      _token = token;
     }
     
     public function init( user_id:String ):void {
-      var commander:Sprite = ActionRequest.sendRequest( "commanders", "get_commander", { user_id:user_id } );
-      commander.addEventListener( MagasiRequestEvent.MAGASI_REQUEST, commanderLoaded );
-      commander.addEventListener( MagasiErrorEvent.USER_ERROR, userError );
+      if( user_id ) {
+        _uid = user_id;
+      }
+      if ( !_token ) {
+        refreshToken();
+      } else {
+        _initialized = true;
+        var commander:Sprite = ActionRequest.sendRequest( "commanders", "get_commander", { user_id:_uid } );
+        commander.addEventListener( MagasiRequestEvent.MAGASI_REQUEST, commanderLoaded );
+        commander.addEventListener( MagasiErrorEvent.USER_ERROR, userError );
+      }
     }
     
     private function userError( e:MagasiErrorEvent ):void {
@@ -123,6 +134,30 @@
       dispatchEvent( new Event( Event.COMPLETE ) );
     }
     
+    private var tokenRefreshEnabled:Boolean = false;
+    public function refreshToken():void {
+      if ( !tokenRefreshEnabled ) {
+        tokenRefreshEnabled = true;
+        ExternalInterface.addCallback( "tokenRefreshed", tokenRefreshed );
+      }
+      if ( ExternalInterface.call( "refreshToken" ) == null ) {
+        _token = XMLManager.getFile("settings").default_token.toString();
+        init(null);
+        KuroExpress.broadcast( { }, "No external interface available." );
+      } else {
+        KuroExpress.broadcast( { }, "Refreshing the current commander's token." );
+      }
+    }
+    
+    private function tokenRefreshed( token:String ):void {
+      _token = token;
+      if ( !_initialized ) {
+        init(null);
+      }
+      dispatchEvent( new Event( TOKEN_REFRESHED ) );
+      KuroExpress.broadcast( { }, "The current commander's token has been refreshed to:\n" + _token );
+    }
+    
     public function get id():String {
       return _id;
     }
@@ -153,6 +188,14 @@
     
     public function get complete():Boolean {
       return _complete;
+    }
+    
+    public function get token():String {
+      return _token;
+    }
+    
+    public function get TOKEN_REFRESHED():String {
+      return "token_refreshed";
     }
     
   }

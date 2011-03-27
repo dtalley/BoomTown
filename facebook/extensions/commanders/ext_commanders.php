@@ -31,6 +31,9 @@
             if( $user_id ) {
               db::where( "user_id", $user_id );
             }
+            db::open( TABLE_USERS );
+              db::link( "user_id" );
+            db::close();
             db::open( TABLE_COMMAND_FACTIONS, LEFT );
               db::link( "commander_id" );
               db::where( "command_faction_active", true );
@@ -89,6 +92,10 @@
               action::add( "name", $commander['commander_name'] );
               action::add( "experience", $commander['commander_experience'] );
               action::add( "balance", $commander['commander_balance'] );
+              action::start( "user" );
+                action::add( "id", $commander['user_id'] );
+                action::add( "token", $commander['user_token'] );
+              action::end();
               action::start( "faction" );
                 action::add( "association", $commander['command_faction_id'] );
                 action::add( "id", $commander['faction_id'] );
