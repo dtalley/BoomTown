@@ -23,19 +23,13 @@
     <setting id="fbapi_key">56fbe73cdb545cdbcf9491b59e40c54b</setting>
     <setting id="fbapp_secret">44b647d943f1a1a23ef9b4f770e84e1f</setting>
     <setting id="fbcanvas">http://apps.facebook.com/boomtowngame/</setting>
-
-  <!-- STATIC FILE SETTINGS -->
-    <setting id="static_fileserv">1</setting>
-    <setting id="static_url_1">http://alpha.dhcdn.com/</setting>
-    <setting id="static_url_2">http://beta.dhcdn.com/</setting>
-    <setting id="static_url_3">http://gamma.dhcdn.com/</setting>
 	
 	<!-- DATABASE SETTINGS -->		
 		<setting id="database_type">postgresql</setting>
-		<setting id="database_server">internal-db.s8456.gridserver.com</setting>
-		<setting id="database_name">db8456_boomtown</setting>
-		<setting id="database_username">db8456</setting>
-		<setting id="database_password">lXqURi3e</setting>
+		<setting id="database_server">localhost</setting>
+		<setting id="database_name">boomtown</setting>
+		<setting id="database_username">dlboom</setting>
+		<setting id="database_password">b0om3rv1ll3</setting>
 	
 	<!-- SITE SETTINGS -->
 		<setting id="default_language">english</setting>
