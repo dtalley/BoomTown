@@ -1,10 +1,13 @@
 ﻿package com.boomtown.modules.commandercreator {
   import com.boomtown.core.Commander;
+  import com.boomtown.loader.GraphicLoader;
   import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
   import flash.display.Bitmap;
+  import flash.display.GradientType;
   import flash.display.Sprite;
   import flash.events.Event;
+  import flash.geom.Matrix;
   import flash.text.TextField;
   import com.boomtown.modules.core.Module;
   
@@ -21,9 +24,27 @@
       super.open( commander );
       
       _background = new Sprite();
+      var tile:Bitmap = KuroExpress.createBitmap("GridTile");
+      _background.graphics.beginFill( 0x3f0000 );
+      _background.graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
+      _background.graphics.endFill();
+      var matr:Matrix = new Matrix();
+      matr.translate( 
+        0 - ( Math.floor( stage.stageWidth / 2 ) - ( Math.floor( stage.stageWidth / 2 / 16 ) * 16 ) + 16 ) - 2,
+        0 - ( Math.floor( stage.stageHeight / 2 ) - ( Math.floor( stage.stageHeight / 2 / 8 ) * 8 ) + 8 )
+      );
+      _background.graphics.beginBitmapFill( tile.bitmapData, matr );
+      _background.graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
+      _background.graphics.endFill();
+      KuroExpress.beginGradientFill( _background, stage.stageWidth, stage.stageHeight, GradientType.RADIAL, 0, [0x000000, 0x000000], [0, .6], [0x00, 0xFF] );
+      _background.graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
+      _background.graphics.endFill();
       
       addChild( _background );
       TweenLite.from( _background, .5, { alpha:0 } );
+      
+      var loader:GraphicLoader = new GraphicLoader( null, true );
+      addChild( loader );
       
       chooseName();
     }
