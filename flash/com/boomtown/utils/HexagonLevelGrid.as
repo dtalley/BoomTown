@@ -3,43 +3,49 @@
   
   public class HexagonLevelGrid {
     
-    public static function calculateLevel( index:Number ):Number {
+    public static function levelStart( level:uint ):uint {
+      return ( ( level * ( level - 1 ) ) / 2 ) * 6;
+    }
+    
+    public static function levelTotal( level:uint ):uint {
+      return level * 6;
+    }
+    
+    public static function level( index:uint ):uint {
       if ( index == 0 ) {
         return 0;
       } else if ( index < 7 ) {
         return 1;
       }
-      var a:Number = 1;
-      var b:Number = 1;
+      var a:int = 1;
+      var b:int = 1;
       var c:Number = 0 - Math.floor( ( index - 1 ) / 6 ) * 2;
       
       var quad:Number = ( (0 - b) + Math.sqrt( Math.pow( b, 2 ) - ( 4 * a * c ) ) ) / ( 2 * a );
-      return Number( Math.floor( quad ) + 1 );
+      return uint( Math.floor( quad ) + 1 );
     }
     
-    public static function calculateIndex( index:Number ):Number {
-      if ( index == 0 ) {
+    public static function index( i:Number ):Number {
+      if ( i == 0 ) {
         return 0;
-      } else if ( index < 7 ) {
-        return index - 1;
+      } else if ( i < 7 ) {
+        return i - 1;
       }
-      var level:Number = calculateLevel(index) - 1;
-      var total:Number = Number( ( level * ( level + 1 ) ) / 2 ) * 6;
-      return index - total - 1;
+      var _level:Number = level(i) - 1;
+      var _total:Number = Number( ( _level * ( _level + 1 ) ) / 2 ) * 6;
+      return i - _total - 1;
     }
     
-    public static function calculateOffset( i:Number, angle1:Number, angle2:Number, size1:Number, size2:Number ):Point {
-      var level:Number = calculateLevel(i);
-      var index:Number = calculateIndex(i);
-      var direction:Number = Math.floor( ( index ) / level );
-      var offset:Number = ( index + 1 ) - ( direction * level );
+    public static function offset( i:Number, angle1:Number, angle2:Number, size1:Number, size2:Number ):Point {
+      var _level:Number = level(i);
+      var _index:Number = index(i);
+      var direction:Number = Math.floor( ( _index ) / _level );
+      var offset:Number = ( _index + 1 ) - ( direction * _level );
       direction %= 6;
       if ( i == 0 ) {
         direction = 0;
         offset = 0;
       }
-      
-      trace( "Index: " + i + ", Level: " + level + ", Offset: " + index + ", PrimeDirection: " + direction + ", DirectionOffset: " + offset );
       
       var angle3:Number = 0;
       var angle4:Number = 0;
@@ -83,12 +89,10 @@
           size4 = size2;
           break;
       }
-      trace( "Angle1: " + angle3 + ", Angle2:" + angle4 );
+      
       angle3 *= Math.PI / 180;
       angle4 *= Math.PI / 180;
-      return new Point( Math.round( Math.cos( angle3 ) * level * size3 ) + Math.round( Math.cos( angle4 ) * offset * size4 ), Math.round( Math.sin( angle3 ) * level * size3 * -1 ) + Math.round( Math.sin( angle4 ) * offset * size4 * -1 ) );
-      //return new Point( Math.cos( angle3 ) * level * size3, Math.sin( angle3 ) * level * size3 * -1 );
-      //return new Point( Math.cos( angle4 ) * offset * size4, Math.sin( angle4 ) * offset * size4 * -1 );
+      return new Point( Math.cos( angle3 ) * _level * size3 + Math.cos( angle4 ) * offset * size4, Math.sin( angle3 ) * _level * size3 * -1 + Math.sin( angle4 ) * offset * size4 * -1 );
     }
     
   }

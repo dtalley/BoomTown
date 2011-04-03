@@ -34,7 +34,6 @@ define( "EMAIL_DIR", ROOT_DIR . "/" . $settings['email_dir'] );
 //Require some necessary files
 require_once( INCLUDE_DIR . "/account.php" );
 require_once( INCLUDE_DIR . "/action.php" );
-require_once( INCLUDE_DIR . "/authentication.php" );
 require_once( INCLUDE_DIR . "/constants.php" );
 require_once( INCLUDE_DIR . "/email.php" );
 require_once( INCLUDE_DIR . "/facebook.php" );
@@ -115,46 +114,50 @@ if( isset( $uri_split[0] ) && $uri_split[0] == "index.php" ) {
   $action = sys::input( "action", "" );
   $template = sys::input( "template", "" );
   $no_header = sys::input( "no_header", false );
-  if( $extension && $action ) {
-    action::start( "request" );
+  action::start( "request" );
+    if( $extension ) {
       action::add( "extension", $extension );
+    }
+    if( $action ) {
       action::add( "action", $action );
-      action::add( "template", $template );
-    action::end();
-    if( action::get( "settings/enable_accounts" ) ) {
-      account::initialize( false );
     }
-    if( sys::setting( "global", "maintenance_mode" ) ) {
-      if( !auth::test( "global", "bypass_maintenance" ) ) {
-        sys::message( MAINTENANCE_ERROR, "Maintenance Underway", sys::setting( "global", "maintenance_message" ) );
-      }
-    }
-    action::start( "request" );
-      action::add( "page", $path );
-      action::add( "self", $_SERVER['REQUEST_URI'] );
-      action::add( "urlencoded_self", urlencode( $_SERVER['REQUEST_URI'] ) );
-      action::add( "language", DEFAULT_LANG );
-      action::add( "root", RELATIVE_DIR );
-    action::end();
-    action::call( $extension, $action );
-    if( !$template ) {
-      action::remove( "settings" );
-    }
-    $response = action::response();
-    $response = $response->saveXML();
     if( $template ) {
-      process_template( explode("/",$template), $style_dir, $template_dir, $template_page );
-      tpl::initialize( $style_dir, $template_dir );
-      $response = tpl::load( $template_page );
-      
-    } else if( !$no_header ) {
-      header( "Content-type: text/xml" );
+      action::add( "template", $template );
     }
-    echo $response;
-    exit();
-  } else {
-    sys::message( APPLICATION_ERROR, lang::phrase( "main/missing_action_error/title" ), lang::phrase( "main/missing_action_error/body" ), __FILE__, __LINE__ );
+  action::end();
+  if( action::get( "settings/enable_accounts" ) ) {
+    account::initialize();
   }
+  if( sys::setting( "global", "maintenance_mode" ) ) {
+    sys::message( MAINTENANCE_ERROR, "Maintenance Underway", sys::setting( "global", "maintenance_message" ) );
+  }
+  action::start( "request" );
+    action::add( "page", $path );
+    action::add( "self", $_SERVER['REQUEST_URI'] );
+    action::add( "urlencoded_self", urlencode( $_SERVER['REQUEST_URI'] ) );
+    action::add( "language", DEFAULT_LANG );
+    action::add( "root", RELATIVE_DIR );
+    action::add( "domain", action::get( "settings/domain" ) );
+    action::add( "script", action::get( "settings/script_path" ) );
+  action::end();
+  if( $extension && $action ) {
+    action::call( $extension, $action );
+  }
+  if( !$template ) {
+    action::remove( "settings" );
+    action::remove( "extension_list" );
+  }
+  $response = action::response();
+  $response = $response->saveXML();
+  if( $template ) {
+    process_template( explode("/",$template), $style_dir, $template_dir, $template_page );
+    tpl::initialize( $style_dir, $template_dir );
+    $response = tpl::load( $template_page );
+  } else if( !$no_header ) {
+    header( "Content-type: text/xml" );
+  }
+  echo $response;
+  exit();
 } else {
   action::start( "request" );
     action::add( "page", $path );
@@ -187,10 +190,6 @@ if( isset( $uri_split[0] ) && $uri_split[0] == "index.php" ) {
     }
   }
   $bypass_maintenance = false;
-  if( auth::test( "global", "bypass_maintenance" ) ) {
-    error_reporting( E_ALL );
-    $bypass_maintenance = true;
-  }
   if( !$feed && $output_encoding ) {
     ob_start( "ob_gzhandler" );
   }

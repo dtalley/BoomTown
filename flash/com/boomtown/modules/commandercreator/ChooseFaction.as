@@ -17,6 +17,7 @@
     
     override public function close():void {
       super.close();
+      closed();
     }
     
   }

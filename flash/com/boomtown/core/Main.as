@@ -1,6 +1,8 @@
 ﻿package com.boomtown.core {
   import com.boomtown.loader.GraphicLoader;
+  import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
+  import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiErrorEvent;
@@ -16,7 +18,10 @@
   
   public class Main extends MovieClip {
     
+    private var _background:HexGridBackground;
     private var _commander:Commander;
+    
+    private var _loader:GraphicLoader;
     
     public function Main():void {      
       addEventListener( Event.ADDED_TO_STAGE, init );
@@ -24,6 +29,11 @@
     
     private function init( e:Event ):void {
       removeEventListener( Event.ADDED_TO_STAGE, init );
+      
+      _background = new HexGridBackground( 0x00193f, 12, 8 );
+      addChild( _background );
+      TweenLite.from( _background, .5, { alpha:0 } );
+      
       var style:String = loaderInfo.parameters && loaderInfo.parameters.style_dir ? loaderInfo.parameters.style_dir + "/flash/" : "";
       if ( style ) {
         KuroExpress.setFullURL( style );
@@ -51,13 +61,13 @@
         fonts.push( loaderFonts.font[i].toString() );
       }
       var fontLoader:Sprite = KuroExpress.loadFonts(fonts);
-      fontLoader.addEventListener( Event.COMPLETE, loaderFontsLoaded );
+      _loader = new GraphicLoader( 12, 8, null, { cycle:true, invert:true, color:0x98bfff } );
+      addChild( _loader );
+      KuroExpress.addListener( fontLoader, Event.COMPLETE, loaderFontsLoaded, fontLoader );
     }
     
-    private function loaderFontsLoaded( e:Event ):void {
-      if( e ) {
-        e.target.removeEventListener( Event.COMPLETE, loaderFontsLoaded );
-      }
+    private function loaderFontsLoaded( loader:Sprite ):void {
+      KuroExpress.removeListener( loader, Event.COMPLETE, loaderFontsLoaded );
       
       var allFonts:XMLList = XMLManager.getFile("settings").all_fonts;
       var total:int = allFonts.font.length();
@@ -77,6 +87,12 @@
         e.target.removeEventListener( Event.COMPLETE, allFontsLoaded );
       }
       
+      _loader.addEventListener( Event.COMPLETE, loaderDestroyed );
+      _loader.destroy();
+    }
+    
+    private function loaderDestroyed( e:Event ):void {
+      _loader.removeEventListener( Event.COMPLETE, loaderDestroyed );      
       loadCommander();
     }
     
@@ -98,13 +114,12 @@
       }
     }
     
-    private var loadedModules:Object = {};
     private function loadModule( id:String ):void {
-      if ( !loadedModules[id] ) {
-        var moduleLoader:Sprite = KuroExpress.loadAssetsFile( "modules/" + id + ".swf" );
+      var moduleLoader:Sprite = KuroExpress.loadAssetsFile( "modules/" + id + ".swf" );
+      if( moduleLoader ) {
         KuroExpress.addListener( moduleLoader, Event.COMPLETE, moduleLoaded, moduleLoader, id );
       } else {
-        openModule( id );
+        openModule(id);
       }
     }
     

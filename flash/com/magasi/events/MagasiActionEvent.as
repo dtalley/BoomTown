@@ -9,8 +9,9 @@
     private var _name:String;
     private var _body:String;
     private var _success:Boolean;
+    private var _extra:XMLList;
     
-    public function MagasiActionEvent( type:String, extension:String, action:String, title:String, name:String, body:String, success:Boolean ):void {
+    public function MagasiActionEvent( type:String, extension:String, action:String, title:String, name:String, body:String, success:Boolean, extra:XMLList = null ):void {
       super( type );
       _extension = extension;
       _action = action;
@@ -18,6 +19,7 @@
       _name = name;
       _body = body;
       _success = success;
+      _extra = extra;
     }
     
     public function get extension():String {
@@ -42,6 +44,10 @@
     
     public function get success():Boolean {
       return _success;
+    }
+    
+    public function get extra():XMLList {
+      return _extra;
     }
     
     public static function get MAGASI_ACTION():String { return "magasi_action"; }

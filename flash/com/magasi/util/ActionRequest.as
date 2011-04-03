@@ -1,5 +1,6 @@
 ﻿package com.magasi.util {
   import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.PostGenerator;
   import com.magasi.events.MagasiActionEvent;
   import com.magasi.events.MagasiErrorEvent;
   import com.magasi.events.MagasiMessageEvent;
@@ -8,6 +9,7 @@
   import flash.events.Event;
   import flash.events.IOErrorEvent;
   import flash.net.URLLoader;
+  import flash.net.URLLoaderDataFormat;
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
@@ -20,45 +22,37 @@
       _address = url;
     }
     
-    public static function sendRequest( extension:String, action:String, params:Object = null ):Sprite {
-      KuroExpress.broadcast( {}, "ActionRequest::sendRequest(): Sending request to " + extension + " for action " + action );
+    public static function sendRequest( params:Object = null ):Sprite {
+      KuroExpress.broadcast( {}, "ActionRequest::sendRequest(): Sending request." );
       
-      var request:URLRequest = new URLRequest( _address );
-      var uvars:URLVariables = new URLVariables();
-      if( params ) {
-        for ( var key:String in params ) {
-          uvars[key] = params[key];
-        }
-      }
-      uvars.extension = extension;
-      uvars.action = action;
-      request.method = URLRequestMethod.POST;
-      request.data = uvars;
+      var request:URLRequest = PostGenerator.getRequest( _address, params );
       
       var dispatcher:Sprite = new Sprite();
       var loader:URLLoader = new URLLoader();
-      KuroExpress.addListener( loader, Event.COMPLETE, requestLoaded, loader, extension, action, dispatcher );
-      loader.addEventListener( IOErrorEvent.IO_ERROR, requestError );
+      loader.dataFormat = URLLoaderDataFormat.BINARY;
+      KuroExpress.addListener( loader, Event.COMPLETE, requestLoaded, loader, dispatcher );
+      KuroExpress.addListener( loader, IOErrorEvent.IO_ERROR, requestError, loader );
       loader.load( request );
       
       return dispatcher;
       
     }
     
-    private static function requestError( e:IOErrorEvent ):void {
+    private static function requestError( loader:URLLoader ):void {
+      KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded );
+      KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, requestError );
       KuroExpress.broadcast( {}, "ActionRequest::requestError(): An error occurred in processing the request.", 0xFF0000 );
     }
     
-    private static function requestLoaded( loader:URLLoader, extension:String, action:String, dispatcher:Sprite ):void {      
-      if ( !KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded ) ) {
-        KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): Unable to remove request listener.", 0xFF0000 );
-      }
+    private static function requestLoaded( loader:URLLoader, dispatcher:Sprite ):void {      
+      KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded );
+      KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, requestError );
       
       try {
         var response:XML = new XML( loader.data );
       } catch ( e:Error ) { KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): XML document was malformed.\n\n" + loader.data, 0xFF0000 ) }
       
-      KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): Response from extension " + extension + " for action " + action + " was properly returned.", 0x00FF00 );
+      KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): Response from Magasi was properly returned.", 0x00FF00 );
       
       /**
        * Parse through all of the messages returned from Magasi and dispatch errors
@@ -125,7 +119,8 @@
           actionxml.title.toString(),
           actionxml.name.toString(),
           actionxml.message.toString(),
-          Boolean( actionxml.success.toString() ) 
+          Boolean( actionxml.success.toString() ),
+          actionxml.extra
         );
         dispatcher.dispatchEvent( act );
       }

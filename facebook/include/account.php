@@ -4,6 +4,7 @@
 		
 		public static function initialize( $call_hooks = true ) {
 
+      
       $error_reason = sys::input( "error_reason", "unknown_error" );
       $error = sys::input( "error", null );
       if( $error ) {
@@ -35,7 +36,7 @@
       $auth_url .= $app_id;
       $auth_url .= "&redirect_uri=";
       $auth_url .= $canvas;
-      $auth_url .= "&scope=user_birthday,email";
+      $auth_url .= "&scope=user_birthday,email,user_photos,offline_access";
 
       $signed_request = sys::input( "signed_request", null, SKIP_GET );
       if( $signed_request ) {
@@ -105,7 +106,11 @@
            * hasn't been pulled from Facebook in a while, pull it and update
            * their database entry.
            */
-          $user_updated = strtotime( $user['user_updated'] );
+          if( isset( $user['user_updated'] ) ) {
+            $user_updated = strtotime( $user['user_updated'] );
+          } else {
+            $user_updated = 0;
+          }
           if( $user_updated + 60 * 60 * 24 * 2 < time() ) {
             $user_url = "https://graph.facebook.com/me?" . $access_token;
             $user_data = json_decode( facebook::graph_call( $user_url ), true );
@@ -152,6 +157,10 @@
         }
       action::end();
 
+      if( $call_hooks ) {
+        sys::hook( "account_initialized" );
+      }
+
 		}
 
     public static function update_token() {
@@ -172,7 +181,7 @@
         $access_token = facebook::graph_call( $token_url );
       }
 
-      if( $response = "token_only" ) {
+      if( $response == "token_only" ) {
         echo $access_token;
         exit();
       }

@@ -103,7 +103,7 @@
     }
     
     private static function fontListProgress( e:ProgressEvent ):void {
-      var bytesLoaded:Number = ( e.bytesLoaded * 100 ) + Math.round( ( e.bytesLoaded / e.bytesTotal ) * 100 );
+      var bytesLoaded:Number = ( e.bytesLoaded ) + Math.round( ( e.bytesLoaded / e.bytesTotal ) );
       Sprite( e.target.parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, bytesLoaded, e.bytesTotal ) );
     }
     
@@ -153,9 +153,14 @@
      * application domain and return a sprite that can be
      * used to track the file's load progress.
      */
+    private static var _assets:Array = [];
 		public static function loadAssetsFile( file:String ):Sprite {
+      if ( _assets.indexOf( file ) >= 0 ) {
+        return null;
+      }
       KuroExpress.broadcast( { }, "Loading assets file: " + fullURL + file );
 			var request:URLRequest = new URLRequest( fullURL + file );
+      _assets.push( file );
 			var loader:Loader = new Loader();
 			var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
 			loader.load( request, context );

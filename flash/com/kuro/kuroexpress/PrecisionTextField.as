@@ -49,6 +49,7 @@
       _clip = new Sprite();
       _mask = new Sprite();
       _field = KuroExpress.createTextField( properties );
+      _backup = KuroExpress.createTextField( properties );
       _stage = new Bitmap( new BitmapData( 10, 10, true, 0x00000000 ), "auto", true );
       
       addChild( _holder );
@@ -60,7 +61,9 @@
     
     public function applyInput( width:Number ):void {
       KuroExpress.setTextFormat( _field, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
+      KuroExpress.setTextFormat( _backup, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
       _field.width = width;
+      _backup.width = width;
       _input = true;
       draw();
       
@@ -87,6 +90,7 @@
     
     public function applyFormatting( properties:Object ):void {
       KuroExpress.setTextFormat( _field, properties );
+      KuroExpress.setTextFormat( _backup, properties );
       draw();
     }
     
@@ -119,10 +123,17 @@
     }
     
     private function draw():void {
+      _backup.selectable = false;
+      _backup.setSelection( _field.selectionBeginIndex, _field.selectionEndIndex );
+      if ( _backup.text.length < _field.text.length ) {
+        for ( var i:int = 0; i < _field.text.length - _backup.text.length; i++ ) {
+          _backup.appendText("X");
+        }
+      }
       _stage.bitmapData = new BitmapData( _field.width, _field.height, true, 0x00000000 );
       var selectable:Boolean = _field.selectable;
       _field.selectable = false;
-      _stage.bitmapData.draw( _field, null, null, null, null, true );
+      _stage.bitmapData.draw( _field.type == TextFieldType.INPUT ? _backup : _field, null, null, null, null, true );
       _field.selectable = selectable;
       _rect = _stage.bitmapData.getColorBoundsRect( 0xFFFFFFFF, 0x00000000, false );
       _clip.graphics.clear();

@@ -1,4 +1,5 @@
 ﻿package com.boomtown.core {
+  import com.boomtown.events.CommanderEvent;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiErrorEvent;
@@ -43,7 +44,7 @@
         refreshToken();
       } else {
         _initialized = true;
-        var commander:Sprite = ActionRequest.sendRequest( "commanders", "get_commander", { user_id:_uid } );
+        var commander:Sprite = ActionRequest.sendRequest( { commanders_action:"get_commander", user_id:_uid } );
         commander.addEventListener( MagasiRequestEvent.MAGASI_REQUEST, commanderLoaded );
         commander.addEventListener( MagasiErrorEvent.USER_ERROR, userError );
       }
@@ -154,16 +155,28 @@
       if ( !_initialized ) {
         init(null);
       }
-      dispatchEvent( new Event( TOKEN_REFRESHED ) );
+      dispatchEvent( new CommanderEvent( CommanderEvent.TOKEN_REFRESHED ) );
       KuroExpress.broadcast( { }, "The current commander's token has been refreshed to:\n" + _token );
+    }
+    
+    public function save():void {
+      
     }
     
     public function get id():String {
       return _id;
     }
     
+    public function get uid():String {
+      return _uid;
+    }
+    
     public function get name():String {
       return _name;
+    }
+    
+    public function set name( val:String ):void {
+      _name = val;
     }
     
     public function get experience():uint {
@@ -178,12 +191,24 @@
       return _faction;
     }
     
+    public function set faction( val:Faction ):void {
+      _faction = val;
+    }
+    
     public function get commandCenter():CommandCenter {
       return _commandCenter;
     }
     
+    public function set commandCenter( val:CommandCenter ):void {
+      _commandCenter = val;
+    }
+    
     public function get rank():Rank {
       return _rank;
+    }
+    
+    public function set rank( val:Rank ):void {
+      _rank = val;
     }
     
     public function get complete():Boolean {
@@ -194,8 +219,12 @@
       return _token;
     }
     
-    public function get TOKEN_REFRESHED():String {
-      return "token_refreshed";
+    public function get image():Bitmap {
+      return _image;
+    }
+    
+    public function set image( val:Bitmap ):void {
+      _image = val;
     }
     
   }
