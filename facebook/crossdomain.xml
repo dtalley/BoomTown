@@ -1,4 +1,6 @@
 <?xml version="1.0" ?>
 <cross-domain-policy>
-<allow-access-from domain="dl.dropbox.com" />
+<allow-access-from domain="*.fbcdn.net" />
+<allow-access-from domain="a7.sphotos.ak.fbcdn.net" />
+<allow-access-from domain="*.sphotos.ak.fbcdn.net" />
 </cross-domain-policy>

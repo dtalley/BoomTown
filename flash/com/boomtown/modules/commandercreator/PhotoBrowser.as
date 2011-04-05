@@ -10,11 +10,12 @@ package com.boomtown.modules.commandercreator {
   import flash.events.MouseEvent;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
+  import flash.system.LoaderContext;
 	/**
    * ...
    * @author David Talley
    */
-  public class PhotoBrowser extends Sprite {
+  class PhotoBrowser extends Sprite {
     
     private var _photos:Array;
     private var _width:Number;
@@ -71,7 +72,7 @@ package com.boomtown.modules.commandercreator {
         var loader:Loader = new Loader();
         var request:URLRequest = new URLRequest( photo.source );
         KuroExpress.addListener( loader.contentLoaderInfo, Event.COMPLETE, photoLoaded, loader, clip, scale );
-        loader.load( request );
+        loader.load( request, new LoaderContext( true ) );
         _clips.push( clip );
       }
       

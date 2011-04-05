@@ -4,7 +4,7 @@ package com.boomtown.modules.commandercreator.events {
    * ...
    * @author David Talley
    */
-  public class CreatorScreenEvent extends Event{
+  public class CreatorScreenEvent extends Event {
     
     public function CreatorScreenEvent( type:String ) {
       super( type );
@@ -12,6 +12,10 @@ package com.boomtown.modules.commandercreator.events {
     
     public static function get SCREEN_SAVED():String {
       return "screen_saved";
+    }
+    
+    public static function get SAVE_COMMANDER():String {
+      return "save_commander";
     }
     
   }

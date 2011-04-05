@@ -1,8 +1,11 @@
 ﻿package com.boomtown.modules.commandercreator {
+  import com.adobe.images.JPGEncoder;
   import com.adobe.serialization.json.JSON;
   import com.boomtown.core.Commander;
+  import com.boomtown.events.CommanderEvent;
   import com.boomtown.gui.StandardButton;
   import com.boomtown.loader.GraphicLoader;
+  import com.boomtown.modules.commandercreator.events.CreatorScreenEvent;
   import com.boomtown.modules.commandercreator.events.PhotoBrowserEvent;
   import com.kuro.kuroexpress.PostGenerator;
   import com.kuro.kuroexpress.PrecisionTextField;
@@ -38,12 +41,13 @@
     
     private var _photosButton:StandardButton;
     private var _uploadButton:StandardButton;
+    private var _save:StandardButton;
     
     private var _thumbHeight:Number = 180;
     
     override public function open():void {
       _title = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:22, color:0xFFFFFF } );
-      _title.text = "STEP 1: COMMANDER PROFILE";
+      _title.text = "STEP 3: COMMANDER PROFILE";
       addChild( _title );
       _title.x = 50;
       _title.y = 50;
@@ -82,6 +86,7 @@
       addChild( _nameHolder );
       _nameHolder.x = _card.x + _card.width + 20;
       _nameHolder.y = _card.y;
+      _name.addEventListener( Event.CHANGE, nameChanged );
       
       if ( _commander.name ) {
         _name.text = _commander.name;
@@ -98,6 +103,24 @@
       
       _photosButton.addEventListener( MouseEvent.CLICK, useFacebookPhoto );
       _uploadButton.addEventListener( MouseEvent.CLICK, uploadPhoto );
+      
+      _save = new StandardButton( "Confirm" );
+      addChild( _save );
+      _save.x = stage.stageWidth - _save.width - 50;
+      _save.y = stage.stageHeight - _save.height - 20;
+      _save.addEventListener( MouseEvent.CLICK, saveCommander );
+      
+      if ( _commander.name && _commander.image ) {
+        _saved = true;
+      }
+    }
+    
+    private function saveCommander( e:MouseEvent ):void {
+      dispatchEvent( new CreatorScreenEvent( CreatorScreenEvent.SAVE_COMMANDER ) );
+    }
+    
+    private function nameChanged( e:Event ):void {
+      _saved = false;
     }
     
     private function uploadPhoto( e:MouseEvent ):void {
@@ -129,17 +152,19 @@
     private function fileUploaded( e:MagasiActionEvent ):void {
       if( e.extension == "commanders" && e.action == "upload_image" ) {
         e.target.removeEventListener( MagasiActionEvent.MAGASI_ACTION, fileUploaded );
-        _editor.load( XMLManager.getFile("settings").site_path + "uploads/commander_images/" + e.extra.filename.toString() );
+        _editor.load( XMLManager.getFile("settings").site_path + "uploads/temp_images/" + e.extra.filename.toString() );
+        _saved = false;
       }
     }
     
     private var facebookPhotoEnabled:Boolean = false;
     private function useFacebookPhoto( e:MouseEvent ):void {
+      _photosButton.disable();
       if ( !facebookPhotoEnabled ) {
         facebookPhotoEnabled = true;
         ExternalInterface.addCallback( "enablePhotos", enablePhotos );
       }
-      if ( ExternalInterface.call( "requestPhotos" ) == null ) {
+      if ( ExternalInterface.call( "requestPermissions", "user_photos" ) == null ) {
         enablePhotos(true);
       }
     }
@@ -152,18 +177,27 @@
         loadingText.x = _card.x;
         loadingText.y = _card.y + _card.height + 20;
         
-        var request:URLRequest = new URLRequest( "https://graph.facebook.com/me/albums?access_token=" + _commander.token );
-        var loader:URLLoader = new URLLoader();
-        KuroExpress.addListener( loader, Event.COMPLETE, albumsLoaded, loader, loadingText );
-        KuroExpress.addListener( loader, IOErrorEvent.IO_ERROR, albumsError, loader );
-        loader.load( request );
+        KuroExpress.addListener( _commander, CommanderEvent.TOKEN_REFRESHED, tokenReady, loadingText );
+        _commander.refreshToken();
       }
     }
     
-    private function albumsError( loader:URLLoader ):void {
+    private function tokenReady( ltext:TextField ):void {
+      KuroExpress.removeListener( _commander, CommanderEvent.TOKEN_REFRESHED, tokenReady );
+      
+      var request:URLRequest = new URLRequest( "https://graph.facebook.com/me/albums?access_token=" + _commander.token );
+      var loader:URLLoader = new URLLoader();
+      KuroExpress.addListener( loader, Event.COMPLETE, albumsLoaded, loader, ltext );
+      KuroExpress.addListener( loader, IOErrorEvent.IO_ERROR, albumsError, loader, ltext );
+      loader.load( request );
+    }
+    
+    private function albumsError( loader:URLLoader, ltext:TextField ):void {
       KuroExpress.removeListener( loader, Event.COMPLETE, albumsLoaded );
       KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, albumsError );
       KuroExpress.broadcast( this, "ChooseName::albumsError(): There was an error loading the user's albums.", 0xFF0000 );
+      ltext.text = "Error loading albums";
+      _photosButton.enable();
     }
     
     private function albumsLoaded( loader:URLLoader, ltext:TextField ):void {
@@ -205,6 +239,7 @@
     }
     
     private function photoClicked( e:PhotoBrowserEvent ):void {
+      _saved = false;
       _editor.load( e.photo );
     }
     
@@ -223,18 +258,35 @@
     }
     
     override public function save():void {
-      _commander.name = _name.text;
-      _commander.image = _editor.photo;
+      if( _name.text ) {
+        _commander.name = _name.text;
+      }
+      if( _editor.photo ) {
+        _commander.image = _editor.photo;
+      }
+      var encoder:JPGEncoder = new JPGEncoder(80);
+      encoder.addEventListener( Event.COMPLETE, imageEncoded );
+      encoder.encode( _commander.image.bitmapData );
+    }
+    
+    private function imageEncoded( e:Event ):void {
+      e.target.removeEventListener( Event.COMPLETE, imageEncoded );
+      _commander.imageData = JPGEncoder( e.target ).imageData;
       super.save();
     }
     
     override public function close():void {
       if ( _gallery ) {
         _gallery.destroy();
+        _gallery.removeEventListener( PhotoBrowserEvent.PHOTO_CLICKED, photoClicked );
       }
       if ( _editor ) {
         _editor.destroy();
       }
+      _name.removeEventListener( Event.CHANGE, nameChanged );
+      _save.removeEventListener( MouseEvent.CLICK, saveCommander );
+      _photosButton.removeEventListener( MouseEvent.CLICK, useFacebookPhoto );
+      _uploadButton.removeEventListener( MouseEvent.CLICK, uploadPhoto );
       super.close();
       closed();
     }

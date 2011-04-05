@@ -1,5 +1,8 @@
 ﻿package com.boomtown.core {
+  import com.boomtown.events.OpenModuleEvent;
+  import com.boomtown.events.PromptEvent;
   import com.boomtown.loader.GraphicLoader;
+  import com.boomtown.prompts.PromptManager;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
   import com.greensock.TweenLite;
@@ -7,7 +10,6 @@
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiErrorEvent;
   import com.magasi.util.ActionRequest;
-  import flash.display.MovieClip;
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.MouseEvent;
@@ -16,7 +18,7 @@
   import com.boomtown.modules.core.Module;
   import nl.demonsters.debugger.MonsterDebugger;
   
-  public class Main extends MovieClip {
+  public class Main extends Sprite {
     
     private var _background:HexGridBackground;
     private var _commander:Commander;
@@ -30,7 +32,7 @@
     private function init( e:Event ):void {
       removeEventListener( Event.ADDED_TO_STAGE, init );
       
-      _background = new HexGridBackground( 0x00193f, 12, 8 );
+      _background = new HexGridBackground( 0x222222, 12, 8 );
       addChild( _background );
       TweenLite.from( _background, .5, { alpha:0 } );
       
@@ -107,10 +109,41 @@
     }
     
     private function commanderReady( e:Event ):void {
+      begin();
+    }
+    
+    private function begin():void {
+      PromptManager.dispatcher.addEventListener( PromptEvent.PROMPT_ISSUED, promptIssued );
+      PromptManager.dispatcher.addEventListener( PromptEvent.CLOSE_PROMPT, closePrompt );
       if ( _commander.complete ) {
-        loadModule( "CommandBridge" );
+        loadModule( "WorldMap" );
       } else {
         loadModule( "CommanderCreator" );
+      }
+    }
+    
+    private var _prompts:uint = 0;
+    private var _promptBackground:HexGridBackground;
+    
+    private function promptIssued( e:PromptEvent ):void {
+      if ( !_promptBackground ) {
+        _promptBackground = new HexGridBackground( 0x111111, 12, 8 );
+        _promptBackground.alpha = .9;
+        addChild( _promptBackground );
+      }
+      addChild( e.prompt );
+      e.prompt.x = stage.stageWidth / 2 - e.prompt.width / 2;
+      e.prompt.y = stage.stageHeight / 2 - e.prompt.height / 2;
+      _prompts++;
+    }
+    
+    private function closePrompt( e:PromptEvent ):void {
+      if ( contains( e.prompt ) ) {
+        removeChild( e.prompt );
+        _prompts--;
+        if ( _prompts == 0 && contains( _promptBackground ) ) {
+          removeChild( _promptBackground );
+        }
       }
     }
     
@@ -132,20 +165,29 @@
     private function openModule( id:String ):void {
       if ( !this.loaderInfo.applicationDomain.hasDefinition( id ) ) {
         throw new Error( "Module \"" + id + "\" is not loaded or does not exist." );
+        return;
       }
       if ( !currentModule || currentModule.id != id ) {
         var newModule:Module = Module( KuroExpress.createAsset( id ) );
         if ( currentModule ) {
           KuroExpress.addListener( currentModule, Event.CLOSE, moduleClosed, currentModule, newModule );
+          currentModule.removeEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
+          currentModule.close();
         } else {
           addChild( newModule );
           newModule.open( _commander );
         }
         currentModule = newModule;
+        currentModule.addEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
       }
     }
     
+    private function moduleRequested( e:OpenModuleEvent ):void {
+      loadModule( e.module );
+    }
+    
     private function moduleClosed( oldModule:Module, newModule:Module ):void {
+      KuroExpress.removeListener( oldModule, Event.CLOSE, moduleClosed );
       if( contains( oldModule ) ) {
         removeChild( oldModule );
       }

@@ -19,14 +19,13 @@ package com.boomtown.gui {
       if( style ) {
         _style = style;
       }
-      _title = new PrecisionTextField( { font:_style.font ? _style.font : "BorisBlackBloxx", size:_style.size ? _style.size : 14, color:_style.fontColor ? _style.fontColor : 0xFFFFFF } );
+      _title = new PrecisionTextField( { font:_style.font ? _style.font : "BorisBlackBloxx", size:_style.size ? _style.size : 14, color:_style.fontColor != null ? _style.fontColor : 0xFFFFFF } );
       _title.text = title;
       
-      addEventListener( Event.ADDED_TO_STAGE, init );
+      init();
     }
     
-    private function init( e:Event ):void {
-      removeEventListener( Event.ADDED_TO_STAGE, init );
+    private function init():void {
       draw();
       
       if ( _style.width ) {
@@ -49,17 +48,25 @@ package com.boomtown.gui {
     
     private function draw( over:Boolean = false ):void {
       graphics.clear();
-      graphics.beginFill( over ? 0x000000 : ( _style.color ? _style.color : 0x0088FF ) );
+      graphics.beginFill( over ? ( _style.overColor ? _style.overColor : 0x000000 ) : ( _style.color ? _style.color : 0x0088FF ) );
       graphics.drawRoundRect( 0, 0, _style.width ? _style.width : ( _title.width + 10 ), _style.height ? _style.height : ( _title.height + 10 ), 5 );
       graphics.endFill();
     }
     
     private function mouseOver( e:MouseEvent ):void {
-      draw(true);
+      if( _enabled ) {
+        draw(true);
+      } else {
+        e.stopPropagation();
+      }
     }
     
     private function mouseOut( e:MouseEvent ):void {
-      draw();
+      if( _enabled ) {
+        draw();
+      } else {
+        e.stopPropagation();
+      }
     }
     
     private function mouseClick( e:MouseEvent ):void {
@@ -69,11 +76,16 @@ package com.boomtown.gui {
     }
     
     public function enable():void {
-      _enabled = true;
+      if( !_enabled ) {
+        _enabled = true;
+      }
     }
     
     public function disable():void {
-      _enabled = false;
+      if( _enabled ) {
+        _enabled = false;
+        draw(false);
+      }
     }
     
   }

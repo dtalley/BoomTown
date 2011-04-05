@@ -2,16 +2,16 @@
     class commanders {
 		
       public static function hook_account_initialized() {
-        $commanders_action = sys::input( "commanders_action", false, SKIP_GET );
+        $extension_actions = sys::input( "commanders_action", false, SKIP_GET );
         $actions = array(
           "get_commander",
           "save_commander",
           "upload_image"
         );
-        if( !is_array( $commanders_action ) ) {
-          $commanders_action = array( $commanders_action );
+        if( !is_array( $extension_actions ) ) {
+          $extension_actions = array( $extension_actions );
         }
-        foreach( $commanders_action as $action ) {
+        foreach( $extension_actions as $action ) {
           if( in_array( $action, $actions ) ) {
             call_user_func( "self::$action" );
           }
@@ -96,7 +96,6 @@
               action::add( "balance", $commander['commander_balance'] );
               action::start( "user" );
                 action::add( "id", $commander['user_id'] );
-                action::add( "token", $commander['user_token'] );
               action::end();
               action::start( "faction" );
                 action::add( "association", $commander['command_faction_id'] );
@@ -155,7 +154,165 @@
       }
 
       private function save_commander() {
-        
+        $user_id = sys::input( "user_id", "" );
+        $access_token = sys::input( "access_token", "" );
+
+        $response = facebook::graph_call( "me?access_token=" . $access_token );
+        $user = json_decode( $response, true );
+        if( $user['id'] !== $user_id ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/user_failed_authentication/title" ),
+            lang::phrase( "commanders/error/user_failed_authentication/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        $commander_name = sys::input( "commander_name", "" );
+        db::open( TABLE_COMMANDERS );
+          db::where( "user_id", $user_id );
+          db::where_or();
+          db::where( "commander_name", $commander_name );
+        $commander = db::result();
+        db::clear_result();
+        if( $commander ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/commander_already_exists/title" ),
+            lang::phrase( "commanders/error/commander_already_exists/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        $base_id = sys::input( "base_id", "" );
+        $faction_id = sys::input( "faction_id", "" );
+        $commander_image = sys::file( "commander_image", "" );
+
+        db::open( TABLE_BASES );
+          db::where( "base_id", $base_id );
+        $base = db::result();
+        db::clear_result();
+        if( !$base ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/invalid_base_id/title" ),
+            lang::phrase( "commanders/error/invalid_base_id/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        db::open( TABLE_FACTIONS );
+          db::where( "faction_id", $faction_id );
+        $faction = db::result();
+        db::clear_result();
+        if( !$faction ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/invalid_faction_id/title" ),
+            lang::phrase( "commanders/error/invalid_faction_id/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        if( !$commander_image ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/no_image_provided/title" ),
+            lang::phrase( "commanders/error/no_image_provided/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        db::open( TABLE_COMMANDERS );
+          db::set( "user_id", $user_id );
+          db::set( "commander_name", $commander_name );
+          db::set( "commander_experience", 0, false );
+          db::set( "commander_balance", 0, false );
+        if( !db::insert() ) {
+          sys::message(
+            SYSTEM_ERROR,
+            lang::phrase( "commanders/error/could_not_create_commander/title" ),
+            lang::phrase( "commanders/error/could_not_create_commander/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        db::open( TABLE_COMMANDERS );
+          db::where( "user_id", $user_id );
+        $commander = db::result();
+        db::clear_result();
+
+        db::open( TABLE_COMMAND_BASES );
+          db::set( "commander_id", $commander['commander_id'] );
+          db::set( "base_id", $base_id );
+          db::set( "command_base_acquired", "NOW()", false );
+          db::set( "command_base_active", true );
+          db::set( "command_base_bandwidth", 0, false );
+        if( !db::insert() ) {
+          sys::message(
+            SYSTEM_ERROR,
+            lang::phrase( "commanders/error/could_not_create_command_base/title" ),
+            lang::phrase( "commanders/error/could_not_create_command_base/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        db::open( TABLE_COMMAND_FACTIONS );
+          db::set( "commander_id", $commander['commander_id'] );
+          db::set( "faction_id", $faction_id );
+          db::set( "command_faction_joined", "NOW()", false );
+          db::set( "command_faction_active", true );
+          db::set( "command_faction_dropship_max", 0, false );
+          db::set( "command_faction_dropships", 0, false );
+        if( !db::insert() ) {
+          sys::message(
+            SYSTEM_ERROR,
+            lang::phrase( "commanders/error/could_not_create_command_faction/title" ),
+            lang::phrase( "commanders/error/could_not_create_command_faction/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        db::open( TABLE_RANKS );
+          db::order( "rank_order", "ASC" );
+          db::limit( 0, 1 );
+        $rank = db::result();
+        db::clear_result();
+
+        db::open( TABLE_COMMAND_RANKS );
+          db::set( "commander_id", $commander['commander_id'] );
+          db::set( "rank_id", $rank['rank_id'] );
+          db::set( "command_rank_achieved", "NOW()", false );
+          db::set( "command_rank_active", true );
+        if( !db::insert() ) {
+          sys::message(
+            SYSTEM_ERROR,
+            lang::phrase( "commanders/error/could_not_create_command_rank/title" ),
+            lang::phrase( "commanders/error/could_not_create_command_rank/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+
+        $split = explode( ".", $commander_image['name'] );
+        $extension = $split[count($split)-1];
+        if( !sys::copy_file( "commander_image", "uploads/commander_images", $commander['commander_id'] . "." . $extension ) ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "commanders/error/image_upload_failed/title" ),
+            lang::phrase( "commanders/error/image_upload_failed/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
+        }
+        action::resume( "actions" );
+          action::start( "action" );
+            action::add( "extension", "commanders" );
+            action::add( "action", "save_commander" );
+            action::add( "title", lang::phrase( "commanders/actions/save_commander/title" ) );
+            action::add( "name", "save_commander" );
+            action::add( "message", lang::phrase( "commanders/actions/save_commander/success" ) );
+            action::add( "success", 1 );
+          action::end();
+        action::end();
       }
 
       private function upload_image() {
@@ -188,7 +345,7 @@
         }
         $split = explode( ".", $commander_image['name'] );
         $extension = $split[count($split)-1];
-        if( !sys::copy_file( "commander_image", "uploads/commander_images", $user_id . "." . $extension ) ) {
+        if( !sys::copy_file( "commander_image", "uploads/temp_images", $user_id . "." . $extension ) ) {
           sys::message(
             USER_ERROR,
             lang::phrase( "commanders/error/image_upload_failed/title" ),

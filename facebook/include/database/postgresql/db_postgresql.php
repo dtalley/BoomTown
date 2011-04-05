@@ -903,7 +903,7 @@
 				$sql .= " ORDER BY " . $this->order;
 			}
 			if( $this->limit ) {
-				$sql .= " LIMIT " . $this->limit['start'] . " OFFSET " . $this->limit['total'];
+				$sql .= " LIMIT " . $this->limit['total'] . " OFFSET " . $this->limit['start'];
 			}
       if( $this->encased ) {
         $sql = "( " . $sql . " )";

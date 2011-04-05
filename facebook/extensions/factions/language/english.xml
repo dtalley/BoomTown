@@ -2,14 +2,15 @@
 
 <phrases>
 	
-	<commanders>
-		<title>Commanders</title>
-	</commanders>
+	<factions>
+		<title>Factions</title>
+    
+	</factions>
 	
 	<error>
-		<commanders>
+		<factions>
 			
-		</commanders>
+		</factions>
 	</error>
 
 </phrases>

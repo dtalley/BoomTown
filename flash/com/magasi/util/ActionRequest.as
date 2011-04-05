@@ -52,7 +52,7 @@
         var response:XML = new XML( loader.data );
       } catch ( e:Error ) { KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): XML document was malformed.\n\n" + loader.data, 0xFF0000 ) }
       
-      KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): Response from Magasi was properly returned.", 0x00FF00 );
+      KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): Response from Magasi was properly returned.", 0x00FF00 );
       
       /**
        * Parse through all of the messages returned from Magasi and dispatch errors
@@ -101,6 +101,7 @@
             break;
         }
         if ( evt != null ) {
+          KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): An error was encountered.\n\n" + evt.title + "\n" + evt.body, 0xFF0000 );
           dispatcher.dispatchEvent( evt );
         }
       }
@@ -122,6 +123,7 @@
           Boolean( actionxml.success.toString() ),
           actionxml.extra
         );
+        KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): An action was encountered, " + act.extension + ":: " + act.action );
         dispatcher.dispatchEvent( act );
       }
       

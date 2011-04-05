@@ -1,66 +1,63 @@
 ﻿package com.boomtown.modules.commandercreator {
+  import com.boomtown.core.CommandCenter;
   import com.boomtown.core.Commander;
-  import com.boomtown.core.Faction;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiRequestEvent;
   import com.magasi.util.ActionRequest;
   import flash.display.Sprite;
   import flash.events.Event;
-  import flash.net.URLRequest;
   import flash.text.TextField;
   
-  public class ChooseFaction extends CreatorScreen {
+  public class ChooseCommandCenter extends CreatorScreen {
     
-    public function ChooseFaction( commander:Commander ):void {      
+    public function ChooseCommandCenter( commander:Commander ):void {      
       super( commander );
     }
     
     private var _title:TextField;
     
-    private var _factions:Object;
+    private var _commandCenters:Object;
     
     override public function open():void {
       _title = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:22, color:0xFFFFFF } );
-      _title.text = "STEP 1: FACTION ALLEGIANCE";
+      _title.text = "STEP 2: HEADQUARTERS ASSIGNMENT";
       addChild( _title );
       _title.x = 50;
       _title.y = 50;
       
-      _factions = XMLManager.getFile("factions");
-      if ( _factions ) {
+      _commandCenters = XMLManager.getFile("commandCenters");
+      if ( _commandCenters ) {
         createSelection();
       } else {
         var loader:Sprite = ActionRequest.sendRequest( {
-          factions_action: "list_factions"
+          bases_action: "list_bases"
         });
-        KuroExpress.addFullListener( loader, MagasiRequestEvent.MAGASI_REQUEST, factionsLoaded, loader );
+        KuroExpress.addFullListener( loader, MagasiRequestEvent.MAGASI_REQUEST, commandCentersLoaded, loader );
       }
     }
     
-    private function factionsLoaded( loader:Sprite, e:MagasiRequestEvent ):void {
-      KuroExpress.removeListener( loader, MagasiRequestEvent.MAGASI_REQUEST, factionsLoaded );
-      XMLManager.addFile( "factions", e.data.factions.faction_list );
-      _factions = XMLManager.getFile("factions");      
+    private function commandCentersLoaded( loader:Sprite, e:MagasiRequestEvent ):void {
+      KuroExpress.removeListener( loader, MagasiRequestEvent.MAGASI_REQUEST, commandCentersLoaded );
+      XMLManager.addFile( "commandCenters", e.data.bases.base_list );
+      _commandCenters = XMLManager.getFile("commandCenters");      
       createSelection();
     }
     
     private var _selections:Array;
-    private var _selected:FactionChoice;
+    private var _selected:CommandCenterChoice;
     private function createSelection():void {
       _selections = [];
-      var total:uint = _factions.faction.length();
+      var total:uint = _commandCenters.base.length();
       for ( var i:int = 0; i < total; i++ ) {
-        var data:XML = _factions.faction[i];
-        var faction:Faction = new Faction();
-        faction.update( { id: data.id.toString() } );
-        faction.update( { title: data.title.toString() } );
-        faction.update( { name: data.name.toString() } );
-        faction.update( { description: data.description.toString() } );
-        faction.update( { acronym: data.acronym.toString() } );
-        faction.update( { population: uint( data.population.toString() ) } );
+        var data:XML = _commandCenters.base[i];
+        var commandCenter:CommandCenter = new CommandCenter();
+        commandCenter.update( { id: data.id.toString() } );
+        commandCenter.update( { title: data.title.toString() } );
+        commandCenter.update( { name: data.name.toString() } );
+        commandCenter.update( { description: data.description.toString() } );
         
-        var selection:FactionChoice = new FactionChoice( faction, 220, 400 );
+        var selection:CommandCenterChoice = new CommandCenterChoice( commandCenter, 320, 400 );
         addChild( selection );
         if ( i > 0 ) {
           selection.x = _selections[i - 1].x + _selections[i - 1].width + 20;
@@ -70,9 +67,9 @@
         selection.y = _title.y + _title.height + 20;
         _selections.push( selection );
         
-        KuroExpress.addListener( selection, Event.SELECT, factionSelected, selection );
+        KuroExpress.addListener( selection, Event.SELECT, commandCenterSelected, selection );
         
-        if ( _commander.faction && faction.id == _commander.faction.id ) {
+        if ( _commander.commandCenter && commandCenter.id == _commander.commandCenter.id ) {
           _selected = selection;
           _selected.select();
           _saved = true;
@@ -80,7 +77,7 @@
       }
     }
     
-    private function factionSelected( faction:FactionChoice ):void {
+    private function commandCenterSelected( faction:CommandCenterChoice ):void {
       if ( _selected ) {
         _selected.deselect();
       }
@@ -91,7 +88,7 @@
     
     override public function verify():Boolean {
       if ( !_selected ) {
-        KuroExpress.broadcast( this, "ChooseFaction::verify(): No selection made.", 0xFF0000 );
+        KuroExpress.broadcast( this, "ChooseCommandCenter::verify(): No selection made.", 0xFF0000 );
         return false;
       }
       return true;
@@ -99,7 +96,7 @@
     
     override public function save():void {
       if( _selected ) {
-        _commander.faction = _selected.faction;
+        _commander.commandCenter = _selected.commandCenter;
       }
       super.save();
     }
@@ -107,7 +104,7 @@
     override public function close():void {
       var total:uint = _selections.length;
       for ( var i:int = 0; i < total; i++ ) {
-        KuroExpress.removeListener( _selections[i], Event.SELECT, factionSelected );
+        KuroExpress.removeListener( _selections[i], Event.SELECT, commandCenterSelected );
       }
       super.close();
       closed();
@@ -117,7 +114,7 @@
   
 }
 
-import com.boomtown.core.Faction;
+import com.boomtown.core.CommandCenter;
 import com.boomtown.gui.StandardButton;
 import com.kuro.kuroexpress.KuroExpress;
 import com.kuro.kuroexpress.XMLManager;
@@ -127,19 +124,18 @@ import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFormatAlign;
 
-class FactionChoice extends Sprite {
+class CommandCenterChoice extends Sprite {
   
-  private var _faction:Faction;
+  private var _commandCenter:CommandCenter;
   private var _width:Number;
   private var _height:Number;
   
   private var _title:TextField;
-  private var _acronym:TextField;
   private var _description:TextField;
   private var _select:StandardButton;
   
-  public function FactionChoice( faction:Faction, width:Number, height:Number ):void {
-    _faction = faction;
+  public function CommandCenterChoice( commandCenter:CommandCenter, width:Number, height:Number ):void {
+    _commandCenter = commandCenter;
     _width = width;
     _height = height;
     
@@ -147,36 +143,22 @@ class FactionChoice extends Sprite {
   }
   
   private function init( e:Event ):void {
-    removeEventListener( Event.ADDED_TO_STAGE, init );
-    
-    var dark:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].dark );
-    var medium:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].medium );
-    var light:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].light );
-    var alternate:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].alternate );
-    
+    removeEventListener( Event.ADDED_TO_STAGE, init );    
     draw();
     
     _title = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:16, color:0xFFFFFF, width:_width - 40, wordWrap:true, align:TextFormatAlign.CENTER } );
-    _title.text = _faction.title;
+    _title.text = _commandCenter.title;
     addChild( _title );
     _title.x = 20;
     _title.y = 20;
     
-    _acronym = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:12, color:light } );
-    _acronym.text = _faction.acronym;
-    addChild( _acronym );
-    _acronym.x = _width / 2 - _acronym.width / 2;
-    _acronym.y = _title.y + _title.height + 10;
-    
     _description = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:10, color:0xFFFFFF, width:_width - 40, wordWrap:true } );
-    _description.text = _faction.description;
+    _description.text = _commandCenter.description;
     addChild( _description );
     _description.x = 20;
-    _description.y = _acronym.y + _acronym.height + 40;
+    _description.y = _title.y + _title.height + 40;
     
     _select = new StandardButton( "SELECT", { 
-      color:medium,
-      overColor:light,
       width: _width - 40,
       height: 50
     } );
@@ -191,8 +173,8 @@ class FactionChoice extends Sprite {
   }
   
   private function draw( selected:Boolean = false ):void {
-    var dark:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].dark );
-    var medium:uint = uint( XMLManager.getFile("settings").primary_faction_colors[_faction.name].medium );
+    var dark:uint = 0x0044AA;
+    var medium:uint = 0x0088FF;
     
     graphics.clear();
     graphics.beginFill( selected ? medium : dark );
@@ -223,8 +205,8 @@ class FactionChoice extends Sprite {
     return _height;
   }
   
-  public function get faction():Faction {
-    return _faction;
+  public function get commandCenter():CommandCenter {
+    return _commandCenter;
   }
   
 }

@@ -345,12 +345,14 @@
     }
     
     public static function removeListener( obj:IEventDispatcher, event:String, listener:Function ):Boolean {
-      var total:int = listeners[event].length;
-      for ( var i:int = 0; i < total; i++ ) {
-        if ( listeners[event][i].object == obj && listeners[event][i].listener == listener ) {
-          obj.removeEventListener( event, listeners[event][i].delegate );
-          listeners[event].splice( i, 1 );
-          return true;
+      if( listeners[event] ) {
+        var total:int = listeners[event].length;
+        for ( var i:int = 0; i < total; i++ ) {
+          if ( listeners[event][i].object == obj && listeners[event][i].listener == listener ) {
+            obj.removeEventListener( event, listeners[event][i].delegate );
+            listeners[event].splice( i, 1 );
+            return true;
+          }
         }
       }
       return false;

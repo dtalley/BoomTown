@@ -1,6 +1,8 @@
 ﻿package com.boomtown.modules.commandercreator {
   import com.boomtown.core.Commander;
   import com.boomtown.core.HexGridBackground;
+  import com.boomtown.events.CommanderEvent;
+  import com.boomtown.events.OpenModuleEvent;
   import com.boomtown.gui.StandardButton;
   import com.boomtown.loader.GraphicLoader;
   import com.boomtown.modules.commandercreator.events.CreatorScreenEvent;
@@ -30,7 +32,7 @@
     
     private var _end:Boolean = false;
     
-    private var _order:Array = ["ChooseName", "ChooseFaction", "ChooseCommandCenter", "ConfirmCommander"];
+    private var _order:Array = ["ChooseFaction", "ChooseCommandCenter", "ChooseName"];
     
     public function CommanderCreator():void {
       _id = "CommanderCreator";
@@ -45,59 +47,62 @@
       _next = new StandardButton( "Next" );
       _prev = new StandardButton( "Previous" );
       _confirm = new StandardButton( "Confirm" );
+      _next.alpha = _prev.alpha = _confirm.alpha = 0;
       KuroExpress.addListener( _next, MouseEvent.CLICK, nextClicked );
       KuroExpress.addListener( _prev, MouseEvent.CLICK, prevClicked );
       KuroExpress.addListener( _confirm, MouseEvent.CLICK, confirmClicked );
       
-      chooseName();
+      switchScreen( _order[0], false );
     }
     
     private function chooseName( oride:Boolean = false ):void {
-      if ( _commander.name && !oride ) {
-        chooseFaction();
-      }
       loadScreen( "ChooseName" );
-      disablePrevious();
-      enableNext();
-      enableConfirm();
+      toggleButtons( "ChooseName" );
+      _end = true;
     }
     
     private function chooseFaction( oride:Boolean = false ):void {
       if ( _commander.faction && !oride ) {
-        chooseCommandCenter();
+        switchScreen( _order[_order.indexOf("ChooseFaction") + 1] );
       }
       loadScreen( "ChooseFaction" );
-      enablePrevious();
-      enableNext();
-      enableConfirm();
+      toggleButtons( "ChooseFaction" );
     }
     
     private function chooseCommandCenter( oride:Boolean = false ):void {
       if ( _commander.commandCenter && !oride ) {
-        confirmCommander();
+        switchScreen( _order[_order.indexOf("ChooseCommandCenter") + 1] );
       }
       loadScreen( "ChooseCommandCenter" );
-      enablePrevious();
-      enableNext();
-      enableConfirm();
+      toggleButtons( "ChooseCommandCenter" );
     }
     
-    private function confirmCommander():void {
-      loadScreen( "ConfirmCommander" );
-      enablePrevious();
-      disableNext();
-      disableConfirm();
-      _end = true;
+    private function toggleButtons( id:String ):void {
+      if( _order.indexOf(id) == 0 ) {
+        disablePrevious();
+      } else {
+        enablePrevious();
+      }
+      if( _order.indexOf(id) == _order.length-1 ) {
+        disableNext();
+      } else {
+        enableNext();
+      }
+      if( _order.indexOf(id) >= _order.length - 2 ) {
+        disableConfirm();
+      } else {
+        enableConfirm();
+      }
     }
     
     private function nextClicked():void {
       if ( _screen ) {
+        if ( !_screen.verify() ) {
+          return;
+        }
         var screen:String = getQualifiedClassName( _screen );
         screen = screen.substr( screen.lastIndexOf("::") + 2 );
         if ( _order.indexOf(screen) == _order.length - 1 ) {
-          return;
-        }
-        if ( !_screen.verify() ) {
           return;
         }
         var target:String = _order[_order.indexOf(screen) + 1];
@@ -112,31 +117,30 @@
         if ( _order.indexOf(screen) == 0 ) {
           return;
         }
-        if ( !_screen.verify() ) {
-          return;
-        }
         var target:String = _order[_order.indexOf(screen) - 1];
         switchScreen(target);
       }
     }
     
     private function confirmClicked():void {
-      
+      if ( _screen ) {
+        if ( !_screen.verify() ) {
+          return;
+        }
+        switchScreen(_order[_order.length - 1]);
+      }
     }
     
-    private function switchScreen( id:String ):void {
+    private function switchScreen( id:String, oride:Boolean = true ):void {
       switch( id ) {
         case "ChooseName":
-          chooseName(true);
+          chooseName(oride);
           break;
         case "ChooseFaction":
-          chooseFaction(true);
+          chooseFaction(oride);
           break;
         case "ChooseCommandCenter":
-          chooseCommandCenter(true);
-          break;
-        case "ConfirmCommander":
-          confirmCommander();
+          chooseCommandCenter(oride);
       }
     }
     
@@ -181,9 +185,14 @@
       disableButton( _confirm );
     }
     
+    private function disableButtons():void {
+      _next.disable();
+      _prev.disable();
+      _confirm.disable();
+    }
+    
     private function enableButton( btn:StandardButton ):void {
       btn.enable();
-      btn.alpha = 0;
       TweenLite.to( btn, .3, { alpha:1 } );
     }
     
@@ -203,6 +212,7 @@
           _screen.save();
         } else {
           KuroExpress.removeListener( _screen, CreatorScreenEvent.SCREEN_SAVED, loadScreen );
+          KuroExpress.removeListener( _screen, CreatorScreenEvent.SAVE_COMMANDER, saveCommander );
           var old:CreatorScreen = _screen;
           _screen = null;
           KuroExpress.addListener( old, Event.CLOSE, loadScreen, id, old );
@@ -212,8 +222,44 @@
       }
       var screenClass:Class = KuroExpress.getAsset("com.boomtown.modules.commandercreator." + id);
       _screen = new screenClass(_commander);
+      KuroExpress.addListener( _screen, CreatorScreenEvent.SAVE_COMMANDER, saveCommander );
       addChild( _screen );
       _screen.open();
+    }
+    
+    private function saveCommander():void {
+      KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen has requested that the commander be saved." );
+      if ( !_screen.verify() ) {
+        return;
+      }
+      disableButtons();
+      if ( !_screen.saved ) {
+        KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen needs to save information first." );
+        KuroExpress.addListener( _screen, CreatorScreenEvent.SCREEN_SAVED, saveCommander );
+        _screen.save();
+        return;
+      }
+      KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen is saved, so now we can save the commander information." );
+      KuroExpress.removeListener( _screen, CreatorScreenEvent.SCREEN_SAVED, saveCommander );
+      KuroExpress.removeListener( _screen, CreatorScreenEvent.SAVE_COMMANDER, saveCommander );
+      
+      if ( !_commander.verify() ) {
+        return;
+      }
+      _commander.addEventListener( CommanderEvent.COMMANDER_SAVED, commanderSaved );    
+      _commander.save();
+    }
+    
+    private function commanderSaved( e:CommanderEvent ):void {
+      KuroExpress.broadcast( this, "CommanderCreator::commanderSaved(): Commander indicated that info is saved." );
+      _commander.removeEventListener( CommanderEvent.COMMANDER_SAVED, commanderSaved );      
+      _commander.addEventListener( Event.COMPLETE, commanderReady );
+      _commander.init(null);
+    }
+    
+    private function commanderReady( e:Event ):void {
+      _commander.removeEventListener( Event.COMPLETE, commanderReady );
+      dispatchEvent( new OpenModuleEvent( OpenModuleEvent.OPEN_MODULE, "WorldMap" ) );
     }
     
     override public function close():void {

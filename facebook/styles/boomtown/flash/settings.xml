@@ -5,12 +5,33 @@
   <magasi_url>http://boomtowngame.com/facebook/index.php</magasi_url>
   <site_path>http://boomtowngame.com/facebook/</site_path>
   <default_user>100002260212840</default_user>
-  <default_token>202115116472856|2.d4DFA_e1uVlmNfM5LpiKtA__.3600.1301806800-100002260212840|GSTtTFk5NYT-pJ1Hymk2b8voXWU</default_token>
+  <default_token>202115116472856|2.d6nSg5fKgr6tOv8TMUNoHQ__.3600.1301907600-100002260212840|6HLc6s36ldzP-yWbjKOqa9aPCPU</default_token>
 
   <loader_fonts>
-    <font>font01</font>
+    <font>BorisBlackBloxx</font>
   </loader_fonts>
 
   <all_fonts>    
   </all_fonts>
+
+  <primary_faction_colors>
+    <norton-mcdowell_industries>
+      <dark>0x00193f</dark>
+      <medium>0x003388</medium>
+      <light>0x98bfff</light>
+      <alternate>0xffcc00</alternate>
+    </norton-mcdowell_industries>
+    <the_environmental_liberation_force>
+      <dark>0x1f3f00</dark>
+      <medium>0x568800</medium>
+      <light>0xcdff98</light>
+      <alternate>0xFFFFFF</alternate>
+    </the_environmental_liberation_force>
+    <the_global_defense_and_assault_movement>
+      <dark>0x3f0000</dark>
+      <medium>0x880000</medium>
+      <light>0xff9898</light>
+      <alternate>0x000000</alternate>
+    </the_global_defense_and_assault_movement>
+  </primary_faction_colors>
 </settings>

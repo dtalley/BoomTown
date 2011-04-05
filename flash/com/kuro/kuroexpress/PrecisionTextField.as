@@ -43,6 +43,7 @@
     private var _useBackground:Boolean = true;
     
     private var _updateTimer:Timer;
+    private var _oldText:String;
     
     public function PrecisionTextField( properties:Object ):void {
       _holder = new Sprite();
@@ -57,6 +58,12 @@
       _holder.addChild( _mask );
       _mask.addChild( _field );
       _clip.mask = _mask;
+      
+      _field.addEventListener( Event.CHANGE, fieldChanged );
+    }
+    
+    private function fieldChanged( e:Event ):void {
+      draw();
     }
     
     public function applyInput( width:Number ):void {
@@ -123,17 +130,19 @@
     }
     
     private function draw():void {
-      _backup.selectable = false;
-      _backup.setSelection( _field.selectionBeginIndex, _field.selectionEndIndex );
-      if ( _backup.text.length < _field.text.length ) {
-        for ( var i:int = 0; i < _field.text.length - _backup.text.length; i++ ) {
-          _backup.appendText("X");
+      if( _input ) {
+        _backup.selectable = false;
+        _backup.setSelection( _field.selectionBeginIndex, _field.selectionEndIndex );
+        if ( _backup.text.length < _field.text.length ) {
+          for ( var i:int = 0; i < _field.text.length - _backup.text.length; i++ ) {
+            _backup.appendText("X");
+          }
         }
       }
       _stage.bitmapData = new BitmapData( _field.width, _field.height, true, 0x00000000 );
       var selectable:Boolean = _field.selectable;
       _field.selectable = false;
-      _stage.bitmapData.draw( _field.type == TextFieldType.INPUT ? _backup : _field, null, null, null, null, true );
+      _stage.bitmapData.draw( _input ? _backup : _field, null, null, null, null, true );
       _field.selectable = selectable;
       _rect = _stage.bitmapData.getColorBoundsRect( 0xFFFFFFFF, 0x00000000, false );
       _clip.graphics.clear();
@@ -151,10 +160,14 @@
         _clip.visible = false;
         _clip.graphics.beginFill( uint( _field.defaultTextFormat.color ) );
       }
-      _clip.graphics.drawRect( 0, 0, _field.width, _field.height );
+      _clip.graphics.drawRect( 0, 0, _rect.width, _rect.height );
       _clip.graphics.endFill();
       _holder.x = 0 - _rect.x;
       _holder.y = 0 - _rect.y;
+      if ( !_oldText || _oldText != _field.text ) {
+        dispatchEvent( new Event( Event.CHANGE ) );
+        _oldText = _field.text;
+      }
     }
     
     public function set text( val:String ):void {

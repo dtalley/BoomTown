@@ -24,6 +24,10 @@
       }
     }
     
+    public static function addFile( id:String, content:Object ):void {
+      _xml[id] = content;
+    }
+    
     public static function purgeFile( id:String ):Boolean {
       if( _xml[id] ) {
         _xml[id] = null;
@@ -32,7 +36,7 @@
       return false;
     }
     
-    public static function getFile( id:String ):XML {
+    public static function getFile( id:String ):Object {
       if ( _xml[id] ) {
         return _xml[id];
       }

@@ -124,14 +124,6 @@ if( isset( $uri_split[0] ) && $uri_split[0] == "index.php" ) {
     if( $template ) {
       action::add( "template", $template );
     }
-  action::end();
-  if( action::get( "settings/enable_accounts" ) ) {
-    account::initialize();
-  }
-  if( sys::setting( "global", "maintenance_mode" ) ) {
-    sys::message( MAINTENANCE_ERROR, "Maintenance Underway", sys::setting( "global", "maintenance_message" ) );
-  }
-  action::start( "request" );
     action::add( "page", $path );
     action::add( "self", $_SERVER['REQUEST_URI'] );
     action::add( "urlencoded_self", urlencode( $_SERVER['REQUEST_URI'] ) );
@@ -140,6 +132,10 @@ if( isset( $uri_split[0] ) && $uri_split[0] == "index.php" ) {
     action::add( "domain", action::get( "settings/domain" ) );
     action::add( "script", action::get( "settings/script_path" ) );
   action::end();
+  sys::hook( "account_initialized" );
+  if( sys::setting( "global", "maintenance_mode" ) ) {
+    sys::message( MAINTENANCE_ERROR, "Maintenance Underway", sys::setting( "global", "maintenance_message" ) );
+  }
   if( $extension && $action ) {
     action::call( $extension, $action );
   }

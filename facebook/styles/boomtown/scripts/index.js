@@ -44,3 +44,14 @@ function refreshToken() {
   }
   return true;
 }
+
+function requestPermissions( perms ) {
+  FB.login(function(response){
+    var enabled = false;
+    if( response.session && response.perms && response.perms === perms ) {
+      enabled = true;
+    }
+    swfobject.getObjectById( "gameflash" ).enablePhotos( enabled );
+  }, {perms:perms});
+  return true;
+}

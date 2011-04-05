@@ -35,9 +35,7 @@
             <img src="{$style_dir}/images/main_header.jpg" id="header" /><br />
             <div id="content">
               <xsl:variable name="flashvars">
-                <xsl:text>token=</xsl:text>
-                <xsl:value-of select="facebook/token" />
-                <xsl:text>&amp;app_id=</xsl:text>
+                <xsl:text>app_id=</xsl:text>
                 <xsl:value-of select="facebook/app_id" />
                 <xsl:text>&amp;canvas=</xsl:text>
                 <xsl:value-of select="facebook/canvas" />

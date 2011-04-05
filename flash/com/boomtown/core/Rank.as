@@ -14,7 +14,9 @@
     private var _previous:Rank;
     
     public function Rank( data:Object = null ):void {      
-      update( data );
+      if( data ) {
+        update( data );
+      }
     }
     
     public function update( data:Object ):void {

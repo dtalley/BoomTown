@@ -17,7 +17,7 @@ package com.boomtown.modules.commandercreator {
    * ...
    * @author David Talley
    */
-  public class PhotoEditor extends Sprite {
+  class PhotoEditor extends Sprite {
     
     private var _width:Number, _height:Number;
     private var _mask:Sprite;
@@ -129,10 +129,12 @@ package com.boomtown.modules.commandercreator {
     }
     
     public function destroy():void {
-      KuroExpress.removeListener( _clip, MouseEvent.MOUSE_DOWN, photoDown );
-      photoUp();
-      _clip.removeChild( _photo );
-      removeChild( _clip );
+      if( _clip ) {
+        KuroExpress.removeListener( _clip, MouseEvent.MOUSE_DOWN, photoDown );
+        _clip.removeChild( _photo );
+        removeChild( _clip );
+        photoUp();
+      }
     }
     
     override public function get width():Number {

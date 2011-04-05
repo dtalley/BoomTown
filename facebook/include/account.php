@@ -4,7 +4,6 @@
 		
 		public static function initialize( $call_hooks = true ) {
 
-      
       $error_reason = sys::input( "error_reason", "unknown_error" );
       $error = sys::input( "error", null );
       if( $error ) {
@@ -17,6 +16,9 @@
 
       $code = sys::input( "code", null );
       $access_token = sys::input( "access_token", null );
+      if( substr( $access_token, 0, 11 ) !== "access_token" ) {
+        $access_token = "access_token=" . $access_token;
+      }
       $app_id = sys::setting( "facebook", "fbapp_id" );
       $api_key = sys::setting( "facebook", "fbapi_key" );
       $app_secret = sys::setting( "facebook", "fbapp_secret" );
@@ -24,7 +26,7 @@
       $current_datetime = sys::create_datetime( time() );
 
       if( $code && !$access_token ) {
-        $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=";
+        $token_url  = "oauth/access_token?client_id=";
         $token_url .= $app_id;
         $token_url .= "&redirect_uri=" . $canvas;
         $token_url .= "&client_secret=" . $app_secret;
@@ -36,7 +38,7 @@
       $auth_url .= $app_id;
       $auth_url .= "&redirect_uri=";
       $auth_url .= $canvas;
-      $auth_url .= "&scope=user_birthday,email,user_photos,offline_access";
+      $auth_url .= "&scope=user_birthday,email";
 
       $signed_request = sys::input( "signed_request", null, SKIP_GET );
       if( $signed_request ) {
@@ -74,9 +76,6 @@
           $user = db::result();
           db::clear_result();
           if( !$user ) {
-            $user_url = "https://graph.facebook.com/me?" . $access_token;
-            $user = json_decode( facebook::graph_call( $user_url ), true );
-
             db::open( TABLE_USERS );
               db::set( "user_id", trim( $data['user_id'] ) );
               db::set( "user_created", $current_datetime );
@@ -112,9 +111,12 @@
             $user_updated = 0;
           }
           if( $user_updated + 60 * 60 * 24 * 2 < time() ) {
-            $user_url = "https://graph.facebook.com/me?" . $access_token;
-            $user_data = json_decode( facebook::graph_call( $user_url ), true );
-            $facebook_updated = strtotime( $user_data['updated_time'] );
+            $user_data = json_decode( facebook::graph_call( "me?" . $access_token ), true );
+            if( isset( $user_data['updated_time'] ) ) {
+              $facebook_updated = strtotime( $user_data['updated_time'] );
+            } else {
+              $facebook_updated = 0;
+            }
             if( $facebook_updated > $user_updated ) {
               db::open( TABLE_USERS );
                 db::set( "user_timezone", $user_data['timezone'] );
@@ -152,9 +154,6 @@
         action::add( "api_key", $api_key );
         action::add( "canvas", $canvas );
         action::add( "auth_url", $auth_url );
-        if( $access_token ) {
-          action::add( "token", $access_token );
-        }
       action::end();
 
       if( $call_hooks ) {
