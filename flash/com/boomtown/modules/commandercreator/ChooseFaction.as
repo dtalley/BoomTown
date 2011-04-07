@@ -91,7 +91,8 @@
     
     override public function verify():Boolean {
       if ( !_selected ) {
-        KuroExpress.broadcast( this, "ChooseFaction::verify(): No selection made.", 0xFF0000 );
+        KuroExpress.broadcast( "No selection made.", 
+          { obj:this, label:"ChooseFaction::verify()", color:0xFF0000 } );
         return false;
       }
       return true;

@@ -88,7 +88,8 @@
     
     override public function verify():Boolean {
       if ( !_selected ) {
-        KuroExpress.broadcast( this, "ChooseCommandCenter::verify(): No selection made.", 0xFF0000 );
+        KuroExpress.broadcast( "No selection made.", 
+          { obj:this, label:"ChooseCommandCenter::verify()", color:0xFF0000 } );
         return false;
       }
       return true;

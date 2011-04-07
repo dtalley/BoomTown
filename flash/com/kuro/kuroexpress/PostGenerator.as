@@ -37,7 +37,7 @@ package com.kuro.kuroexpress {
           postData.writeMultiByte( "Content-Disposition: form-data; name=\"" + name + "\"", 'ascii' );
           if ( params[name] is PostGeneratorFile ) {
             if ( !params[name].filename || !params[name].file ) {
-              trace( "Incomplete post file." );
+              KuroExpress.broadcast( "Incomplete post file.", { color:0xFF0000, label:"PostGenerator::getRequest()" } );
             }
             postData.writeMultiByte( "; filename=\"" + params[name].filename + "\"", 'ascii' );          
             postData = addLineBreak( postData );

@@ -16,7 +16,7 @@
   import flash.external.ExternalInterface;
   import flash.text.TextField;
   import com.boomtown.modules.core.Module;
-  import nl.demonsters.debugger.MonsterDebugger;
+  import com.demonsters.debugger.MonsterDebugger;
   
   public class Main extends Sprite {
     
@@ -45,8 +45,7 @@
     
     private function settingsLoaded():void {
       if ( int( XMLManager.getFile("settings").debug.toString() ) == 1 ) {
-        var debugger:MonsterDebugger = new MonsterDebugger(this);
-        MonsterDebugger.enabled = true;
+        MonsterDebugger.initialize(this);
       }
       ActionRequest.saveAddress( XMLManager.getFile("settings").magasi_url.toString() );
       loadFonts();

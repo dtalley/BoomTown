@@ -135,7 +135,8 @@
         file.load();
         KuroExpress.addListener( file, Event.COMPLETE, fileLoaded, file );
       } else {
-        KuroExpress.broadcast( this, "Chosen file is too large.  Must be 250Kb or less.", 0xFF0000 );
+        KuroExpress.broadcast( "Chosen file is too large.  Must be 250Kb or less.", 
+          { obj:this, label:"ChooseName::fileSelected()", color:0xFF0000 } );
       }
     }
     
@@ -195,7 +196,8 @@
     private function albumsError( loader:URLLoader, ltext:TextField ):void {
       KuroExpress.removeListener( loader, Event.COMPLETE, albumsLoaded );
       KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, albumsError );
-      KuroExpress.broadcast( this, "ChooseName::albumsError(): There was an error loading the user's albums.", 0xFF0000 );
+      KuroExpress.broadcast( "There was an error loading the user's albums.", 
+        { obj:this, label:"ChooseName::albumsError()", color:0xFF0000 } );
       ltext.text = "Error loading albums";
       _photosButton.enable();
     }
@@ -209,7 +211,8 @@
       var data:Object = JSON.decode( loader.data );
       var total:int = data.data.length;
       var id:String = null;
-      KuroExpress.broadcast( this, "ChooseName::albumsLoaded(): Found " + total + " photos from which to choose." );
+      KuroExpress.broadcast( "ChooseName::albumsLoaded(): Found " + total + " photos from which to choose.", 
+        { obj:this, label:"ChooseName::albumsLoaded()" } );
       for ( var i:int = 0; i < total; i++ ) {
         if ( data.data[i].type == "profile" ) {
           id = data.data[i].id;
@@ -224,13 +227,15 @@
     }
     
     private function createGallery( id:String, ltext:TextField ):void {
-      KuroExpress.broadcast( this, "ChooseName::createGallery(): Creating the photo browser now." );
+      KuroExpress.broadcast( "Creating the photo browser now.", 
+        { obj:this, label:"ChooseName::createGallery()" } );
       _gallery = new PhotoBrowser( id, _commander.token, stage.stageWidth, 140 );
       KuroExpress.addListener( _gallery, Event.COMPLETE, galleryLoaded, ltext );
     }
     
     private function galleryLoaded( ltext:TextField ):void {
-      KuroExpress.broadcast( this, "ChooseName::galleryLoaded(): Photo browser has successfully loaded the photo list." );
+      KuroExpress.broadcast( "Photo browser has successfully loaded the photo list.", 
+        { obj:this, label:"ChooseName::galleryLoaded()" } );
       KuroExpress.removeListener( _gallery, Event.COMPLETE, galleryLoaded );
       removeChild( ltext );
       addChild( _gallery );
@@ -246,11 +251,14 @@
     override public function verify():Boolean {
       if ( !_name.text || _name.text.length < 3 || !_editor.photo ) {
         if ( !_name.text ) {
-          KuroExpress.broadcast( this, "ChooseName::verify(): Name field is blank", 0xFF0000 );
+          KuroExpress.broadcast( "Name field is blank", 
+            { obj:this, label:"ChooseName::verify()", color:0xFF0000 } );
         } else if ( _name.text.length < 3 ) {
-          KuroExpress.broadcast( this, "ChooseName::verify(): Name field is too short", 0xFF0000 );
+          KuroExpress.broadcast( "Name field is too short", 
+            { obj:this, label:"ChooseName::verify()", color:0xFF0000 } );
         } else if ( !_editor.photo ) {
-          KuroExpress.broadcast( this, "ChooseName::verify(): No image provided", 0xFF0000 );
+          KuroExpress.broadcast( "No image provided", 
+            { obj:this, label:"ChooseName::verify()", color:0xFF0000 } );
         }
         return false;
       }

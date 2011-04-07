@@ -228,18 +228,21 @@
     }
     
     private function saveCommander():void {
-      KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen has requested that the commander be saved." );
+      KuroExpress.broadcast( "Screen has requested that the commander be saved.", 
+        { obj:this, label:"CommanderCreator::saveCommander()" } );
       if ( !_screen.verify() ) {
         return;
       }
       disableButtons();
       if ( !_screen.saved ) {
-        KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen needs to save information first." );
+        KuroExpress.broadcast( "Screen needs to save information first.", 
+          { obj:this, label:"CommanderCreator::saveCommander()" } );
         KuroExpress.addListener( _screen, CreatorScreenEvent.SCREEN_SAVED, saveCommander );
         _screen.save();
         return;
       }
-      KuroExpress.broadcast( this, "CommanderCreator::saveCommander(): Screen is saved, so now we can save the commander information." );
+      KuroExpress.broadcast( "Screen is saved, so now we can save the commander information.", 
+        { obj:this, label:"CommanderCreator::saveCommander()" } );
       KuroExpress.removeListener( _screen, CreatorScreenEvent.SCREEN_SAVED, saveCommander );
       KuroExpress.removeListener( _screen, CreatorScreenEvent.SAVE_COMMANDER, saveCommander );
       
@@ -251,7 +254,8 @@
     }
     
     private function commanderSaved( e:CommanderEvent ):void {
-      KuroExpress.broadcast( this, "CommanderCreator::commanderSaved(): Commander indicated that info is saved." );
+      KuroExpress.broadcast( "Commander indicated that info is saved.", 
+        { obj:this, label:"CommanderCreator::commanderSaved()" } );
       _commander.removeEventListener( CommanderEvent.COMMANDER_SAVED, commanderSaved );      
       _commander.addEventListener( Event.COMPLETE, commanderReady );
       _commander.init(null);
