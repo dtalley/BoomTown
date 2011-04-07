@@ -63,7 +63,8 @@
     
     private function userError( e:MagasiErrorEvent ):void {
       if ( e.object == "commanders" && e.func == "get_commander" ) {
-        KuroExpress.broadcast( this, "An error occured trying to retrieve the commander for this user.\n\n" + e.title + "\n" + e.body, 0xFF0000 );
+        KuroExpress.broadcast( "An error occured trying to retrieve the commander for this user.\n\n" + e.title + "\n" + e.body, 
+          { obj:this, label:"Commander::userError()", color:0xFF0000 } );
         _complete = false;
       }
     }
@@ -73,7 +74,8 @@
         _complete = false;
       }
       if ( _complete ) {
-        KuroExpress.broadcast( this, "The commander's information was successfully loaded.", 0x00FF00 );
+        KuroExpress.broadcast( "The commander's information was successfully loaded.", 
+          { obj:this, label:"Commander::commanderLoaded()", color:0x00FF00 } );
         
         var factionXML:XMLList = e.data.commanders.commander.faction;
         if( factionXML ) {
@@ -89,7 +91,8 @@
             currentDropships: uint( factionXML.dropships.current.toString() )
           } );
         } else {
-          KuroExpress.broadcast( this, "No faction was found for the commander." );
+          KuroExpress.broadcast( "No faction was found for the commander.", 
+            { obj:this, label:"Commander::commanderLoaded()" } );
           _complete = false;
         }
         
@@ -103,7 +106,8 @@
             bandwidth: uint( baseXML.bandwidth.toString() )
           } );
         } else {
-          KuroExpress.broadcast( this, "No base was found for the commander." );
+          KuroExpress.broadcast( "No base was found for the commander.", 
+            { obj:this, label:"Commander::commanderLoaded()" } );
           _complete = false;
         }
         
@@ -136,7 +140,8 @@
           }
           _rank = new Rank( rank );
         } else {
-          KuroExpress.broadcast( this, "No base was found for the commander." );
+          KuroExpress.broadcast( "No base was found for the commander.", 
+            { obj:this, label:"Commander::commanderLoaded()" } );
           _complete = false;
         }
         
@@ -151,7 +156,8 @@
           _experience = uint( e.data.commanders.commander.experience.toString() );
           _balance = uint( e.data.commanders.commander.balance.toString() );
         } else {
-          KuroExpress.broadcast( this, "Not all of the information was provided for the commander" );
+          KuroExpress.broadcast( "Not all of the information was provided for the commander", 
+            { obj:this, label:"Commander::commanderLoaded()" } );
           _complete = false;
         }
       }
@@ -170,9 +176,11 @@
         if( !_initialized ) {
           init(null);
         }
-        KuroExpress.broadcast( { }, "No external interface available." );
+        KuroExpress.broadcast( "No external interface available.", 
+          { obj:this, label:"Commander::refreshToken()" } );
       } else {
-        KuroExpress.broadcast( { }, "Refreshing the current commander's token." );
+        KuroExpress.broadcast( "Refreshing the current commander's token.", 
+          { obj:this, label:"Commander::refreshToken()" } );
       }
     }
     
@@ -182,27 +190,34 @@
         init(null);
       }
       dispatchEvent( new CommanderEvent( CommanderEvent.TOKEN_REFRESHED ) );
-      KuroExpress.broadcast( { }, "The current commander's token has been refreshed to:\n" + _token );
+      KuroExpress.broadcast( "The current commander's token has been refreshed to:\n" + _token, 
+        { obj:this, label:"Commander::tokenRefreshed()" } );
     }
     
     public function verify():Boolean {
       if ( !_uid ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No user id saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No user id saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       } else if ( !_token ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No access token saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No access token saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       } else if ( !_imageData ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No image data saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No image data saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       } else if ( !_faction ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No faction saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No faction saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       } else if ( !_commandCenter ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No command center saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No command center saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       } else if ( !_name ) {
-        KuroExpress.broadcast( this, "Commander:verify(): No name saved.", 0xFF0000 );
+        KuroExpress.broadcast( "No name saved.", 
+          { obj:this, label:"Commander::verify()", color:0xFF0000 } );
         return false;
       }
       return true;
@@ -215,7 +230,8 @@
     
     private function submit( e:PromptEvent ):void {
       PromptManager.removeEventListener( PromptEvent.PROMPT_ACCEPTED, submit );
-      KuroExpress.broadcast( this, "Commander::save(): Sending data to server." );
+      KuroExpress.broadcast( "Commander::save(): Sending data to server.", 
+        { obj:this, label:"Commander::submit()" } );
       var loader:Sprite = ActionRequest.sendRequest( {
         commanders_action: "save_commander",
         user_id: _uid,
@@ -234,7 +250,8 @@
       KuroExpress.removeListener( loader, MagasiErrorEvent.SYSTEM_ERROR, error );
       KuroExpress.removeListener( loader, MagasiErrorEvent.USER_ERROR, error );
       KuroExpress.removeListener( loader, MagasiActionEvent.MAGASI_ACTION, saved );
-      KuroExpress.broadcast( this, "Commander::error(): There was a problem saving the commander.\n\n" + e.title + "\n" + e.body, 0xFF0000 );
+      KuroExpress.broadcast( "There was a problem saving the commander.\n\n" + e.title + "\n" + e.body, 
+        { obj:this, label:"Commander::error()", color:0xFF0000 } );
     }
     
     private function saved( loader:Sprite, e:MagasiActionEvent ):void {

@@ -53,7 +53,7 @@ package com.boomtown.modules.commandercreator {
     }
     
     private function photoError():void {
-      KuroExpress.broadcast( this, "PhotoEditor::photoError(): An error occured when attempting to load a photo.", 0xFF0000 );
+      KuroExpress.broadcast( "An error occured when attempting to load a photo.", { obj:this, color:0xFF0000 } );
     }
     
     private function photoLoaded( loader:Loader ):void {

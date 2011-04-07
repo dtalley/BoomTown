@@ -136,12 +136,13 @@
 			Font.registerFont( fontClass );
       loadingFont = null;
       var fontList:Array = Font.enumerateFonts(false);
-      trace( "Current Font List: ---------------------------------------" );
+      var traceValue:String = "Current font list ---------------------------\n";
       for ( var i:int = 0; i < fontList.length; i++ ) {
-        trace( "Font Loaded: " + fontList[i].fontName );
+        traceValue += "Font Loaded: " + fontList[i].fontName;
       }
-      trace( "----------------------------------------------------------" );
-      trace( "" );
+      traceValue += "\n----------------------------------------------------------\n\n";
+      KuroExpress.broadcast( traceValue, 
+        { label:"KuroExpress::fontComplete()" } );
       Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
 		}
     
@@ -158,7 +159,8 @@
       if ( _assets.indexOf( file ) >= 0 ) {
         return null;
       }
-      KuroExpress.broadcast( { }, "Loading assets file: " + fullURL + file );
+      KuroExpress.broadcast( "Loading assets file: " + fullURL + file,
+        { label:"KuroExpress::loadAssetsFile()" } );
 			var request:URLRequest = new URLRequest( fullURL + file );
       _assets.push( file );
 			var loader:Loader = new Loader();
@@ -387,11 +389,21 @@
       return tAngle;
     }
     
-    public static function broadcast( obj:Object, text:String, color:uint = 0x000000, functions:Boolean = false, depth:int = 4 ):void {
-      trace( text );
-      if ( ApplicationDomain.currentDomain.hasDefinition( "nl.demonsters.debugger.MonsterDebugger" ) ) {
-        var debuggerClass:Class = getDefinitionByName( "nl.demonsters.debugger.MonsterDebugger" ) as Class;
-        debuggerClass.trace( obj, text, color, functions, depth );
+    public static function broadcast( text:String, perms:Object = null ):void {
+      if ( !perms ) {
+        perms = { };
+      }
+      trace( ( perms.label ? perms.label + ": " : "" ) + text );
+      if ( ApplicationDomain.currentDomain.hasDefinition( "com.demonsters.debugger.MonsterDebugger" ) ) {
+        var debuggerClass:Class = getDefinitionByName( "com.demonsters.debugger.MonsterDebugger" ) as Class;
+        debuggerClass.trace( 
+          perms.obj ? perms.obj : { }, 
+          text, 
+          perms.person ? perms.persone : "David Talley", 
+          perms.label ? perms.label : "KuroExpress::broadcast()", 
+          perms.color ? perms.color : 0x000000, 
+          perms.depth ? perms.depth : 4 
+        );
       }
     }
     

@@ -23,7 +23,8 @@
     }
     
     public static function sendRequest( params:Object = null ):Sprite {
-      KuroExpress.broadcast( {}, "ActionRequest::sendRequest(): Sending request." );
+      KuroExpress.broadcast( "Sending request.",
+        { label:"ActionRequest::sendRequest()" } );
       
       var request:URLRequest = PostGenerator.getRequest( _address, params );
       
@@ -41,7 +42,8 @@
     private static function requestError( loader:URLLoader ):void {
       KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded );
       KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, requestError );
-      KuroExpress.broadcast( {}, "ActionRequest::requestError(): An error occurred in processing the request.", 0xFF0000 );
+      KuroExpress.broadcast( "An error occurred in processing the request.", 
+        { label:"ActionRequest::requestError()", color:0xFF0000 } );
     }
     
     private static function requestLoaded( loader:URLLoader, dispatcher:Sprite ):void {      
@@ -50,9 +52,14 @@
       
       try {
         var response:XML = new XML( loader.data );
-      } catch ( e:Error ) { KuroExpress.broadcast( {}, "ActionRequest::requestLoaded(): XML document was malformed.\n\n" + loader.data, 0xFF0000 ) }
+      } catch ( e:Error ) { 
+        KuroExpress.broadcast( "XML document was malformed.\n\n" + loader.data, 
+          { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
+        return;
+      }
       
-      KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): Response from Magasi was properly returned.", 0x00FF00 );
+      KuroExpress.broadcast( "Response from Magasi was properly returned.", 
+        { label:"ActionRequest::requestLoaded()", color:0x00FF00 } );
       
       /**
        * Parse through all of the messages returned from Magasi and dispatch errors
@@ -101,7 +108,8 @@
             break;
         }
         if ( evt != null ) {
-          KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): An error was encountered.\n\n" + evt.title + "\n" + evt.body, 0xFF0000 );
+          KuroExpress.broadcast( "An error was encountered.\n\n" + evt.title + "\n" + evt.body, 
+            { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
           dispatcher.dispatchEvent( evt );
         }
       }
@@ -123,7 +131,8 @@
           Boolean( actionxml.success.toString() ),
           actionxml.extra
         );
-        KuroExpress.broadcast( { }, "ActionRequest::requestLoaded(): An action was encountered, " + act.extension + ":: " + act.action );
+        KuroExpress.broadcast( "An action was encountered, " + act.extension + "::" + act.action,
+          { label:"ActionRequest::requestLoaded()" } );
         dispatcher.dispatchEvent( act );
       }
       

@@ -4,71 +4,135 @@
   
   public class HexagonAxisGrid {
     
-    public static function drawHexagon( obj:Sprite, width:Number, height:Number, rotation:Number = 0 ):void {
-      var sangle:Number = Math.atan( ( height / 2 ) / ( width / 4 ) );
-      var mangle:Number = Math.PI - sangle * 2;
-      var slength:Number = ( height / 2 ) / Math.sin( sangle );
-      var tlength:Number = Math.sin( mangle / 2 ) * slength * 2;
-      rotation *= Math.PI / 180;
-      
-      var p1:Point = new Point( 
-        ( Math.cos( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.cos( rotation ) * ( tlength / 2 ) ),
-        ( ( Math.sin( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.sin( rotation ) * ( tlength / 2 ) ) ) * -1
-      );
-      var p2:Point = new Point( 
-        ( Math.cos( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.cos( rotation ) * ( tlength / -2 ) ),
-        ( ( Math.sin( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.sin( rotation ) * ( tlength / -2 ) ) ) * -1
-      );
-      var p3:Point = new Point( 
-        ( Math.cos( rotation + ( Math.PI ) ) * ( width / 2 ) ),
-        ( ( Math.sin( rotation + ( Math.PI ) ) * ( width / 2 ) ) ) * -1
-      );
-      var p4:Point = new Point( 
-        ( Math.cos( rotation + ( 3 * Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.cos( rotation ) * ( tlength / -2 ) ),
-        ( ( Math.sin( rotation + ( 3 * Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.sin( rotation ) * ( tlength / -2 ) ) ) * -1
-      );
-      var p5:Point = new Point( 
-        ( Math.cos( rotation + ( 3 * Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.cos( rotation ) * ( tlength / 2 ) ),
-        ( ( Math.sin( rotation + ( 3 * Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.sin( rotation ) * ( tlength / 2 ) ) ) * -1
-      );
-      var p6:Point = new Point( 
-        ( Math.cos( rotation ) * ( width / 2 ) ),
-        ( ( Math.sin( rotation ) * ( width / 2 ) ) ) * -1
-      );
-      
-      obj.graphics.moveTo( p1.x, p1.y );
-      obj.graphics.lineTo( p2.x, p2.y );
-      obj.graphics.lineTo( p3.x, p3.y );
-      obj.graphics.lineTo( p4.x, p4.y );
-      obj.graphics.lineTo( p5.x, p5.y );
-      obj.graphics.lineTo( p6.x, p6.y );
+    private static var _yalign:int = 90;
+    private static var _xalign:int = _yalign - 60;
+    
+    public static function set yalign( val:int ):void {
+      _yalign = val;
     }
     
-    public static function getMetrics( width:Number, height:Number, rotation:Number = 0 ):Object {
-      var sangle:Number = Math.atan( ( height / 2 ) / ( width / 4 ) );
-      var mangle:Number = Math.PI - sangle * 2;
-      var slength:Number = ( height / 2 ) / Math.sin( sangle );
-      var tlength:Number = Math.sin( mangle / 2 ) * slength * 2;
-      rotation *= Math.PI / 180;
-      var ret:Object = { };
-      var p1:Point = new Point( 
-        ( Math.cos( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.cos( rotation ) * ( tlength / 2 ) ),
-        ( ( Math.sin( rotation + ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( Math.sin( rotation ) * ( tlength / 2 ) ) ) * -1
-      );
-      var p2:Point = new Point( 
-        ( Math.cos( rotation ) * ( width / 2 ) ),
-        ( ( Math.sin( rotation ) * ( width / 2 ) ) ) * -1
-      );
-      var mp:Point = new Point( ( p1.x + p2.x ) / 2, ( p1.y + p2.y ) / 2 );
-      var mlength:Number = Math.sqrt( Math.pow( p2.x - mp.x, 2 ) + Math.pow( p2.y - mp.y, 2 ) );
-      var mheight:Number = Math.sin( sangle ) * mlength;
-      var hlength:Number = Math.sqrt( Math.pow( mp.x, 2 ) + Math.pow( mp.y, 2 ) );
-      var angle2:Number = Math.asin( mheight / hlength );
-      ret.angle1 = rotation + 90;
-      ret.angle2 = angle2 * 180 / Math.PI;
-      ret.size1 = height / 2;
-      ret.size2 = hlength;
-      return ret;
+    public static function set xalign( val:int ):void {
+      _xalign = val;
+    }
+     
+    public static function calculateSplit( size:Number ):Number {
+      return Math.round( Math.sqrt( Math.pow( size, 2 ) - Math.pow( size / 2, 2 ) ) * 10000 ) / 10000;
+    }
+    
+    public static function calculateSize( split:Number ):Number {
+      return Math.round( Math.sqrt( 4 * Math.pow( split, 2 ) / 3 ) * 10000 ) / 10000;
+    }
+    
+    public static function calculateX( size:Number, split:Number, x:Number, y:Number, angleOffset:int = 0 ):Number {
+      var xAngle:Number = ( Math.PI / 180 ) * ( _xalign + angleOffset );
+      var xDist:Number = ( split * 2 ) * x;
+      var firstX:Number = Math.cos( xAngle ) * xDist;
+      var firstY:Number = Math.sin( xAngle ) * xDist;
+      
+      var yAngle:Number = ( Math.PI / 180 ) * ( _yalign + angleOffset );
+      var yDist:Number = ( split * 2 ) * y;
+      
+      var newX:Number = firstX + ( Math.cos( yAngle ) * yDist );      
+      return Math.round( newX * 10000 ) / 10000;
+    }
+    
+    public static function calculateHexX( width:Number, height:Number, x:Number, y:Number ):Number {
+      y *= -1;
+      
+      var metrics:Number = Hexagon.getMetrics( size * 2, split * 2, _yalign - 90 );
+      var add:Number = 0;
+      var dist:Number = Math.sqrt( Math.pow( x, 2 ) + Math.pow( y, 2 ) );
+      if ( x < 0 && y > 0 ) {
+        add = Math.PI / 2;
+      } else if ( x < 0 && y < 0 ) {
+        add = Math.PI;
+      } else if ( x > 0 && y < 0 ) {
+        add = 3 * Math.PI / 2;
+      }
+      var angle:Number = Math.atan( Math.abs( y ) / Math.abs( x ) ) + add;
+      var sangle:Number = angle - _xalign;
+      
+      
+      /*var yAngle:Number = ( Math.PI / 180 ) * _yalign;
+      var slope:Number = ( Math.cos( yAngle ) / Math.sin( yAngle ) ) * -1;
+      var yDist:Number = ( slope * x - y ) / Math.sqrt( Math.pow( slope, 2 ) + Math.pow( -1, 2 ) ) / ( split * 2 );
+      var firstX:Number = x - ( Math.cos( yAngle ) * yDist );
+      
+      var xAngle:Number = ( Math.PI / 180 ) * _xalign;
+      var newX:Number = firstX / ( Math.cos( xAngle ) * ( split * 2 ) );
+      return Math.round( newX * 10000 ) / 10000;*/
+    }
+    
+    public static function calculateY( size:Number, split:Number, x:Number, y:Number, angleOffset:int = 0 ):Number {
+      var xAngle:Number = ( Math.PI / 180 ) * ( _xalign + angleOffset );
+      var xDist:Number = ( split * 2 ) * x;
+      var firstX:Number = Math.cos( xAngle ) * xDist;
+      var firstY:Number = Math.sin( xAngle ) * xDist;
+      
+      var yAngle:Number = ( Math.PI / 180 ) * ( _yalign + angleOffset );
+      var yDist:Number = ( split * 2 ) * y;
+      
+      var newY:Number = 0 - ( firstY + ( Math.sin( yAngle ) * yDist ) );      
+      return Math.round( newY * 10000 ) / 10000;
+    }
+    
+    public static function calculateHexY( size:Number, split:Number, x:Number, y:Number ):Number {
+      y *= -1;      
+      var yAngle:Number = ( Math.PI / 180 ) * _yalign;
+      var ySlope:Number = Math.sin( yAngle ) / Math.cos( yAngle );
+      var yInt:Number = y - ( ySlope * x );
+      
+      var xAngle:Number = ( Math.PI / 180 ) * _xalign;
+      var xSlope:Number = Math.sin( xAngle ) / Math.cos( xAngle );
+      
+      var newX:Number = 0;
+      newX = ( 0 - yInt ) / ( ySlope - xSlope );
+      var newY:Number = xSlope * newX;
+      
+      var yDist:Number = Math.sqrt( Math.pow( newY - y, 2 ) + Math.pow( newX - x, 2 ) );
+      if ( y < newY ) {
+        yDist *= -1;
+      }
+      
+      return Math.round( yDist / ( split * 2 ) * 10000 ) / 10000;
+    }
+    
+    public static function calculateDist( size:Number, split:Number, x:Number, y:Number, centerX:Number, centerY:Number ):Number {
+      x = calculateX( size, split, x, y );
+      y = calculateY( size, split, x, y );
+      centerX = calculateX( size, split, centerX, centerY );
+      centerY = calculateY( size, split, centerX, centerY );
+      return Math.sqrt( Math.pow( centerX - x, 2 ) + Math.pow( centerY - y, 2 ) );
+    }
+    
+    public static function calculateHDist( x:Number, y:Number, centerX:Number, centerY:Number ):Number {
+      return Math.sqrt( Math.pow( centerX - x, 2 ) + Math.pow( centerY - y, 2 ) );
+    }
+    
+    public static function calculateAngle( size:Number, split:Number, x:Number, y:Number, centerX:Number, centerY:Number ):Number {
+      x = calculateX( size, split, x, y );
+      y = calculateY( size, split, x, y );
+      centerX = calculateX( size, split, centerX, centerY );
+      centerY = calculateY( size, split, centerX, centerY );
+      var tAngle:Number = ( 180 / Math.PI ) * Math.atan2( ( 0 - y ) - ( 0 - centerY ), x - centerX );
+      if ( tAngle < 0 ) {
+        tAngle += 360;
+      }
+      if ( tAngle >= 360 ) {
+        tAngle -= 360;
+      }
+      return Math.round( tAngle * 10000 ) / 10000;
+    }
+    
+    public static function calculateHAngle( x:Number, y:Number, centerX:Number, centerY:Number ):Number {
+      var tAngle:Number = ( 180 / Math.PI ) * Math.atan2( ( 0 - y ) - ( 0 - centerY ), x - centerX );
+      if ( tAngle < 0 ) {
+        tAngle += 360;
+      }
+      if ( tAngle >= 360 ) {
+        tAngle -= 360;
+      }
+      return Math.round( tAngle * 10000 ) / 10000;
     }
     
   }
