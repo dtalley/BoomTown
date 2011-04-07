@@ -50,8 +50,8 @@
         var col:uint = current % _key.width;
         var row:uint = _key.height - Math.floor( current / _key.height );
         if( row > 0 ) {
-          var tx:Number = HexagonAxisGrid.calculateX( 6, 4, col, row, 0 );
-          var ty:Number = HexagonAxisGrid.calculateY( 6, 4, col, row, 0 );
+          var tx:Number = HexagonAxisGrid.calculateX( 12, 8, col, row );
+          var ty:Number = HexagonAxisGrid.calculateY( 12, 8, col, row );
           var pixel:uint = _key.bitmapData.getPixel( col, _key.height - row );
           if( pixel < 0xFFFFFF ) {
             _grid.graphics.beginFill( 0xFFFFFF );
