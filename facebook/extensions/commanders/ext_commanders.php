@@ -154,19 +154,9 @@
       }
 
       private function save_commander() {
+        action::verify_user();
         $user_id = sys::input( "user_id", "" );
         $access_token = sys::input( "access_token", "" );
-
-        $response = facebook::graph_call( "me?access_token=" . $access_token );
-        $user = json_decode( $response, true );
-        if( $user['id'] !== $user_id ) {
-          sys::message(
-            USER_ERROR,
-            lang::phrase( "commanders/error/user_failed_authentication/title" ),
-            lang::phrase( "commanders/error/user_failed_authentication/body" ),
-            NULL, NULL, __FUNCTION__, __CLASS__
-          );
-        }
 
         $commander_name = sys::input( "commander_name", "" );
         db::open( TABLE_COMMANDERS );

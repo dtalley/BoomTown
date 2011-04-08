@@ -25,6 +25,9 @@
       $canvas = urlencode( sys::setting( "facebook", "fbcanvas" ) );
       $current_datetime = sys::create_datetime( time() );
 
+      /**
+       * If we have a code but no access token, retrieve the access token
+       */
       if( $code && !$access_token ) {
         $token_url  = "oauth/access_token?client_id=";
         $token_url .= $app_id;
@@ -40,6 +43,10 @@
       $auth_url .= $canvas;
       $auth_url .= "&scope=user_birthday,email";
 
+      /**
+       * Process the Facebook signed request, verify it, and pull out the data
+       * which should include the user id.
+       */
       $signed_request = sys::input( "signed_request", null, SKIP_GET );
       if( $signed_request ) {
         list( $encoded_sig, $payload ) = explode( ".", $signed_request, 2 );
@@ -67,7 +74,8 @@
       }
 
       action::resume( "account" );
-      
+
+        //If the Facebook data variable isn't empty, the user is logged into Facebook
         action::add( "logged_in", ( empty( $data['user_id'] ) ) ? 0 : 1 );
 
         if( !empty( $data['user_id'] ) ) {
@@ -75,6 +83,10 @@
             db::where( "user_id", trim( $data['user_id'] ) );
           $user = db::result();
           db::clear_result();
+          /**
+           * If no user exists in the database, create one based on the
+           * information pulled from Facebook.
+           */
           if( !$user ) {
             db::open( TABLE_USERS );
               db::set( "user_id", trim( $data['user_id'] ) );
@@ -92,6 +104,10 @@
             $user = db::result();
             db::clear_result();
           }
+          /**
+           * At this point if the user variable is not populated, something
+           * has gone terribly wrong.
+           */
           if( !$user ) {
             sys::message(
               USER_ERROR,
@@ -145,6 +161,18 @@
           action::end();
           action::add( "email", $user['user_email'] );
           action::add( "birthday", $user['user_birthday'] );
+
+          $action_key = sys::random_chars(32);
+          db::open( TABLE_USERS );
+            db::set( "user_action_key", $action_key );
+          if( !db::update() ) {
+            sys::message(
+              USER_ERROR,
+              lang::phrase( "account/error/could_not_update_action_key/title" ),
+              lang::phrase( "account/error/could_not_update_action_key/body" )
+            );
+          }
+          action::add( "action_key", $action_key );
           
         }
       action::end();
@@ -155,7 +183,7 @@
         action::add( "canvas", $canvas );
         action::add( "auth_url", $auth_url );
       action::end();
-
+      
       if( $call_hooks ) {
         sys::hook( "account_initialized" );
       }
@@ -185,6 +213,31 @@
         exit();
       }
 
+    }
+
+    public static function verify_user() {
+      $user_id = sys::input( "user_id", "" );
+      $action_key = sys::input( "action_key", "" );
+      if( !$user_id || !$action_key ) {
+        sys::message(
+          USER_ERROR,
+          lang::phrase( "account/error/commander_already_exists/title" ),
+          lang::phrase( "account/error/commander_already_exists/body" ),
+          NULL, NULL, __FUNCTION__, __CLASS__
+        );
+      }
+      db::open( TABLE_USERS );
+        db::where( "user_id", $user_id );
+        db::where( "user_action_key", $action_key );
+      $user = db::result();
+      if( !$user ) {
+        sys::message(
+          USER_ERROR,
+          lang::phrase( "account/error/invalid_user/title" ),
+          lang::phrase( "account/error/invalid_user/body" ),
+          NULL, NULL, __FUNCTION__, __CLASS__
+        );
+      }
     }
 		
 	}

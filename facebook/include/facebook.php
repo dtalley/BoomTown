@@ -18,6 +18,15 @@ class facebook {
     return $response;
   }
 
+  public static function verify_user( $user_id, $access_token ) {
+    $response = self::graph_call( "me?access_token=" . $access_token );
+    $user = json_decode( $response, true );
+    if( $user['id'] !== $user_id ) {
+      return false;
+    }
+    return true;
+  }
+
 }
 
 ?>

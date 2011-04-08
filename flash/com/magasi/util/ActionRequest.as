@@ -1,4 +1,5 @@
 ﻿package com.magasi.util {
+  import com.adobe.crypto.SHA256;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.PostGenerator;
   import com.magasi.events.MagasiActionEvent;
@@ -26,6 +27,7 @@
       KuroExpress.broadcast( "Sending request.",
         { label:"ActionRequest::sendRequest()" } );
       
+        
       var request:URLRequest = PostGenerator.getRequest( _address, params );
       
       var dispatcher:Sprite = new Sprite();
