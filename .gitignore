@@ -3,3 +3,6 @@ nbproject/
 flash/nl/
 flash/com/greensock/
 flash/com/adobe/
+flash/*.as3proj
+flash/.flashProjectProperties
+facebook/nbproject
