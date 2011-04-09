@@ -2,6 +2,7 @@
   import com.boomtown.core.Commander;
   import com.boomtown.events.CommanderEvent;
   import com.boomtown.events.OpenModuleEvent;
+  import com.boomtown.modules.worldmap.events.WorldGridEvent;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.greensock.TweenLite;
@@ -16,8 +17,7 @@
   
   public class WorldMap extends Module {
     
-    private var _grid:Sprite;
-    private var _key:Bitmap;
+    private var _grid:WorldGrid;
     
     public function WorldMap():void {
       _id = "WorldMap";
@@ -29,46 +29,14 @@
     }
     
     private function start():void {
-      _key = KuroExpress.createBitmap("WorldMapKey");
-      _grid = new Sprite();
-      addChild( _grid );
-      _grid.x = 300;//Math.floor( stage.stageWidth / 2 );
-      _grid.y = Math.floor( stage.stageHeight - 100 );
-      
-      var draw:Timer = new Timer(10);
-      draw.addEventListener( TimerEvent.TIMER, drawMap );
-      draw.start();
+       _grid = new WorldGrid();
+       _grid.addEventListener( WorldGridEvent.GRID_READY, gridReady );
+       KuroExpress.broadcast( "Creating grid and beginning its pool population", { obj:this, label:"WorldMap::start()" } );
     }
     
-    private var current:uint = 0;
-    private var total:uint = 0;
-    private function drawMap( e:TimerEvent ):void {
-      var metrics:Object = Hexagon.getMetrics( 12, 8, 0 );
-      HexagonAxisGrid.yalign = metrics.angle1;
-      HexagonAxisGrid.xalign = metrics.angle2;
-      for ( var i:int = 0; i < 10; i++ ) {
-        var col:uint = current % _key.width;
-        var row:uint = _key.height - Math.floor( current / _key.height );
-        if( row > 0 ) {
-          var tx:Number = HexagonAxisGrid.calculateX( 12, 8, col, row );
-          var ty:Number = HexagonAxisGrid.calculateY( 12, 8, col, row );
-          var pixel:uint = _key.bitmapData.getPixel( col, _key.height - row );
-          if( pixel < 0xFFFFFF ) {
-            _grid.graphics.beginFill( 0xFFFFFF );
-            total++;
-          } else {
-            _grid.graphics.beginFill( 0xFF0000 );
-          }
-          Hexagon.drawHexagon( _grid, 12, 8, tx, ty, 0 );
-          _grid.graphics.endFill();
-          current++;
-        } else {
-          trace( total + " total open territories out of " + current + " total spaces." );
-          Timer( e.target ).stop();
-          Timer( e.target ).removeEventListener( TimerEvent.TIMER, drawMap );
-          return;
-        }
-      }
+    private function gridReady( e:WorldGridEvent ):void {
+      KuroExpress.broadcast( "Grid has signaled that it is ready for population", { obj:this, label:"WorldMap::gridReady()" } );
+      _grid.removeEventListener( WorldGridEvent.GRID_READY, gridReady );
     }
     
     override public function close():void {

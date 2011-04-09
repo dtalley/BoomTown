@@ -26,9 +26,47 @@
             lang::phrase( "map/error/incomplete_map_coordinates/body" ),
             NULL, NULL, __FUNCTION__, __CLASS__
           );
+        }        
+        db::open( TABLE_TERRITORIES );
+          db::where( "territory_x", $territory_x );
+          db::where( "territory_y", $territory_y );
+          db::open( TABLE_TERRITORY_STATUSES );
+            db::link( "territory_status_id" );
+          db::close();
+          db::open( TABLE_FACTIONS, LEFT );
+            db::link( "faction_id" );
+          db::close();
+        $territory = db::result();
+        if( !$territory ) {
+          sys::message(
+            USER_ERROR,
+            lang::phrase( "map/error/territory_not_found/title" ),
+            lang::phrase( "map/error/territory_not_found/body" ),
+            NULL, NULL, __FUNCTION__, __CLASS__
+          );
         }
-        
+        action::resume( "map/territory" );
+          action::add( "id", $territory['territory_id'] );
+          action::add( "x", $territory['territory_x'] );
+          action::add( "y", $territory['territory_y'] );
+          action::start( "status" );
+            action::add( "id", $territory['territory_status_id'] );
+            action::add( "name", $territory['territory_status_name'] );
+          action::end();
+          if( $territory['faction_name'] ) {
+            action::start( "faction" );
+              action::add( "id", $territory['faction_id'] );
+              action::add( "name", $territory['faction_id'] );
+              action::add( "title", $territory['faction_title'] );
+              action::add( "description", $territory['faction_description'] );
+              action::add( "acronym", $territory['faction_acronym'] );
+              action::add( "population", $territory['faction_population'] );
+            action::end();
+          }
+        action::end();
       }
+
+      
 		
     }
 ?>

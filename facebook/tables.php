@@ -14,4 +14,13 @@
   <table id="commanders">commanders</table>
   <table id="factions">factions</table>
   <table id="ranks">ranks</table>
+
+  <table id="territories">territories</table>
+  <table id="territory_statuses">territory_statuses</table>
+
+  <table id="zones">zones</table>
+  <table id="zone_statuses">zone_statuses</table>
+  <table id="zone_scenarios">zone_scenarios</table>
+
+  <table id="scenarios">scenarios</table>
 </tables>
