@@ -4,109 +4,58 @@
   
   public class HexagonAxisGrid {
     
-    private static var _yalign:int = 90;
-    private static var _xalign:int = _yalign - 60;
+    private static var _metrics:Object;
+    private static var _xslope:Number, _yslope:Number;
     
-    public static function set yalign( val:int ):void {
-      _yalign = val;
+    public static function setMetrics( width:Number, height:Number, rotation:Number ):void {
+      _metrics = Hexagon.getMetrics( width, height, rotation );
+      _xslope = Math.sin( _metrics.angle2 * Math.PI / 180 ) / Math.cos( _metrics.angle2 * Math.PI / 180 );
+      _yslope = Math.sin( _metrics.angle1 * Math.PI / 180 ) / Math.cos( _metrics.angle1 * Math.PI / 180 );
     }
     
-    public static function set xalign( val:int ):void {
-      _xalign = val;
-    }
-     
-    public static function calculateSplit( size:Number ):Number {
-      return Math.round( Math.sqrt( Math.pow( size, 2 ) - Math.pow( size / 2, 2 ) ) * 10000 ) / 10000;
+    public static function calculateX( x:Number, y:Number ):Number {
+      return ( Math.cos( _metrics.angle2 * Math.PI / 180 ) * ( _metrics.size2 * 2 * x ) ) + 
+             ( Math.cos( _metrics.angle1 * Math.PI / 180 ) * ( _metrics.size1 * 2 * y ) );
     }
     
-    public static function calculateSize( split:Number ):Number {
-      return Math.round( Math.sqrt( 4 * Math.pow( split, 2 ) / 3 ) * 10000 ) / 10000;
-    }
-    
-    public static function calculateX( width:Number, height:Number, x:Number, y:Number ):Number {
-      var metrics:Object = Hexagon.getMetrics( width, height, _yalign - 90 );
-      return ( Math.cos( metrics.angle2 * Math.PI / 180 ) * ( metrics.size2 * 2 * x ) ) + ( Math.cos( metrics.angle1 * Math.PI / 180 ) * ( metrics.size1 * 2 * y ) );
-    }
-    
-    public static function calculateHexX( width:Number, height:Number, x:Number, y:Number ):Number {
+    public static function calculateHexX( x:Number, y:Number ):Number {
       y *= -1;
       
-      var metrics:Object = Hexagon.getMetrics( width, height, _yalign - 90 );
-      var add:Number = 0;
-      var dist:Number = Math.sqrt( Math.pow( x, 2 ) + Math.pow( y, 2 ) );
-      if ( x < 0 && y > 0 ) {
-        add = Math.PI / 2;
-      } else if ( x < 0 && y < 0 ) {
-        add = Math.PI;
-      } else if ( x > 0 && y < 0 ) {
-        add = 3 * Math.PI / 2;
-      }
-      var angle:Number = Math.atan( Math.abs( y ) / Math.abs( x ) ) + add;
-      var sangle:Number = angle - _xalign;
-      var length:Number = Math.cos( angle ) * dist;
-      return Math.round( length / metrics.size2 * 10000 ) / 10000;
-    }
-    
-    public static function calculateY( width:Number, height:Number, x:Number, y:Number ):Number {
-      var metrics:Object = Hexagon.getMetrics( width, height, _yalign - 90 );
-      return ( ( Math.sin( metrics.angle2 * Math.PI / 180 ) * ( metrics.size2 * 2 * x ) ) + ( Math.sin( metrics.angle1 * Math.PI / 180 ) * ( metrics.size1 * 2 * y ) ) ) * -1;
-    }
-    
-    public static function calculateHexY( width:Number, height:Number, x:Number, y:Number ):Number {
-      y *= -1;    
+      var yAngle:Number = ( Math.PI / 180 ) * _metrics.angle1;
+      var slope:Number = ( Math.cos( yAngle ) / Math.sin( yAngle ) ) * -1;
+      var yDist:Number = ( slope * x - y ) / Math.sqrt( Math.pow( slope, 2 ) + Math.pow( -1, 2 ) ) / ( _metrics.size2 * 2 );
+      var firstX:Number = x - ( Math.cos( yAngle ) * yDist );
       
-      var metrics:Object = Hexagon.getMetrics( width, height, _yalign - 90 );
-      var add:Number = 0;
-      var dist:Number = Math.sqrt( Math.pow( x, 2 ) + Math.pow( y, 2 ) );
-      if ( x < 0 && y > 0 ) {
-        add = Math.PI / 2;
-      } else if ( x < 0 && y < 0 ) {
-        add = Math.PI;
-      } else if ( x > 0 && y < 0 ) {
-        add = 3 * Math.PI / 2;
-      }
-      var angle:Number = Math.atan( Math.abs( y ) / Math.abs( x ) ) + add;
-      var sangle:Number = _yalign - angle;
-      var length:Number = Math.cos( angle ) * dist;
-      return Math.round( length / metrics.size1 * 10000 ) / 10000;
+      var xAngle:Number = ( Math.PI / 180 ) * _metrics.angle2;
+      var newX:Number = firstX / ( Math.cos( xAngle ) * ( _metrics.size2 * 2 ) );
+      return Math.round( newX );
     }
     
-    public static function calculateDist( width:Number, height:Number, x:Number, y:Number, centerX:Number, centerY:Number ):Number {
-      x = calculateX( width, height, x, y );
-      y = calculateY( width, height, x, y );
-      centerX = calculateX( width, height, centerX, centerY );
-      centerY = calculateY( width, height, centerX, centerY );
-      return Math.sqrt( Math.pow( centerX - x, 2 ) + Math.pow( centerY - y, 2 ) );
+    public static function calculateY( x:Number, y:Number ):Number {
+      return ( ( Math.sin( _metrics.angle2 * Math.PI / 180 ) * ( _metrics.size2 * 2 * x ) ) + 
+               ( Math.sin( _metrics.angle1 * Math.PI / 180 ) * ( _metrics.size1 * 2 * y ) ) ) * -1;
     }
     
-    public static function calculateHDist( x:Number, y:Number, centerX:Number, centerY:Number ):Number {
-      return Math.sqrt( Math.pow( centerX - x, 2 ) + Math.pow( centerY - y, 2 ) );
-    }
-    
-    public static function calculateAngle( width:Number, height:Number, x:Number, y:Number, centerX:Number, centerY:Number ):Number {
-      x = calculateX( width, height, x, y );
-      y = calculateY( width, height, x, y );
-      centerX = calculateX( width, height, centerX, centerY );
-      centerY = calculateY( width, height, centerX, centerY );
-      var tAngle:Number = ( 180 / Math.PI ) * Math.atan2( ( 0 - y ) - ( 0 - centerY ), x - centerX );
-      if ( tAngle < 0 ) {
-        tAngle += 360;
+    public static function calculateHexY( x:Number, y:Number ):Number {
+      y *= -1; 
+      
+      var yAngle:Number = ( Math.PI / 180 ) * _metrics.angle1;
+      var ySlope:Number = Math.sin( yAngle ) / Math.cos( yAngle );
+      var yInt:Number = y - ( ySlope * x );
+      
+      var xAngle:Number = ( Math.PI / 180 ) * _metrics.angle2;
+      var xSlope:Number = Math.sin( xAngle ) / Math.cos( xAngle );
+      
+      var newX:Number = 0;
+      newX = ( 0 - yInt ) / ( ySlope - xSlope );
+      var newY:Number = xSlope * newX;
+      
+      var yDist:Number = Math.sqrt( Math.pow( newY - y, 2 ) + Math.pow( newX - x, 2 ) );
+      if ( y < newY ) {
+        yDist *= -1;
       }
-      if ( tAngle >= 360 ) {
-        tAngle -= 360;
-      }
-      return Math.round( tAngle * 10000 ) / 10000;
-    }
-    
-    public static function calculateHAngle( x:Number, y:Number, centerX:Number, centerY:Number ):Number {
-      var tAngle:Number = ( 180 / Math.PI ) * Math.atan2( ( 0 - y ) - ( 0 - centerY ), x - centerX );
-      if ( tAngle < 0 ) {
-        tAngle += 360;
-      }
-      if ( tAngle >= 360 ) {
-        tAngle -= 360;
-      }
-      return Math.round( tAngle * 10000 ) / 10000;
+      
+      return Math.round( yDist / ( _metrics.size1 * 2 ) );
     }
     
   }

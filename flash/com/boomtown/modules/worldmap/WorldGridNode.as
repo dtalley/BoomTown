@@ -1,4 +1,5 @@
 package com.boomtown.modules.worldmap {
+  import com.boomtown.utils.Hexagon;
   import flash.display.Sprite;
 	/**
    * ...
@@ -6,13 +7,13 @@ package com.boomtown.modules.worldmap {
    */
   internal class WorldGridNode extends Sprite {
     
-    private var _width:Number;
-    private var _height:Number;
+    private var _width:Number = 0;
+    private var _height:Number = 0;
     
-    private var _hx:int;
-    private var _hy:int;
+    private var _hx:int = 0;
+    private var _hy:int = 0;
     
-    private var _type:uint;
+    private var _type:uint = 0;
     
     public function WorldGridNode() {
       
@@ -24,17 +25,34 @@ package com.boomtown.modules.worldmap {
       _hx = x;
       _hy = y;
       
-      draw();
+      var info:uint = WorldGridCache.getNode( x, y );
+      if ( ( info >> 8 ) == 0x000000 ) {
+        trace( "active" );
+        _type = ACTIVE;
+        draw();
+      } else {
+        trace( "inactive" );
+        _type = ACTIVE;
+        draw(true);
+      }
     }
     
-    private function draw():void {
-      
+    private function draw( stuff:Boolean = false ):void {
+      graphics.clear();
+      graphics.beginFill( stuff ? 0xFFFFFF : 0x000000 );
+      Hexagon.drawHexagon( this, _width - 2, _height - 2 );
+      graphics.endFill();
     }
     
     public function setSize( width:Number, height:Number ):void {
       _width = width;
       _height = height;
       draw();
+    }
+    
+    public function clear():void {
+      graphics.clear();
+      _type = UNDEFINED;
     }
     
     public function get hX():Number {
@@ -47,6 +65,10 @@ package com.boomtown.modules.worldmap {
     
     public function get type():uint {
       return _type;
+    }
+    
+    public static function get UNDEFINED():uint {
+      return 0;
     }
     
     public static function get ACTIVE():uint {

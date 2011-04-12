@@ -30,6 +30,10 @@ package com.boomtown.modules.worldmap {
       return color > 0;
     }
     
+    public static function getNode( x:int, y:int ):uint {
+      return _key.getPixel32( x, y );
+    }
+    
   }
 
 }

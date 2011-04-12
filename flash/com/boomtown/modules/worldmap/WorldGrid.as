@@ -19,15 +19,18 @@ package com.boomtown.modules.worldmap {
     }
     
     private function init():void {
+      WorldGridCache.init();
       _pool = new ObjectPool( 100, WorldGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
-      KuroExpress.broadcast( "Beginning pool population", { obj:this, label:"WorldGrid::init()" } );
+      KuroExpress.broadcast( "Beginning pool population", 
+        { obj:this, label:"WorldGrid::init()" } );
     }
     
     private function poolReady( e:Event ):void {
       _pool.removeEventListener( Event.COMPLETE, poolReady );
+      KuroExpress.broadcast( "Pool has been populated", 
+        { obj:this, label:"WorldGrid::poolReady()" } );
       dispatchEvent( new WorldGridEvent( WorldGridEvent.GRID_READY ) );
-      KuroExpress.broadcast( "Pool has been populated", { obj:this, label:"WorldGrid::poolReady()" } );
     }
     
     public function populate( width:Number, height:Number ):void {
@@ -42,10 +45,10 @@ package com.boomtown.modules.worldmap {
       for ( var i:uint = 0; i < totalChildren; i++ ) {
         if ( getChildAt(i) is WorldGridNode ) {
           var node:WorldGridNode = WorldGridNode( getChildAt( i ) );
-          node.x = HexagonAxisGrid.calculateX( width, height, node.hX, node.hY );
-          node.y = HexagonAxisGrid.calculateY( width, height, node.hX, node.hY );
+          node.x = HexagonAxisGrid.calculateX( node.hX, node.hY );
+          node.y = HexagonAxisGrid.calculateY( node.hX, node.hY );
           if ( node.x < tLX || node.x > bRX || node.y < tLY || node.y > bRY ) {
-            destroyHexagon( node );
+            destroyNode( node );
             i--;
             totalChildren--;
           } else {
@@ -54,10 +57,16 @@ package com.boomtown.modules.worldmap {
         }
       }
       
-      createGrid( width, height, Math.round( HexagonAxisGrid.calculateHexX( width, height, sX, sY ) ), Math.round( HexagonAxisGrid.calculateHexY( width, height, sX, sY ) ), 0, tLX, tLY, bRX, bRY );
+      createGrid( width, height, 
+                  Math.round( HexagonAxisGrid.calculateHexX( sX, sY ) ), 
+                  Math.round( HexagonAxisGrid.calculateHexY( sX, sY ) ), 
+                  0, tLX, tLY, bRX, bRY );
     }
     
-    private function createGrid( width:Number, height:Number, sx:int, sy:int, level:int, tLX:int, tLY:int, bRX:int, bRY:int ):void {
+    private function createGrid( width:Number, height:Number, 
+                                 sx:int, sy:int, level:int, 
+                                 tLX:int, tLY:int, 
+                                 bRX:int, bRY:int ):void {
       var quadrant:int = 0;
       var created:int = 0;
       while ( quadrant < 4 ) {
@@ -77,13 +86,15 @@ package com.boomtown.modules.worldmap {
             cx += addx * ( distance + 1 );
             cy = nsy;
           }
-          var useX:int = Math.round( HexagonAxisGrid.calculateX( width, height, cx, cy ) );
-          var useY:int = Math.round( HexagonAxisGrid.calculateY( width, height, cx, cy ) );
+          var useX:int = HexagonAxisGrid.calculateX( cx, cy );
+          var useY:int = HexagonAxisGrid.calculateY( cx, cy );
+          trace( sx + "," + sy + " / " + tLX + "," + tLY + " / " + bRX + "," + bRY );
+          trace( useX + "," + useY );
           if ( useX < tLX || useX > bRX || useY < tLY || useY > bRY ) {
             count++;
             distance = 0;
           } else {
-            createHexagon( width, height, cx, cy );
+            createNode( width, height, cx, cy );
             created++;
             distance++;
           }
@@ -97,7 +108,7 @@ package com.boomtown.modules.worldmap {
       }
     }
     
-    private function createHexagon( width:Number, height:Number, x:int, y:int ):void {
+    private function createNode( width:Number, height:Number, x:int, y:int ):void {
       var newNode:WorldGridNode = null;
       if ( !WorldGridCache.checkNode( x, y ) ) {
         newNode = WorldGridNode( _pool.getObject() );
@@ -105,8 +116,8 @@ package com.boomtown.modules.worldmap {
         newNode.init( width, height, x, y );
         if ( newNode.type != WorldGridNode.INACTIVE ) {
           addChild( newNode );
-          newNode.x = HexagonAxisGrid.calculateX( width, height, x, y );
-          newNode.y = HexagonAxisGrid.calculateY( width, height, x, y );
+          newNode.x = HexagonAxisGrid.calculateX( x, y );
+          newNode.y = HexagonAxisGrid.calculateY( x, y );
         } else {
           _pool.returnObject( newNode );
         }
@@ -117,7 +128,7 @@ package com.boomtown.modules.worldmap {
       }
     }
     
-    private function destroyHexagon( node:WorldGridNode ):void {
+    private function destroyNode( node:WorldGridNode ):void {
       WorldGridCache.removeNode( node.hX, node.hY );
       _pool.returnObject( node );
       removeChild( node );
