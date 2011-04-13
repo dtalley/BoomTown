@@ -26,20 +26,20 @@ package com.boomtown.modules.worldmap {
       _hy = y;
       
       var info:uint = WorldGridCache.getNode( x, y );
-      if ( ( info >> 8 ) == 0x000000 ) {
-        trace( "active" );
+      if ( ( info & 0x00FFFFFF ) < 0xFFFFFF ) {
         _type = ACTIVE;
-        draw();
       } else {
-        trace( "inactive" );
-        _type = ACTIVE;
-        draw(true);
+        _type = INACTIVE;
       }
+      draw();
     }
     
     private function draw( stuff:Boolean = false ):void {
       graphics.clear();
-      graphics.beginFill( stuff ? 0xFFFFFF : 0x000000 );
+      graphics.beginFill( 0xAAAAAA );
+      Hexagon.drawHexagon( this, _width, _height );
+      graphics.endFill();
+      graphics.beginFill( _type == INACTIVE ? 0xFFFFFF : 0x000000 );
       Hexagon.drawHexagon( this, _width - 2, _height - 2 );
       graphics.endFill();
     }

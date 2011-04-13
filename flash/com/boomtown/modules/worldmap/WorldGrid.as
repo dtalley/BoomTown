@@ -33,6 +33,11 @@ package com.boomtown.modules.worldmap {
       dispatchEvent( new WorldGridEvent( WorldGridEvent.GRID_READY ) );
     }
     
+    public function position( x:int, y:int ):void {
+      this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
+      this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
+    }
+    
     public function populate( width:Number, height:Number ):void {
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
@@ -88,8 +93,6 @@ package com.boomtown.modules.worldmap {
           }
           var useX:int = HexagonAxisGrid.calculateX( cx, cy );
           var useY:int = HexagonAxisGrid.calculateY( cx, cy );
-          trace( sx + "," + sy + " / " + tLX + "," + tLY + " / " + bRX + "," + bRY );
-          trace( useX + "," + useY );
           if ( useX < tLX || useX > bRX || useY < tLY || useY > bRY ) {
             count++;
             distance = 0;
@@ -103,7 +106,7 @@ package com.boomtown.modules.worldmap {
       }
       if ( created > 0 ) {
         createGrid( width, height, sx, sy, level + 1, tLX, tLY, bRX, bRY );
-      } else { 
+      } else {
         dispatchEvent( new WorldGridEvent( WorldGridEvent.GRID_POPULATED ) );
       }
     }

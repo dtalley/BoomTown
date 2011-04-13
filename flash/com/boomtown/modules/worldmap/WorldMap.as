@@ -13,15 +13,18 @@
   import flash.events.MouseEvent;
   import com.boomtown.modules.core.Module;
   import flash.events.TimerEvent;
+  import flash.geom.Point;
   import flash.utils.Timer;
   
   public class WorldMap extends Module {
     
-    private var _width:Number = 50;
-    private var _height:Number = 30;
+    private var _width:Number = 110;
+    private var _height:Number = 80;
     private var _rotation:Number = 0;
     
+    private var _background:Sprite;
     private var _grid:WorldGrid;
+    private var _offset:Point;
     
     public function WorldMap():void {
       _id = "WorldMap";
@@ -35,7 +38,14 @@
     private function start():void {
       HexagonAxisGrid.setMetrics( _width, _height, _rotation );
       
-      _grid = new WorldGrid();      
+      _background = new Sprite();
+      _background.graphics.beginFill( 0xFFFFFF );
+      _background.graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
+      _background.graphics.endFill();
+      addChild( _background );
+      TweenLite.from( _background, .3, { alpha:0 } );
+      
+      _grid = new WorldGrid();  
       _grid.addEventListener( WorldGridEvent.GRID_READY, gridReady );
       KuroExpress.broadcast( "Creating grid and beginning its pool population", 
         { obj:this, label:"WorldMap::start()" } );
@@ -46,9 +56,43 @@
         { obj:this, label:"WorldMap::gridReady()" } );
       _grid.removeEventListener( WorldGridEvent.GRID_READY, gridReady );
       addChild( _grid );
+      _grid.position( 10, 10 );
       _grid.visible = false;
       _grid.alpha = 0;
       _grid.addEventListener( WorldGridEvent.GRID_POPULATED, gridPopulated );
+      _grid.populate( _width, _height );
+      
+      stage.addEventListener( MouseEvent.MOUSE_DOWN, mouseDown );
+    }
+    
+    private function mouseDown( e:MouseEvent ):void {
+      _offset = new Point( _grid.mouseX, _grid.mouseY );
+      var timer:Timer = new Timer(30,1);
+      timer.addEventListener( TimerEvent.TIMER_COMPLETE, enableNav );
+      KuroExpress.addListener( stage, MouseEvent.MOUSE_UP, interceptNav, timer );
+      timer.start();
+    }
+    
+    private function interceptNav( timer:Timer ):void {
+      timer.removeEventListener( TimerEvent.TIMER_COMPLETE, enableNav );
+    }
+    
+    private function enableNav( e:TimerEvent ):void {
+      KuroExpress.removeListener( stage, MouseEvent.MOUSE_UP, interceptNav );
+      stage.addEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
+      stage.addEventListener( MouseEvent.MOUSE_UP, mouseUp );
+    }
+    
+    private function mouseUp( e:MouseEvent ):void {
+      stage.removeEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
+      stage.removeEventListener( MouseEvent.MOUSE_UP, mouseUp );
+    }
+    
+    private function mouseMove( e:MouseEvent ):void {
+      TweenLite.to( _grid, .4, { x:mouseX - _offset.x, y:mouseY - _offset.y, onUpdate:updateGrid, onComplete:updateGrid } );
+    }
+    
+    private function updateGrid():void {
       _grid.populate( _width, _height );
     }
     
