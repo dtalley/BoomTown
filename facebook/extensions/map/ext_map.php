@@ -19,6 +19,7 @@
       private static function get_territory() {
         $territory_x = sys::input( "territory_x", null );
         $territory_y = sys::input( "territory_y", null );
+        $faction_id = sys::input( "faction_id", null );
         if( $territory_x == null || $territory_y == null ) {
           sys::message(
             USER_ERROR,
@@ -36,6 +37,15 @@
           db::open( TABLE_FACTIONS, LEFT );
             db::link( "faction_id" );
           db::close();
+          if( $faction_id != null ) {
+            db::open( TABLE_ZONES, LEFT );
+              db::link( "territory_id" );
+              db::open( TABLE_ZONE_SCENARIOS, LEFT );
+                db::link( "zone_id" );
+                db::open( TABLE_BATTLES, LEFT );
+                  
+            db::close();
+          }
         $territory = db::result();
         if( !$territory ) {
           sys::message(

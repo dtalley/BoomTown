@@ -1,14 +1,16 @@
 package com.boomtown.modules.worldmap {
   import com.boomtown.utils.Hexagon;
+  import com.boomtown.utils.HexagonLevelGrid;
+  import com.boomtown.utils.HexagonMetrics;
   import flash.display.Sprite;
+  import flash.geom.Point;
 	/**
    * ...
    * @author David Talley
    */
   internal class WorldGridNode extends Sprite {
     
-    private var _width:Number = 0;
-    private var _height:Number = 0;
+    private var _metrics:HexagonMetrics;
     
     private var _hx:int = 0;
     private var _hy:int = 0;
@@ -19,9 +21,8 @@ package com.boomtown.modules.worldmap {
       
     }
     
-    public function init( width:Number, height:Number, x:int, y:int ):void {
-      _width = width;
-      _height = height;
+    public function init( metrics:HexagonMetrics, x:int, y:int ):void {
+      _metrics = metrics;
       _hx = x;
       _hy = y;
       
@@ -37,22 +38,35 @@ package com.boomtown.modules.worldmap {
     private function draw( stuff:Boolean = false ):void {
       graphics.clear();
       graphics.beginFill( 0xAAAAAA );
-      Hexagon.drawHexagon( this, _width, _height );
+      Hexagon.drawHexagon( this, _metrics.width - 2, _metrics.height - 2, 0, 0, _metrics.rotation );
       graphics.endFill();
-      graphics.beginFill( _type == INACTIVE ? 0xFFFFFF : 0x000000 );
-      Hexagon.drawHexagon( this, _width - 2, _height - 2 );
+      graphics.beginFill( 0xFFFFFF );
+      Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
       graphics.endFill();
-    }
-    
-    public function setSize( width:Number, height:Number ):void {
-      _width = width;
-      _height = height;
-      draw();
+      
+      var metrics:HexagonMetrics = Hexagon.getMetrics( 12, 8, 0 );
+      for ( var i:int = 0; i < 37; i++ ) {
+        graphics.beginFill( 0x444444, .5 );
+        var offset:Point = HexagonLevelGrid.offset( i, metrics );
+        Hexagon.drawHexagon( this, 11, 7, offset.x, offset.y );
+        graphics.endFill();
+      }
     }
     
     public function clear():void {
       graphics.clear();
       _type = UNDEFINED;
+    }
+    
+    public function set metrics( val:HexagonMetrics ):void {
+      if( !_metrics || !_metrics.compare( val ) ) {
+        _metrics = val;
+        draw();
+      }
+    }
+    
+    public function get metrics():HexagonMetrics {
+      return _metrics;
     }
     
     public function get hX():Number {

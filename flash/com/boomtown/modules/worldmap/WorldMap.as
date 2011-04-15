@@ -18,10 +18,6 @@
   
   public class WorldMap extends Module {
     
-    private var _width:Number = 110;
-    private var _height:Number = 80;
-    private var _rotation:Number = 0;
-    
     private var _background:Sprite;
     private var _grid:WorldGrid;
     private var _offset:Point;
@@ -36,8 +32,6 @@
     }
     
     private function start():void {
-      HexagonAxisGrid.setMetrics( _width, _height, _rotation );
-      
       _background = new Sprite();
       _background.graphics.beginFill( 0xFFFFFF );
       _background.graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
@@ -45,7 +39,7 @@
       addChild( _background );
       TweenLite.from( _background, .3, { alpha:0 } );
       
-      _grid = new WorldGrid();  
+      _grid = new WorldGrid();
       _grid.addEventListener( WorldGridEvent.GRID_READY, gridReady );
       KuroExpress.broadcast( "Creating grid and beginning its pool population", 
         { obj:this, label:"WorldMap::start()" } );
@@ -60,7 +54,7 @@
       _grid.visible = false;
       _grid.alpha = 0;
       _grid.addEventListener( WorldGridEvent.GRID_POPULATED, gridPopulated );
-      _grid.populate( _width, _height );
+      _grid.populate();
       
       stage.addEventListener( MouseEvent.MOUSE_DOWN, mouseDown );
     }
@@ -89,11 +83,11 @@
     }
     
     private function mouseMove( e:MouseEvent ):void {
-      TweenLite.to( _grid, .4, { x:mouseX - _offset.x, y:mouseY - _offset.y, onUpdate:updateGrid, onComplete:updateGrid } );
+      TweenLite.to( _grid, .2, { x:mouseX - _offset.x, y:mouseY - _offset.y, onUpdate:updateGrid, onComplete:updateGrid } );
     }
     
     private function updateGrid():void {
-      _grid.populate( _width, _height );
+      _grid.populate();
     }
     
     private function gridPopulated( e:WorldGridEvent ):void {

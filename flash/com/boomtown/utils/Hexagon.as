@@ -44,23 +44,8 @@
       obj.graphics.lineTo( x + p6.x, y + p6.y );
     }
     
-    public static function getMetrics( width:Number, height:Number, rotation:Number = 0 ):Object {
-      rotation *= Math.PI / 180;
-      var p1:Point = new Point( 
-        ( Math.cos( ( Math.PI / 2 ) ) * ( height / 2 ) ) + ( ( width / 4 ) ),
-        ( ( Math.sin( ( Math.PI / 2 ) ) * ( height / 2 ) ) * -1 )
-      );
-      var p2:Point = new Point( 
-        ( ( width / 2 ) ),
-        0
-      );
-      var mp:Point = new Point( ( p1.x + p2.x ) / 2, ( p1.y + p2.y ) / 2 );
-      var ret:Object = { };
-      ret.angle1 = rotation * 180 / Math.PI + 90;
-      ret.angle2 = ret.angle1 - ( 90 - ( Math.atan( mp.y * -1 / mp.x ) * 180 / Math.PI ) );
-      ret.size1 = height / 2;
-      ret.size2 = Math.sqrt( Math.pow( mp.x - 0, 2 ) + Math.pow( mp.y - 0, 2 ) );
-      return ret;
+    public static function getMetrics( width:Number, height:Number, rotation:Number = 0 ):HexagonMetrics {
+      return new HexagonMetrics( width, height, rotation );
     }
     
   }

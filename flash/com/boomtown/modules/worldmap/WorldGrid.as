@@ -1,6 +1,7 @@
 package com.boomtown.modules.worldmap {
   import com.boomtown.modules.worldmap.events.WorldGridEvent;
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
+  import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.ObjectPool;
@@ -10,15 +11,32 @@ package com.boomtown.modules.worldmap {
    * ...
    * @author David Talley
    */
-  internal class WorldGrid extends Sprite {    
+  internal class WorldGrid extends Sprite { 
+    
+    private var _width:Number = 72;
+    private var _height:Number = 78;
+    private var _rotation:Number = 90;
     
     private var _pool:ObjectPool;
+    
+    public function setMetrics( width:Number, height:Number, rotation:Number ):void {
+      _width = width;
+      _height = height;
+      _rotation = rotation;
+      KuroExpress.broadcast( "Setting WorldGrid metrics.", 
+        { obj:this, label:"WorldGrid::setMetrics()" } );
+      populate();
+    }
     
     public function WorldGrid() { 
       init();
     }
     
     private function init():void {
+      graphics.beginFill( 0xFF0000 );
+      graphics.drawRect( 0 - 3000, 0 - 3000, 6000, 6000 );
+      graphics.drawRect( 0 - 3000, 0 - 3000, 3000, 3000 );
+      graphics.endFill();
       WorldGridCache.init();
       _pool = new ObjectPool( 100, WorldGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
@@ -33,18 +51,33 @@ package com.boomtown.modules.worldmap {
       dispatchEvent( new WorldGridEvent( WorldGridEvent.GRID_READY ) );
     }
     
+    public function resetMetrics():void {
+      if ( 
+        !HexagonAxisGrid.metrics || 
+        HexagonAxisGrid.metrics.width != _width || 
+        HexagonAxisGrid.metrics.height != _height || 
+        HexagonAxisGrid.metrics.rotation != _rotation 
+      ) {
+        HexagonAxisGrid.metrics = Hexagon.getMetrics( _width, _height, _rotation );
+      }
+    }
+    
     public function position( x:int, y:int ):void {
+      resetMetrics();
+      
       this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
       this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
     }
     
-    public function populate( width:Number, height:Number ):void {
+    public function populate():void {
+      resetMetrics();
+      
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
-      var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - width );
-      var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - height );
-      var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + width );
-      var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + height );
+      var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - _width );
+      var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - _height );
+      var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + _width );
+      var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + _height );
       
       var totalChildren:uint = numChildren;
       for ( var i:uint = 0; i < totalChildren; i++ ) {
@@ -57,19 +90,17 @@ package com.boomtown.modules.worldmap {
             i--;
             totalChildren--;
           } else {
-            node.setSize( width, height );
+            node.metrics = HexagonAxisGrid.metrics;
           }
         }
       }
       
-      createGrid( width, height, 
-                  Math.round( HexagonAxisGrid.calculateHexX( sX, sY ) ), 
+      createGrid( Math.round( HexagonAxisGrid.calculateHexX( sX, sY ) ), 
                   Math.round( HexagonAxisGrid.calculateHexY( sX, sY ) ), 
                   0, tLX, tLY, bRX, bRY );
     }
     
-    private function createGrid( width:Number, height:Number, 
-                                 sx:int, sy:int, level:int, 
+    private function createGrid( sx:int, sy:int, level:int, 
                                  tLX:int, tLY:int, 
                                  bRX:int, bRY:int ):void {
       var quadrant:int = 0;
@@ -97,7 +128,7 @@ package com.boomtown.modules.worldmap {
             count++;
             distance = 0;
           } else {
-            createNode( width, height, cx, cy );
+            createNode( cx, cy );
             created++;
             distance++;
           }
@@ -105,18 +136,18 @@ package com.boomtown.modules.worldmap {
         quadrant++;
       }
       if ( created > 0 ) {
-        createGrid( width, height, sx, sy, level + 1, tLX, tLY, bRX, bRY );
+        createGrid( sx, sy, level + 1, tLX, tLY, bRX, bRY );
       } else {
         dispatchEvent( new WorldGridEvent( WorldGridEvent.GRID_POPULATED ) );
       }
     }
     
-    private function createNode( width:Number, height:Number, x:int, y:int ):void {
+    private function createNode( x:int, y:int ):void {
       var newNode:WorldGridNode = null;
       if ( !WorldGridCache.checkNode( x, y ) ) {
         newNode = WorldGridNode( _pool.getObject() );
         WorldGridCache.addNode( x, y );
-        newNode.init( width, height, x, y );
+        newNode.init( HexagonAxisGrid.metrics, x, y );
         if ( newNode.type != WorldGridNode.INACTIVE ) {
           addChild( newNode );
           newNode.x = HexagonAxisGrid.calculateX( x, y );

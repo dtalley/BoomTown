@@ -1,6 +1,7 @@
 ﻿package com.boomtown.loader {
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
+  import com.boomtown.utils.HexagonMetrics;
   import com.greensock.easing.Linear;
   import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
@@ -30,14 +31,12 @@
     private var _target:EventDispatcher;
     private var _speed:Number = .01;
     
-    private var _hexWidth:Number;
-    private var _hexHeight:Number;
+    private var _metrics:HexagonMetrics;
     
     private var _style:Object;
     
     public function GraphicLoader( hexWidth:Number, hexHeight:Number, target:EventDispatcher = null, style:Object = null ):void {
-      _hexWidth = hexWidth;
-      _hexHeight = hexHeight;
+      _metrics = Hexagon.getMetrics( hexWidth, hexHeight );
       _target = target;
       _style = style ? style : {};
       KuroExpress.addListener( this, Event.ADDED_TO_STAGE, init );
@@ -57,10 +56,9 @@
       for ( var i:int = 0; i < 37; i++ ) {
         var bit:Sprite = new Sprite();
         bit.graphics.beginFill( _style.bitbg ? _style.bitbg : 0x444444 );
-        Hexagon.drawHexagon( bit, _hexWidth-1, _hexHeight-1 );
+        Hexagon.drawHexagon( bit, _metrics.width-1, _metrics.height-1 );
         bit.graphics.endFill();
-        var metrics:Object = Hexagon.getMetrics( _hexWidth, _hexHeight );
-        var offset:Point = HexagonLevelGrid.offset( i, metrics.angle1, metrics.angle2, metrics.size1 * 2, metrics.size2 * 2 );
+        var offset:Point = HexagonLevelGrid.offset( i, _metrics );
         _bg.addChild(bit);
         bit.x = offset.x;
         bit.y = offset.y;
@@ -115,13 +113,12 @@
         } else {
           var bit:Sprite = new Sprite();
           bit.graphics.beginFill( _style.borderColor ? _style.borderColor : 0, _style.borderAlpha ? _style.borderAlpha : 0 );
-          Hexagon.drawHexagon( bit, _hexWidth, _hexHeight );
+          Hexagon.drawHexagon( bit, _metrics.width, _metrics.height );
           bit.graphics.endFill();
           bit.graphics.beginFill( 0xFFFFFF );
-          Hexagon.drawHexagon( bit, _hexWidth-1, _hexHeight-1 );
+          Hexagon.drawHexagon( bit, _metrics.width-1, _metrics.height-1 );
           bit.graphics.endFill();
-          var metrics:Object = Hexagon.getMetrics( _hexWidth, _hexHeight );
-          var offset:Point = HexagonLevelGrid.offset( _style.invert ? _max - _bits.length - 1 : _bits.length, metrics.angle1, metrics.angle2, metrics.size1 * 2, metrics.size2 * 2 );
+          var offset:Point = HexagonLevelGrid.offset( _style.invert ? _max - _bits.length - 1 : _bits.length, _metrics );
           _bits.push(bit);
           _bitHolder.addChild(bit);
           bit.x = _bg.x + offset.x;

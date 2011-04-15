@@ -36,7 +36,7 @@
       return i - _total - 1;
     }
     
-    public static function offset( i:Number, angle1:Number, angle2:Number, size1:Number, size2:Number ):Point {
+    public static function offset( i:Number, metrics:Object ):Point {
       var _level:Number = level(i);
       var _index:Number = index(i);
       var direction:Number = Math.floor( ( _index ) / _level );
@@ -53,40 +53,40 @@
       var size4:Number = 0;
       switch( direction ) {
         case 0:
-          angle3 = 0 - angle1;
-          angle4 = 180 - angle2;
-          size3 = size1;
-          size4 = size2;
+          angle3 = 0 - metrics.angle1;
+          angle4 = 180 - metrics.angle2;
+          size3 = metrics.size1 * 2;
+          size4 = metrics.size2 * 2;
           break;
         case 1:
-          angle3 = angle2 + 180;
-          angle4 = angle1;
-          size3 = size2;
-          size4 = size1;
+          angle3 = metrics.angle2 + 180;
+          angle4 = metrics.angle1;
+          size3 = metrics.size2 * 2;
+          size4 = metrics.size1 * 2;
           break;
         case 2:
-          angle3 = 180 - angle2;
-          angle4 = angle2;
-          size3 = size2;
-          size4 = size2;
+          angle3 = 180 - metrics.angle2;
+          angle4 = metrics.angle2;
+          size3 = metrics.size2 * 2;
+          size4 = metrics.size2 * 2;
           break;
         case 3:
-          angle3 = angle1;
-          angle4 = 0 - angle2;
-          size3 = size1;
-          size4 = size2;
+          angle3 = metrics.angle1;
+          angle4 = 0 - metrics.angle2;
+          size3 = metrics.size1 * 2;
+          size4 = metrics.size2 * 2;
           break;
         case 4:
-          angle3 = angle2;
-          angle4 = 0 - angle1;
-          size3 = size2;
-          size4 = size1;
+          angle3 = metrics.angle2;
+          angle4 = 0 - metrics.angle1;
+          size3 = metrics.size2 * 2;
+          size4 = metrics.size1 * 2;
           break;
         case 5:
-          angle3 = 0 - angle2;
-          angle4 = angle2 + 180;
-          size3 = size2;
-          size4 = size2;
+          angle3 = 0 - metrics.angle2;
+          angle4 = metrics.angle2 + 180;
+          size3 = metrics.size2 * 2;
+          size4 = metrics.size2 * 2;
           break;
       }
       
