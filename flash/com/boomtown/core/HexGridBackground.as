@@ -35,7 +35,7 @@
       _color.graphics.endFill();      
       addChild( _color );
       
-      _metrics = Hexagon.getMetrics( hexWidth, hexHeight );
+      _metrics = new HexagonMetrics( hexWidth, hexHeight );
       
       _hexagons = new Sprite();
       var bits:Sprite = new Sprite();

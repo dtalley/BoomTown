@@ -44,10 +44,6 @@
       obj.graphics.lineTo( x + p6.x, y + p6.y );
     }
     
-    public static function getMetrics( width:Number, height:Number, rotation:Number = 0 ):HexagonMetrics {
-      return new HexagonMetrics( width, height, rotation );
-    }
-    
   }
   
 }

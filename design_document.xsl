@@ -66,6 +66,16 @@
 					padding: 3px;
 					margin-bottom: 5px;
 				}
+        .background {
+					border: 1px solid #000000;
+					padding: 3px;
+				}
+				.background_title {
+					background-color: #000000;
+					color: #FFFFFF;
+					padding: 3px;
+					margin-bottom: 5px;
+				}
 				.implementation {
 					border: 1px solid #000000;
 					padding: 3px;
@@ -86,36 +96,6 @@
 					padding: 3px;
 					margin-bottom: 5px;
 				}
-				.tasks {
-					border: 1px solid #000000;	
-					padding: 3px;
-				}
-				.tasks_title {
-					background-color: #000000;
-					color: #FFFFFF;
-					padding: 3px;
-					margin-bottom: 5px;
-				}
-				.tasks_design_title {
-					padding: 3px;
-					border-bottom: 1px solid #DDDDDD;
-				}
-				.tasks_code_title {
-					padding: 3px;
-					border-bottom: 1px solid #DDDDDD;
-				}
-				.tasks_art_title {
-					padding: 3px;
-					border-bottom: 1px solid #DDDDDD;
-				}
-				.tasks_animation_title {
-					padding: 3px;
-					border-bottom: 1px solid #DDDDDD;
-				}
-				.tasks_sound_title {
-					padding: 3px;
-					border-bottom: 1px solid #DDDDDD;
-				}
 			</style>
         	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         </head>
@@ -126,11 +106,36 @@
             	<xsl:variable name="graphic_header" select="information/graphic" />
                 <img src="{$graphic_header}" />
             </div>
+
+            <div style="text-align: center; font-weight: bold; font-style: italic;">Version: <xsl:value-of select="information/modified" /></div><br />
             <div id="description">
             	<xsl:copy-of select="information/description" />
             </div>
             <br />
-            This is a feature oriented design document.  Each feature is listed individually, simplest to most complex.<br /><br />
+            This is a feature oriented design document.  Each feature is listed individually, broadest to most specific.<br /><br />
+            <strong>Changes since the last version:</strong>
+            <ul>
+              <xsl:for-each select="information/changes/change">
+                <xsl:choose>
+                  <xsl:when test="@type = 'subtraction'">
+                    <li style="color: #FF0000;">- <xsl:value-of select="current()" /></li>
+                  </xsl:when>
+                  <xsl:when test="@type = 'addition'">
+                    <li style="color: #008800;">+ <xsl:value-of select="current()" /></li>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <li><xsl:value-of select="current()" /></li>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+            </ul>
+
+            <strong>Table of Contents:</strong>
+            <ul>
+              <xsl:for-each select="feature">
+                <li><a href="#feature_{id}"><xsl:value-of select="title" /></a></li>
+              </xsl:for-each>
+            </ul>
             <xsl:for-each select="feature">
             	<div class="feature">
                     <div class="feature_title">
@@ -142,16 +147,20 @@
                     <div class="contact">
                         <div class="contact_title">Contact</div>
                         <div class="contact_info">
+                          <span style="font-style: italic; color: #888888;">Contact information for the individual that maintains this section.</span><br /><br />
                         	<xsl:variable name="author_email" select="contact/email" />
                         	Author: <a href="mailto:{$author_email}"><xsl:value-of select="contact/author" /></a>
                         </div>
                         <br />
                         <div class="contact_list">
-                        	Related Sections:<br />
+                        	<em>Other features related to this feature:</em><br />
                             <ul>
                                 <xsl:for-each select="contact/related_sections/section">
-                                    <xsl:variable name="related_section_id" select="id" />
-                                    <li><a href="#feature_{$related_section_id}"><xsl:value-of select="title" /></a></li>
+                                    <xsl:variable name="related_section_id" select="current()" />
+                                    <xsl:variable name="related_section_title" select="/design_document/feature[string(id)=string($related_section_id)]/title" />
+                                    <xsl:if test="string-length( $related_section_title ) > 0">
+                                      <li><a href="#feature_{$related_section_id}"><xsl:value-of select="$related_section_title" /></a></li>
+                                    </xsl:if>
                                 </xsl:for-each>
                             </ul>
                         </div>
@@ -159,240 +168,39 @@
                     <br />
                     <div class="goals">
                     	<div class="goals_title">Goals</div>
+                      <span style="font-style: italic; color: #888888;">Clear, concise goals that this feature is meant to achieve.</span><br />
                         <div class="goals_list">
                         	<ul>
                         		<xsl:for-each select="goals/goal">
-                            		<li><xsl:copy-of select="description" /></li>
+                            		<li><xsl:copy-of select="current()" /></li>
                             	</xsl:for-each>
                             </ul>
                         </div>
                     </div>
                     <br />
-                    <div class="implementation">
-                        <div class="implementation_title">Implementation</div>
-                        <xsl:copy-of select="implementation" />
-                    </div>
-                    <br />
-                    <div class="impact">
-                        <div class="impact_title">Impact</div>
-                        <xsl:copy-of select="impact" />
-                    </div>
-                    <br />
-                    <div class="tasks">
-                    	<div class="tasks_title">
-                        	Tasks
-                        </div>
-                        <div class="tasks_design_title">
-                            Tasks for Design
-                        </div>
-                        <div class="tasks_design">
-                            <ul>
-                                <xsl:for-each select="tasks/design/task">
-                                    <li>
-                                    	<xsl:variable name="task_priority">
-                                            <xsl:choose>
-												<xsl:when test="completed=1">
-													#AAAAAA
-												</xsl:when>
-                                                <xsl:when test="priority=0">
-                                                    #FF0000
-                                                </xsl:when>
-                                                <xsl:when test="priority=1">
-                                                    #FF9900
-                                                </xsl:when>
-                                                <xsl:when test="priority=2">
-                                                    #FFFF00
-                                                </xsl:when>
-                                                <xsl:when test="priority=9">
-                                                    #99FF00
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    #00FF00
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:variable>
-                                        <div style="border-left: 10px solid {$task_priority};border-bottom:1px solid {$task_priority};margin-bottom:2px;padding:4px;display:block;">
-											<span>
-												<xsl:if test="completed = 1">
-													<xsl:attribute name="style">color: #AAAAAA;</xsl:attribute>
-													<strong>Completed: </strong> 
-												</xsl:if>
-												<xsl:copy-of select="description" />
-											</span>
-										</div>
-                                    </li>
-                                </xsl:for-each>
-                            </ul>
-                        </div>
-                        <div class="tasks_code_title">
-                            Tasks for Code
-                        </div>
-                        <div class="tasks_code">
-                            <ul>
-                                <xsl:for-each select="tasks/code/task">
-                                	<li>
-                                    	<xsl:variable name="task_priority">
-                                            <xsl:choose>
-												<xsl:when test="completed=1">
-													#AAAAAA
-												</xsl:when>
-                                                <xsl:when test="priority=0">
-                                                    #FF0000
-                                                </xsl:when>
-                                                <xsl:when test="priority=1">
-                                                    #FF9900
-                                                </xsl:when>
-                                                <xsl:when test="priority=2">
-                                                    #FFFF00
-                                                </xsl:when>
-                                                <xsl:when test="priority=9">
-                                                    #99FF00
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    #00FF00
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:variable>
-                                        <div style="border-left: 10px solid {$task_priority};border-bottom:1px solid {$task_priority};margin-bottom:2px;padding:4px;display:block;">
-											<span>
-												<xsl:if test="completed = 1">
-													<xsl:attribute name="style">color: #AAAAAA;</xsl:attribute>
-													<strong>Completed: </strong> 
-												</xsl:if>
-												<xsl:copy-of select="description" />
-											</span>
-										</div>
-                                    </li>
-                                </xsl:for-each>
-                            </ul>
-                        </div>
-                        <div class="tasks_art_title">
-                            Tasks for Art
-                        </div>
-                        <div class="tasks_art">
-                            <ul>
-                                <xsl:for-each select="tasks/art/task">
-                                    <li>
-                                    	<xsl:variable name="task_priority">
-                                            <xsl:choose>
-												<xsl:when test="completed=1">
-													#AAAAAA
-												</xsl:when>
-                                                <xsl:when test="priority=0">
-                                                    #FF0000
-                                                </xsl:when>
-                                                <xsl:when test="priority=1">
-                                                    #FF9900
-                                                </xsl:when>
-                                                <xsl:when test="priority=2">
-                                                    #FFFF00
-                                                </xsl:when>
-                                                <xsl:when test="priority=9">
-                                                    #99FF00
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    #00FF00
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:variable>
-                                        <div style="border-left: 10px solid {$task_priority};border-bottom:1px solid {$task_priority};margin-bottom:2px;padding:4px;display:block;">
-											<span>
-												<xsl:if test="completed = 1">
-													<xsl:attribute name="style">color: #AAAAAA;</xsl:attribute>
-													<strong>Completed: </strong> 
-												</xsl:if>
-												<xsl:copy-of select="description" />
-											</span>
-										</div>
-                                    </li>
-                                </xsl:for-each>
-                            </ul>
-                        </div>
-                        <div class="tasks_animation_title">
-                            Tasks for Animation
-                        </div>
-                        <div class="tasks_animation">
-                            <ul>
-                                <xsl:for-each select="tasks/animation/task">
-                                    <li>
-                                    	<xsl:variable name="task_priority">
-                                            <xsl:choose>
-												<xsl:when test="completed=1">
-													#AAAAAA
-												</xsl:when>
-                                                <xsl:when test="priority=0">
-                                                    #FF0000
-                                                </xsl:when>
-                                                <xsl:when test="priority=1">
-                                                    #FF9900
-                                                </xsl:when>
-                                                <xsl:when test="priority=2">
-                                                    #FFFF00
-                                                </xsl:when>
-                                                <xsl:when test="priority=9">
-                                                    #99FF00
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    #00FF00
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:variable>
-                                        <div style="border-left: 10px solid {$task_priority};border-bottom:1px solid {$task_priority};margin-bottom:2px;padding:4px;display:block;">
-											<span>
-												<xsl:if test="completed = 1">
-													<xsl:attribute name="style">color: #AAAAAA;</xsl:attribute>
-													<strong>Completed: </strong> 
-												</xsl:if>
-												<xsl:copy-of select="description" />
-											</span>
-										</div>
-                                    </li>
-                                </xsl:for-each>
-                            </ul>
-                        </div>
-                        <div class="tasks_sound_title">
-                            Tasks for Sound
-                        </div>
-                        <div class="tasks_sound">
-                            <ul>
-                                <xsl:for-each select="tasks/sound/task">
-                                    <li>
-                                    	<xsl:variable name="task_priority">
-                                            <xsl:choose>
-												<xsl:when test="completed=1">
-													#AAAAAA
-												</xsl:when>
-                                                <xsl:when test="priority=0">
-                                                    #FF0000
-                                                </xsl:when>
-                                                <xsl:when test="priority=1">
-                                                    #FF9900
-                                                </xsl:when>
-                                                <xsl:when test="priority=2">
-                                                    #FFFF00
-                                                </xsl:when>
-                                                <xsl:when test="priority=9">
-                                                    #99FF00
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    #00FF00
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:variable>
-                                        <div style="border-left: 10px solid {$task_priority};border-bottom:1px solid {$task_priority};margin-bottom:2px;padding:4px;display:block;">
-											<span>
-												<xsl:if test="completed = 1">
-													<xsl:attribute name="style">color: #AAAAAA;</xsl:attribute>
-													<strong>Completed: </strong> 
-												</xsl:if>
-												<xsl:copy-of select="description" />
-											</span>
-										</div>
-                                    </li> 
-                                </xsl:for-each>
-                            </ul>
-                        </div>
-                    </div>
+                    <xsl:if test="string-length( background ) > 0">
+                      <div class="background">
+                          <div class="background_title">Background</div>
+                          <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span><br /><br />
+                          <xsl:copy-of select="background" />
+                      </div>
+                      <br />
+                    </xsl:if>
+                    <xsl:if test="string-length( implementation ) > 0">
+                      <div class="implementation">
+                          <div class="implementation_title">Implementation</div>
+                          <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span><br /><br />
+                          <xsl:copy-of select="implementation" />
+                      </div>
+                      <br />
+                    </xsl:if>
+                    <xsl:if test="string-length( impact ) > 0">
+                      <div class="impact">
+                          <div class="impact_title">Impact</div>
+                          <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span><br /><br />
+                          <xsl:copy-of select="impact" />
+                      </div>
+                    </xsl:if>
                 </div>
                 <br />
             </xsl:for-each>

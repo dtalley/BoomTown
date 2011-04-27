@@ -36,7 +36,7 @@
     private var _style:Object;
     
     public function GraphicLoader( hexWidth:Number, hexHeight:Number, target:EventDispatcher = null, style:Object = null ):void {
-      _metrics = Hexagon.getMetrics( hexWidth, hexHeight );
+      _metrics = new HexagonMetrics( hexWidth, hexHeight );
       _target = target;
       _style = style ? style : {};
       KuroExpress.addListener( this, Event.ADDED_TO_STAGE, init );

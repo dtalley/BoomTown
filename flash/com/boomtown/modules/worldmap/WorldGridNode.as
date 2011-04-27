@@ -2,8 +2,12 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
   import com.boomtown.utils.HexagonMetrics;
+  import flash.display.Bitmap;
+  import flash.display.BitmapData;
   import flash.display.Sprite;
+  import flash.geom.Matrix;
   import flash.geom.Point;
+  import flash.geom.Rectangle;
 	/**
    * ...
    * @author David Talley
@@ -17,8 +21,11 @@ package com.boomtown.modules.worldmap {
     
     private var _type:uint = 0;
     
+    private var _details:Sprite;
+    private var _map:Bitmap;
+    
     public function WorldGridNode() {
-      
+      _details = new Sprite();
     }
     
     public function init( metrics:HexagonMetrics, x:int, y:int ):void {
@@ -32,10 +39,34 @@ package com.boomtown.modules.worldmap {
       } else {
         _type = INACTIVE;
       }
+      
+      generateDetails();      
       draw();
     }
     
-    private function draw( stuff:Boolean = false ):void {
+    private function generateDetails():void {
+      if ( _map ) {
+        removeChild( _map );
+      }
+      _map = new Bitmap( new BitmapData( _metrics.width * 2, _metrics.height * 2, true, 0x00000000 ) );
+      addChild( _map );
+      var metrics:HexagonMetrics = new HexagonMetrics( 12, 8, 0 );
+      _details.graphics.clear();
+      for ( var i:int = 0; i < 37; i++ ) {
+        _details.graphics.beginFill( 0x444444, 1 );
+        var offset:Point = HexagonLevelGrid.offset( i, metrics );
+        Hexagon.drawHexagon( _details, 11, 7, offset.x, offset.y );
+        _details.graphics.endFill();
+      }
+      var matr:Matrix = new Matrix();
+      matr.translate( _metrics.width, _metrics.height );
+      _map.bitmapData.draw( _details, matr );
+      _map.x = 0 - _metrics.width;
+      _map.y = 0 - _metrics.height;
+      _details.graphics.clear();
+    }
+    
+    private function draw():void {
       graphics.clear();
       graphics.beginFill( 0xAAAAAA );
       Hexagon.drawHexagon( this, _metrics.width - 2, _metrics.height - 2, 0, 0, _metrics.rotation );
@@ -43,18 +74,12 @@ package com.boomtown.modules.worldmap {
       graphics.beginFill( 0xFFFFFF );
       Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
       graphics.endFill();
-      
-      var metrics:HexagonMetrics = Hexagon.getMetrics( 12, 8, 0 );
-      for ( var i:int = 0; i < 37; i++ ) {
-        graphics.beginFill( 0x444444, .5 );
-        var offset:Point = HexagonLevelGrid.offset( i, metrics );
-        Hexagon.drawHexagon( this, 11, 7, offset.x, offset.y );
-        graphics.endFill();
-      }
     }
     
     public function clear():void {
       graphics.clear();
+      removeChild( _map );
+      _map = null;
       _type = UNDEFINED;
     }
     

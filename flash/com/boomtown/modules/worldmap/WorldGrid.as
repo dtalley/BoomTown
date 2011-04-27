@@ -3,6 +3,7 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
+  import com.boomtown.utils.HexagonMetrics;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.ObjectPool;
   import flash.display.Sprite;
@@ -33,10 +34,6 @@ package com.boomtown.modules.worldmap {
     }
     
     private function init():void {
-      graphics.beginFill( 0xFF0000 );
-      graphics.drawRect( 0 - 3000, 0 - 3000, 6000, 6000 );
-      graphics.drawRect( 0 - 3000, 0 - 3000, 3000, 3000 );
-      graphics.endFill();
       WorldGridCache.init();
       _pool = new ObjectPool( 100, WorldGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
@@ -58,7 +55,7 @@ package com.boomtown.modules.worldmap {
         HexagonAxisGrid.metrics.height != _height || 
         HexagonAxisGrid.metrics.rotation != _rotation 
       ) {
-        HexagonAxisGrid.metrics = Hexagon.getMetrics( _width, _height, _rotation );
+        HexagonAxisGrid.metrics = new HexagonMetrics( _width, _height, _rotation );
       }
     }
     
@@ -71,14 +68,12 @@ package com.boomtown.modules.worldmap {
     
     public function populate():void {
       resetMetrics();
-      
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
       var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - _width );
       var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - _height );
       var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + _width );
       var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + _height );
-      
       var totalChildren:uint = numChildren;
       for ( var i:uint = 0; i < totalChildren; i++ ) {
         if ( getChildAt(i) is WorldGridNode ) {
@@ -94,7 +89,6 @@ package com.boomtown.modules.worldmap {
           }
         }
       }
-      
       createGrid( Math.round( HexagonAxisGrid.calculateHexX( sX, sY ) ), 
                   Math.round( HexagonAxisGrid.calculateHexY( sX, sY ) ), 
                   0, tLX, tLY, bRX, bRY );
@@ -166,6 +160,7 @@ package com.boomtown.modules.worldmap {
       WorldGridCache.removeNode( node.hX, node.hY );
       _pool.returnObject( node );
       removeChild( node );
+      node.clear();
       if ( node.type == WorldGridNode.ACTIVE ) {
         node.removeEventListener( WorldGridNodeEvent.NODE_OVER, nodeOver );
         node.removeEventListener( WorldGridNodeEvent.NODE_CLICKED, nodeClicked );

@@ -37,15 +37,6 @@
           db::open( TABLE_FACTIONS, LEFT );
             db::link( "faction_id" );
           db::close();
-          if( $faction_id != null ) {
-            db::open( TABLE_ZONES, LEFT );
-              db::link( "territory_id" );
-              db::open( TABLE_ZONE_SCENARIOS, LEFT );
-                db::link( "zone_id" );
-                db::open( TABLE_BATTLES, LEFT );
-                  
-            db::close();
-          }
         $territory = db::result();
         if( !$territory ) {
           sys::message(
