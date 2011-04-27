@@ -7,6 +7,19 @@
               doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
               omit-xml-declaration="yes" />
 
+<xsl:template match="//flink">
+  <xsl:variable name="feature_id" select="current()" />
+  <xsl:variable name="feature_title" select="/design_document/feature[id=$feature_id]/title" />
+  <xsl:choose>
+    <xsl:when test="string-length( $feature_title ) > 0">
+      <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$feature_id" />
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template match="/design_document">
 	<html>
 		<head>
@@ -109,7 +122,9 @@
 
             <div style="text-align: center; font-weight: bold; font-style: italic;">Version: <xsl:value-of select="information/modified" /></div><br />
             <div id="description">
-            	<xsl:copy-of select="information/description" />
+              <xsl:for-each select="information/description">
+                <xsl:apply-templates />
+              </xsl:for-each>
             </div>
             <br />
             This is a feature oriented design document.  Each feature is listed individually, broadest to most specific.<br /><br />
@@ -172,7 +187,7 @@
                         <div class="goals_list">
                         	<ul>
                         		<xsl:for-each select="goals/goal">
-                            		<li><xsl:copy-of select="current()" /></li>
+                            		<li><xsl:apply-templates /></li>
                             	</xsl:for-each>
                             </ul>
                         </div>
@@ -182,7 +197,9 @@
                       <div class="background">
                           <div class="background_title">Background</div>
                           <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span><br /><br />
-                          <xsl:copy-of select="background" />
+                          <xsl:for-each select="background">
+                            <xsl:apply-templates />
+                          </xsl:for-each>
                       </div>
                       <br />
                     </xsl:if>
@@ -190,7 +207,9 @@
                       <div class="implementation">
                           <div class="implementation_title">Implementation</div>
                           <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span><br /><br />
-                          <xsl:copy-of select="implementation" />
+                          <xsl:for-each select="implementation">
+                            <xsl:apply-templates />
+                          </xsl:for-each>
                       </div>
                       <br />
                     </xsl:if>
@@ -198,7 +217,9 @@
                       <div class="impact">
                           <div class="impact_title">Impact</div>
                           <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span><br /><br />
-                          <xsl:copy-of select="impact" />
+                          <xsl:for-each select="impact">
+                            <xsl:apply-templates />
+                          </xsl:for-each>
                       </div>
                     </xsl:if>
                 </div>
@@ -206,6 +227,35 @@
             </xsl:for-each>
         </div>
     </body>
+</xsl:template>
+
+<xsl:template match="strong">
+  <strong><xsl:apply-templates /></strong>
+</xsl:template>
+
+<xsl:template match="em">
+  <em><xsl:apply-templates /></em>
+</xsl:template>
+
+<xsl:template match="ul">
+  <ul><xsl:apply-templates /></ul>
+</xsl:template>
+
+<xsl:template match="li">
+  <li><xsl:apply-templates /></li>
+</xsl:template>
+
+<xsl:template match="br">
+  <br />
+</xsl:template>
+
+<xsl:template match="span">
+  <span>
+    <xsl:if test="string-length( @style ) > 0">
+      <xsl:attribute name="style"><xsl:value-of select="@style" /></xsl:attribute>
+    </xsl:if>
+    <xsl:apply-templates />
+  </span>
 </xsl:template>
 
 </xsl:stylesheet>

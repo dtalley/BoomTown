@@ -17,6 +17,7 @@
 			<change type="addition">Added optional 'background' section</change>
 			<change>Updated 'Commander' feature</change>
 			<change>Updated 'Faction' feature</change>
+			<change type="addition">Added flinks, quick links to other sections</change>
 		</changes>
 		
 		<description>
@@ -49,7 +50,7 @@
 		</background>
 		
 		<implementation>		
-			From the moment players launch the game, even if they aren't logged in, the game's setting should permeate the experience.  They should feel as though they have suddenly become part of this world, as though their presence on Kova is immediately requested.  An unregistered player should be plasterd with "Visit Kova" propoganda from the different factions, enticing them to "join the fight for Kovanite."
+			From the moment players launch the game, even if they aren't logged in, the game's setting should permeate the experience.  They should feel as though they have suddenly become part of this world, as though their presence on Kova is immediately requested.  An unregistered player should be plasterd with "Visit Kova" propoganda from each <flink>faction</flink>, enticing them to "join the fight for Kovanite."
 		</implementation>
 		
 		<impact>
@@ -82,7 +83,7 @@
 		</background>
 		
 		<implementation>		
-			The commander is the representation of the player within the game.  The player creates a "commander card" when they first sign up, providing a standard, recongizable way to represent their individualism to themselves and other players.  The commander card includes a photo provided by the player, as well as a visible rank insignia so other players viewing the commander card can instantly tell what rank the commander is.  The commander controls a single mobile command center at a time, and a commander fights for a single faction.		
+			The commander is the representation of the player within the game.  The player creates a "commander card" when they first sign up, providing a standard, recongizable way to represent their individualism to themselves and other players.  The commander card includes a photo provided by the player, as well as a visible rank insignia so other players viewing the commander card can instantly tell what rank the commander is.  The commander controls a single <flink>mobile_command_center</flink> at a time, and a commander fights for a single <flink>faction</flink>.		
 		</implementation>
 
 		<impact>		
@@ -163,7 +164,7 @@
 		</goals>
 
 		<implementation>
-			A Mobile Command Center (MCC) can either be 'Flying' or 'Rolling', which is to say one flies through the air and one rolls over the ground.  The Player chooses which MCC they would like to control when they first sign up.  The MCC is also what holds all of the Player's Soldiers, Equipment, Vehicles, and Resources.
+			A Mobile Command Center (MCC) can either be 'Flying' or 'Rolling', which is to say one flies through the air and one rolls over the ground.  The player chooses which MCC they would like to control when they first sign up.  The MCC is also what holds all of the player's soldiers, equipment, vehicles, and resources.
 		</implementation>
 		
 		<impact>
@@ -214,7 +215,8 @@
 				<li>The number of faction dropship credits the player has left</li>
 				<li>The used and unused bandwidth of the player's command center</li>
 				<li>The current balance of their credit account</li>
-				<li>A listing of friends</li>
+				<li>A link to the <flink>factory</flink>.</li>
+				<li>A link to the <flink>war_room</flink>.</li>
 			</ul>
 		</implementation>
 		
