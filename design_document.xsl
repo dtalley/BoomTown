@@ -7,9 +7,9 @@
               doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
               omit-xml-declaration="yes" />
 
-<xsl:template match="//flink">
+<xsl:template match="//link">
   <xsl:variable name="feature_id" select="current()" />
-  <xsl:variable name="feature_title" select="/design_document/feature[id=$feature_id]/title" />
+  <xsl:variable name="feature_title" select="/design_document/featureset/feature[id=$feature_id]/title" />
   <xsl:choose>
     <xsl:when test="string-length( $feature_title ) > 0">
       <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
@@ -18,6 +18,29 @@
       <xsl:value-of select="$feature_id" />
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<xsl:template match="//plink">
+  <xsl:variable name="feature_id" select="current()" />
+  <xsl:variable name="feature_title" select="/design_document/featureset/feature[id=$feature_id]/plural" />
+  <xsl:choose>
+    <xsl:when test="string-length( $feature_title ) > 0">
+      <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$feature_id" />
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template match="//t">
+  <xsl:variable name="feature_title" select="ancestor::feature/title" />
+  <xsl:value-of select="$feature_title" />
+</xsl:template>
+
+<xsl:template match="//p">
+  <xsl:variable name="feature_title" select="ancestor::feature/plural" />
+  <xsl:value-of select="$feature_title" />
 </xsl:template>
 
 <xsl:template match="/design_document">
@@ -37,7 +60,7 @@
 					font-family: Verdana, Geneva, sans-serif;
 				}
 				#content {
-					width: 800px;
+					width: 1000px;
 					margin: 0 auto;
 					padding: 0px 10px;
 					text-align: left;
@@ -48,6 +71,17 @@
 					font-size: 24px;
 					font-weight: bold;
 				}
+        .featureset {
+          border: 1px solid #000000;
+          border-bottom: 5px solid #000000;
+          padding: 5px;
+        }
+        .featureset .featureset_title {
+          font-size: 26px;
+          color: #FFFFFF;
+          background-color: #000000;
+          padding: 8px;
+        }
 				.feature {
 					border: 1px solid #0099ff;
 					border-bottom: 5px solid #0099ff;
@@ -127,7 +161,7 @@
               </xsl:for-each>
             </div>
             <br />
-            This is a feature oriented design document.  Each feature is listed individually, broadest to most specific.<br /><br />
+            This is a feature oriented design document.  Each feature is organized by a feature set, and listed broadest to most specific.<br /><br />
             <strong>Changes since the last version:</strong>
             <ul>
               <xsl:for-each select="information/changes/change">
@@ -145,83 +179,92 @@
               </xsl:for-each>
             </ul>
 
-            <strong>Table of Contents:</strong>
-            <ul>
-              <xsl:for-each select="feature">
-                <li><a href="#feature_{id}"><xsl:value-of select="title" /></a></li>
-              </xsl:for-each>
-            </ul>
-            <xsl:for-each select="feature">
-            	<div class="feature">
-                    <div class="feature_title">
-                        Feature: <strong><xsl:value-of select="title" /></strong>
-                        <xsl:variable name="feature_id" select="id" />
-                        <a name="feature_{$feature_id}" />
-                    </div>
-                    <br />
-                    <div class="contact">
-                        <div class="contact_title">Contact</div>
-                        <div class="contact_info">
-                          <span style="font-style: italic; color: #888888;">Contact information for the individual that maintains this section.</span><br /><br />
-                        	<xsl:variable name="author_email" select="contact/email" />
-                        	Author: <a href="mailto:{$author_email}"><xsl:value-of select="contact/author" /></a>
+            <strong>Table of Contents:</strong><br /><br />
+            <xsl:for-each select="featureset">
+              <strong><a href="#featureset_{id}"><xsl:value-of select="title" /></a></strong>
+              <ul>
+                <xsl:for-each select="feature">
+                  <li><a href="#feature_{id}"><xsl:value-of select="title" /></a></li>
+                </xsl:for-each>
+              </ul>
+            </xsl:for-each>
+            <xsl:for-each select="featureset">
+              <div class="featureset">
+                <div class="featureset_title">
+                  <strong><xsl:value-of select="title" /></strong>
+                  <a name="featureset_{id}" />
+                </div><br />
+                <xsl:for-each select="feature">
+                  <div class="feature">
+                    <xsl:choose>
+                      <xsl:when test="planned = '1'">
+                        <div class="feature_title">
+                            Planned Feature: <strong><xsl:value-of select="title" /></strong>
+                            <xsl:variable name="feature_id" select="id" />
+                            <a name="feature_{$feature_id}" />
+                        </div>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <div class="feature_title">
+                            Feature: <strong><xsl:value-of select="title" /></strong>
+                            <xsl:variable name="feature_id" select="id" />
+                            <a name="feature_{$feature_id}" />
                         </div>
                         <br />
-                        <div class="contact_list">
-                        	<em>Other features related to this feature:</em><br />
-                            <ul>
-                                <xsl:for-each select="contact/related_sections/section">
-                                    <xsl:variable name="related_section_id" select="current()" />
-                                    <xsl:variable name="related_section_title" select="/design_document/feature[string(id)=string($related_section_id)]/title" />
-                                    <xsl:if test="string-length( $related_section_title ) > 0">
-                                      <li><a href="#feature_{$related_section_id}"><xsl:value-of select="$related_section_title" /></a></li>
-                                    </xsl:if>
-                                </xsl:for-each>
-                            </ul>
+                        <div class="contact">
+                            <div class="contact_title">Contact</div>
+                            <div class="contact_info">
+                              <span style="font-style: italic; color: #888888;">Contact information for the individual that maintains this section.</span><br /><br />
+                              <xsl:variable name="author_email" select="contact/email" />
+                              Author: <a href="mailto:{$author_email}"><xsl:value-of select="contact/author" /></a>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <div class="goals">
-                    	<div class="goals_title">Goals</div>
-                      <span style="font-style: italic; color: #888888;">Clear, concise goals that this feature is meant to achieve.</span><br />
-                        <div class="goals_list">
-                        	<ul>
-                        		<xsl:for-each select="goals/goal">
-                            		<li><xsl:apply-templates /></li>
-                            	</xsl:for-each>
-                            </ul>
+                        <br />
+                        <div class="goals">
+                          <div class="goals_title">Goals</div>
+                          <span style="font-style: italic; color: #888888;">Clear, concise goals that this feature is meant to achieve.</span><br />
+                            <div class="goals_list">
+                              <ul>
+                                <xsl:for-each select="goals/goal">
+                                    <li><xsl:apply-templates /></li>
+                                  </xsl:for-each>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <xsl:if test="string-length( background ) > 0">
-                      <div class="background">
-                          <div class="background_title">Background</div>
-                          <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span><br /><br />
-                          <xsl:for-each select="background">
-                            <xsl:apply-templates />
-                          </xsl:for-each>
-                      </div>
-                      <br />
-                    </xsl:if>
-                    <xsl:if test="string-length( implementation ) > 0">
-                      <div class="implementation">
-                          <div class="implementation_title">Implementation</div>
-                          <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span><br /><br />
-                          <xsl:for-each select="implementation">
-                            <xsl:apply-templates />
-                          </xsl:for-each>
-                      </div>
-                      <br />
-                    </xsl:if>
-                    <xsl:if test="string-length( impact ) > 0">
-                      <div class="impact">
-                          <div class="impact_title">Impact</div>
-                          <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span><br /><br />
-                          <xsl:for-each select="impact">
-                            <xsl:apply-templates />
-                          </xsl:for-each>
-                      </div>
-                    </xsl:if>
+                        <br />
+                        <xsl:if test="string-length( background ) > 0">
+                          <div class="background">
+                              <div class="background_title">Background</div>
+                              <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span><br /><br />
+                              <xsl:for-each select="background">
+                                <xsl:apply-templates />
+                              </xsl:for-each>
+                          </div>
+                          <br />
+                        </xsl:if>
+                        <xsl:if test="string-length( implementation ) > 0">
+                          <div class="implementation">
+                              <div class="implementation_title">Implementation</div>
+                              <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span><br /><br />
+                              <xsl:for-each select="implementation">
+                                <xsl:apply-templates />
+                              </xsl:for-each>
+                          </div>
+                          <br />
+                        </xsl:if>
+                        <xsl:if test="string-length( impact ) > 0">
+                          <div class="impact">
+                              <div class="impact_title">Impact</div>
+                              <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span><br /><br />
+                              <xsl:for-each select="impact">
+                                <xsl:apply-templates />
+                              </xsl:for-each>
+                          </div>
+                        </xsl:if>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                    </div><br />
+                  </xsl:for-each>
                 </div>
                 <br />
             </xsl:for-each>
