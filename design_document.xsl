@@ -10,9 +10,13 @@
 <xsl:template match="//link">
   <xsl:variable name="feature_id" select="current()" />
   <xsl:variable name="feature_title" select="/design_document/featureset/feature[id=$feature_id]/title" />
+  <xsl:variable name="term_title" select="/design_document/term[id=$feature_id]/title" />
   <xsl:choose>
     <xsl:when test="string-length( $feature_title ) > 0">
       <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
+    </xsl:when>
+    <xsl:when test="string-length( $term_title ) > 0">
+      <xsl:value-of select="$term_title" />
     </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$feature_id" />
@@ -23,25 +27,16 @@
 <xsl:template match="//plink">
   <xsl:variable name="feature_id" select="current()" />
   <xsl:variable name="feature_title" select="/design_document/featureset/feature[id=$feature_id]/plural" />
+  <xsl:variable name="term_title" select="/design_document/term[id=$feature_id]/plural" />
   <xsl:choose>
     <xsl:when test="string-length( $feature_title ) > 0">
       <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
     </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$feature_id" />
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template match="//tlink">
-  <xsl:variable name="term_id" select="current()" />
-  <xsl:variable name="term_title" select="/design_document/term[id=$feature_id]/title" />
-  <xsl:choose>
     <xsl:when test="string-length( $term_title ) > 0">
       <xsl:value-of select="$term_title" />
     </xsl:when>
     <xsl:otherwise>
-      <xsl:value-of select="$term_id" />
+      <xsl:value-of select="$feature_id" />
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
