@@ -5,45 +5,15 @@
 	
 	<information>
 		<title>Boomtown</title>
-		<graphic>./facebook/styles/boomtown/images/main_header.jpg</graphic>
-		<modified>0.21 - April 27th, 2011</modified>
+		<graphic>main_header.jpg</graphic>
+		<modified>0.22 - April 28th, 2011</modified>
 		<changes>
-			<change>Changed 'flink' to simply 'link'</change>
-			<change type="addition">Added 'plink' tag to link to plink feature names</change>
-			<change type="addition">Added 'plink' tag under 'feature' to assign plink titles</change>
-			<change type="addition">Added 'planned' tag under 'feature' to denote a currently unfilled feature section</change>
-			<change type="addition">Added the 'featureset' element to group features together</change>
-			<change type="addition">Added the 'Territory' planned feature</change>
-			<change type="addition">Added the 'Faction Headquarters' planned feature</change>
-			<change type="addition">Added the 'Zone' planned feature</change>
-			<change type="addition">Added the 'Scenario' planned feature</change>
-			<change type="addition">Added the 'Faction News Network' planned feature</change>
-			<change type="addition">Added the 'Notification' planned feature</change>
-			<change type="addition">Added the 'Credit' planned feature</change>
-			<change type="addition">Added the 'Workshop' planned feature</change>
-			<change type="addition">Added the 'Resource' planned feature</change>
-			<change type="addition">Added the 'Natural Resource' planned feature</change>
-			<change type="addition">Added the 'Synthetic Resource' planned feature</change>
-			<change type="addition">Added the 'Warehouse' planned feature</change>
-			<change type="addition">Added the 'Battle' planned feature</change>
-			<change type="addition">Added the 'Soldier' planned feature</change>
-			<change type="addition">Added the 'Equipment' planned feature</change>
-			<change type="addition">Added the 'Weapon' planned feature</change>
-			<change type="addition">Added the 'Armor' planned feature</change>
-			<change type="addition">Added the 'Device' planned feature</change>
-			<change type="addition">Added the 'Vehicle' planned feature</change>
-			<change type="addition">Added the 'Ability' planned feature</change>
-			<change type="addition">Added the 'Abstract and Basic' feature set</change>
-			<change type="addition">Added the 'The World and Management' feature set</change>
-			<change type="addition">Added the 'Resource Gathering and Crafting' feature set</change>
-			<change type="addition">Added the 'Army Building and Combat' feature set</change>
-			<change type="subtraction">Removed the 'related_sections' element under 'contact'</change>
-			<change type="addition">Added the 't' element to refer to the current feature's title</change>
-			<change type="addition">Added the 'p' element to refer to the current feature's plural title</change>
+			<change type="addition">Added 'terms' element</change>
+			<change type="addition">Added 'tlink' element for linking to terms</change>
 		</changes>
 		
 		<description>
-			BoomTown is an online, social strategy game where players assume control of a <link>mobile_command_center</link> and a standing army of <plink>soldier</plink> and wage war against other factions, mining <plink>resource</plink> and crafting <plink>equipment</plink> to give them an advantage.
+			BoomTown is an online, social strategy game where players assume control of a <link>mobile_command_center</link> and a standing army of <plink>soldier</plink> and wage war against other <plink>faction</plink>, mining <plink>resource</plink> and crafting <plink>equipment</plink> to give them an advantage.
 		</description>		
 	</information>
 	
@@ -98,16 +68,62 @@
 			</goals>
 			
 			<background>
-				Due to massive population growth on Earth, many able young men and women venture to Kova to fight for one of the controlling organizations with the promise of money and power.  With the advent of clone soldiers and remote battlefield control, commanding an army on Kova is relatively safe, providing a very effective lure for the organizations needing substantial manpower to secure their place on the planet.
+				Due to massive population growth on Earth, many able young men and women venture to <link>setting</link> to fight for one of the controlling <plink>faction</plink> with the promise of money and power.  With the advent of clone <plink>soldier</plink> and remote battlefield control, commanding an army on <link>setting</link> is relatively safe, providing a very effective lure for the organizations needing substantial manpower to secure their place on the planet.
 			</background>
 			
 			<implementation>		
-				The <t /> is the representation of the player within the game.  The player creates a "<t /> card" when they first sign up, providing a standard, recongizable way to represent their individualism to themselves and other players.  The <t /> card includes a photo provided by the player, as well as a visible rank insignia so other players viewing the <t /> card can instantly tell what rank the <t /> is.  The <t /> controls a single <link>mobile_command_center</link> at a time, and a <t /> fights for a single <link>faction</link>.		
+				The <t /> is the representation of the player within the game.  The player creates a "<t /> card" when they first sign up, providing a standard, recongizable way to represent their individualism to themselves and other players.  The <t /> card includes a photo provided by the player, as well as a visible rank insignia so other players viewing the <t /> card can instantly tell what rank the <t /> is.  The <t /> controls a single <link>mobile_command_center</link> at a time, and a <t /> fights for a single <link>faction</link>.  A commander doesn't have 'levels' like in normal MMOs, but instead attains <plink>rank</plink>.
 			</implementation>
 			
 			<impact>		
 				All actions the player wants to take will be 'carried out' by their <t />.  This serves to separate the player from their counterpart in the game, just in case future versions include the ability to use more than one <t />.  The <t /> also helps other players identify the player, because each <t /> will be unique in name and appearance (both of which are provided by the player).		
 			</impact>
+		</feature>
+		
+		<feature>
+			<title>Rank</title>
+			<plural>Ranks</plural>
+			<id>rank</id>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide a way for players to distinguish between newer players and older players</goal>
+				<goal>Provide another incentive for players to perform actions in the game and gain <link>experience</link> for their <plink>commander</plink></goal>
+			</goals>
+			
+			<implementation>
+				A <link>commander</link>'s <t /> is essentially an identifier letting other players know how long the <link>commander</link> has been playing.  The <t /> should always be visible any time the <link>commander</link>'s information is displayed on screen, and a history of the <p /> and when the <link>commander</link> achieved them should be kept for each <link>commander</link>.<br /><br />
+				
+				The <link>commander</link> gains new <p /> by gaining <link>experience</link>.
+			</implementation>
+			
+			<impact>
+				<p /> are mostly a way to easily tell powerful players from beginning players.
+			</impact>
+		</feature>
+		
+		<feature>
+			<title>Experience</title>
+			<plural>Experiences</plural>
+			<id>experience</id>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide a gauge of a player's progress and reward them for their actions</goal>
+				<goal>Provide an easy way to grant ranks after certain variable lengths of play time</goal>
+			</goals>
+			
+			<implementation>
+				
+			</implementation>
 		</feature>
 		
 		<feature>
@@ -130,13 +146,13 @@
 				The three (3) <p /> within the game are:<br /><br />
 				
 				<strong>The Interplanetary Kova Company</strong> <em>(IKC)</em><br />
-				A defense powerhouse, responsible for a substantial part of Earth's arms trade.  War is an eventuality on Earth, and the need for weapons never waivered.  The IKC is fighting to secure a steady supply of Kovanite to its factories on Earth to support the armies of the future.  The IKC is responsible for designing most of the weaponry used by commanders of all factions on Kova.<br /><br />
+				A defense powerhouse, responsible for a substantial part of Earth's arms trade.  War is an eventuality on Earth, and the need for weapons never waivered.  The IKC is fighting to secure a steady supply of <link>kovanite</link> to its factories on Earth to support the armies of the future.  The IKC is responsible for designing most of the <plink>weapon</plink> used by <plink>commander</plink> of all <plink>faction</plink> on <link>setting</link>.<br /><br />
 				
 				<strong>Ekova, Inc.</strong> <em>(EKV)</em><br />
 				A family-owned industrialist corporation responsible for many of Earth's environmentally friendly advances.  Ekova handles many of Earth's major metropolitan infrastructure contracts, building roads, apartments, parks, and many other civil installations.  Ekova uses Kovanite in many of its projects, and has a vested interest in its continued export from Kova to Earth, preferrably via its own transport ships to internal storage facilities.  Ekova is responsible for designing most of the vehicles used by commanders on Kova, including the standard <plink>mobile_command_center</plink>.<br /><br />
 				
 				<strong>Kovanant</strong> <em>(KVN)</em><br />
-				A rogue, technology-obsessed umbrella corporation fighting to take absolute control over Kova and turn it into a space-faring utopia.  Many of its subsidiaries on Earth are simply buffer companies used to filter money around the planet and especially offworld to support its military engagements on Kova itself.  Kovanant is responsible for much of the auxiliary equipment and body augmentations used by <plink>soldier</plink> on Kova.
+				A rogue, technology-obsessed umbrella corporation fighting to take absolute control over <link>setting</link> and turn it into a space-faring utopia.  Many of its subsidiaries on Earth are simply buffer companies used to filter money around the planet and especially offworld to support its military engagements on <link>setting</link> itself.  Kovanant is responsible for many of the <plink>device</plink> used by <plink>soldier</plink> on <link>setting</link>.
 			</background>
 			
 			<implementation>
@@ -144,7 +160,7 @@
 				
 				Each <t /> is distinguished by a color, a pattern, and a logo, where each color is easily discernable from the next, more than likely Red, Blue, and Yellow for the most accessibility.  Each logo should also be easily recognizable by its silhouette alone.  When a <t />'s color is painted anywhere, it should be painted in that <t />'s pattern, for example dashed lines, curvy lines, circles, etc.  Each pattern should also be easily distinguishable.<br /><br />
 				
-				Within the game, the player should also be able to donate specific <plink>equipment</plink> and <plink>resource</plink> to their <t />.  There should be specific restrictions on what the player can and cannot give, but the player should know that if they give specific things to their <t /> they will be rewarded.  Specifically, the player should always be able to give <link>kovanite</link> to their <t />, and there could be a meter that gradually fills up as the many players fighting for the <t /> donate to it, and once it is full, all players of that <t /> receive something.<br /><br />
+				Within the game, the player should also be able to donate <link>kovanite</link> to their <t />.  There could be a meter that gradually fills up as the many players fighting for the <t /> donate to it, and once it is full, all players of that <t /> receive something.<br /><br />
 				
 				Each player should also have a news feed on their world map that pulls in broadcasts from their <t />, giving them small tidbits of story development about their <t />.
 			</implementation>
@@ -163,13 +179,6 @@
 			<contact>
 				<author>David Talley</author>
 				<email>dtalley@gmail.com</email>
-				<related_sections>
-					<section>commander</section>
-					<section>soldier</section>
-					<section>equipment</section>
-					<section>vehicle</section>
-					<section>resource</section>
-				</related_sections>
 			</contact>
 			
 			<goals>			
@@ -179,7 +188,7 @@
 			</goals>
 			
 			<background>
-				The Arpa9 All-Terrain Support Center was an invention of the late Terrance Bilsner, CEO of Ekova, Inc.  The Arpa9, at first, was primarly used for supporting construction crews as they built transcontinental high-speed rail lines across Siberian Russia, but the gigantic machines proved to be incredibly useful in the acquisition of <link>kovanite</link>.  Resourceful <plink>commander</plink> retrofitted the machines with <plink>workshop</plink> and <plink>warehouse</plink> to help in the outfitting and supply of armies on the surface of <link>setting</link>.
+				The Arpa9 All-Terrain Support Center and Fenix Self-Levitating Airbase were inventions of the late Terrance Bilsner, CEO of Ekova, Inc.  The Arpa9, at first, was primarly used for supporting construction crews as they built transcontinental high-speed rail lines across Siberian Russia, but the gigantic machines proved to be incredibly useful in the acquisition of <link>kovanite</link>.  Resourceful <plink>commander</plink> retrofitted the machines with <plink>workshop</plink> and <plink>warehouse</plink> to help in the outfitting and supply of armies on the surface of <link>setting</link>.
 			</background>
 			
 			<implementation>
@@ -204,13 +213,6 @@
 			<contact>
 				<author>David Talley</author>
 				<email>dtalley@gmail.com</email>
-				<related_sections>
-					<section>faction</section>
-					<section>mobile_command_center</section>
-					<section>territories</section>
-					<section>zones</section>
-					<section>scenarios</section>
-				</related_sections>
 			</contact>
 			
 			<goals>
@@ -225,7 +227,7 @@
 			<implementation>
 				The <t /> is where the player manages the locations of all of their actions.  They can see a full view off all of the <plink>territory</plink> in the game, which ones are disputed, which ones their <link>faction</link> is defending, and which ones their <link>faction</link> is attacking.  Each of the <plink>territory</plink> is color coded, depending on which <link>faction</link> currently holds the <link>territory</link>.  Some <plink>territory</plink> may not be occupied, in which case their color will not reflect any of the <plink>faction</plink>.<br /><br />
 				
-				Some <plink>territory</plink> are clickable, namely <plink>territory</plink> owned by the player's <link>faction</link>, and open <plink>territory</plink> next to <plink>territory</plink> owned by the player's <link>faction</link>.  When the player clicks on one, a radial menu pops up with the following potential options (not all will show up, depending on the status and owner):
+				Some <plink>territory</plink> are clickable, namely <plink>territory</plink> owned by the player's <link>faction</link> and open enemy <plink>territory</plink> next to <plink>territory</plink> owned by the player's <link>faction</link>.  When the player clicks on one, a radial menu pops up with the following potential options (not all will show up, depending on the status and owner):
 				<ul>
 					<li>An icon allowing them to zoom into the <link>territory</link> to view its zones</li>
 				</ul>
@@ -251,14 +253,47 @@
 			<title>Territory</title>
 			<plural>Territories</plural>
 			<id>territory</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide defined areas of the <link>world_map</link> that players can fight to control</goal>
+			</goals>
+			
+			<implementation>
+				
+			</implementation>
+			
+			<impact>
+				
+			</impact>
 		</feature>
 		
 		<feature>
 			<title>Faction Headquarters</title>
 			<plural>Faction Headquarters</plural>
 			<id>faction_headquarters</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide a representation for a <link>faction</link>'s base of operations on the <link>world_map</link></goal>
+				<goal>To give new and old players alike a safe haven, and an important place to protect</goal>
+			</goals>
+			
+			<implementation>
+				Each <link>faction</link> has a <link>territory</link> on the <link>world_map</link> that serves as their <t />.  The <t /> should be clearly defined from the player's perspective on the <link>world_map</link>.  The <t />, in general, works exactly like a normal <link>territory</link> with the exception that enemy <plink>faction</plink> cannot attack it.  All beginning players start out on the <t /> <link>territory</link>, and are not allowed to leave until they reach a specific <link>rank</link>.  Within the <t /> are the same number of <plink>zone</plink> as in a normal <link>territory</link>.
+			</implementation>
+			
+			<impact>
+				
+			</impact>
 		</feature>
 		
 		<feature>
@@ -305,6 +340,13 @@
 			<title>Workshop</title>
 			<plural>Workshops</plural>
 			<id>workshop</id>
+			<planned>1</planned>
+		</feature>
+		
+		<feature>
+			<title>Crafting</title>
+			<plural>Craftings</plural>
+			<id>crafting</id>
 			<planned>1</planned>
 		</feature>
 		
@@ -404,5 +446,20 @@
 			<planned>1</planned>
 		</feature>
 	</featureset>
+	
+	<term>
+		<id>resource1</id>
+		<title>Water</title>
+	</term>
+	
+	<term>
+		<id>resource2</id>
+		<title>Aluminium</title>
+	</term>
+	
+	<term>
+		<id>resource3</id>
+		<title>Carbon</title>
+	</term>
 	
 </design_document>

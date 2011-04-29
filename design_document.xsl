@@ -33,6 +33,19 @@
   </xsl:choose>
 </xsl:template>
 
+<xsl:template match="//tlink">
+  <xsl:variable name="term_id" select="current()" />
+  <xsl:variable name="term_title" select="/design_document/term[id=$feature_id]/title" />
+  <xsl:choose>
+    <xsl:when test="string-length( $term_title ) > 0">
+      <xsl:value-of select="$term_title" />
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$term_id" />
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template match="//t">
   <xsl:variable name="feature_title" select="ancestor::feature/title" />
   <xsl:value-of select="$feature_title" />

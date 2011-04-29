@@ -5,6 +5,7 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.utils.HexagonMetrics;
   import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.XMLManager;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Loader;
@@ -43,7 +44,7 @@ package com.boomtown.modules.worldmap {
       var loader:Loader = new Loader();
       loader.contentLoaderInfo.addEventListener( Event.COMPLETE, imageLoaded );
       loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, imageError );
-      loader.load( new URLRequest( "map/images/" + _bx + "." + _by + ".jpg" ) );
+      loader.load( new URLRequest( XMLManager.getFile("settings").site_path + "styles/boomtown/flash/map/images/" + _bx + "." + _by + ".jpg" ) );
       
       draw();
     }

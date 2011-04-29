@@ -15,23 +15,23 @@
   </all_fonts>
 
   <primary_faction_colors>
-    <norton-mcdowell_industries>
+    <the_interplanetary_kova_company>
       <dark>0x00193f</dark>
       <medium>0x003388</medium>
       <light>0x98bfff</light>
       <alternate>0xffcc00</alternate>
-    </norton-mcdowell_industries>
-    <the_environmental_liberation_force>
+    </the_interplanetary_kova_company>
+    <ekova>
       <dark>0x1f3f00</dark>
       <medium>0x568800</medium>
       <light>0xcdff98</light>
       <alternate>0xFFFFFF</alternate>
-    </the_environmental_liberation_force>
-    <the_global_defense_and_assault_movement>
+    </ekova>
+    <kovanant>
       <dark>0x3f0000</dark>
       <medium>0x880000</medium>
       <light>0xff9898</light>
       <alternate>0x000000</alternate>
-    </the_global_defense_and_assault_movement>
+    </kovanant>
   </primary_faction_colors>
 </settings>
