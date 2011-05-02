@@ -9,8 +9,8 @@
 
 <xsl:template match="//link">
   <xsl:variable name="feature_id" select="current()" />
-  <xsl:variable name="feature_title" select="/design_document/featureset/feature[id=$feature_id]/title" />
-  <xsl:variable name="term_title" select="/design_document/term[id=$feature_id]/title" />
+  <xsl:variable name="feature_title" select="//design_document/featureset/feature[id=$feature_id]/title" />
+  <xsl:variable name="term_title" select="//design_document/term[id=$feature_id]/title" />
   <xsl:choose>
     <xsl:when test="string-length( $feature_title ) > 0">
       <a href="#feature_{$feature_id}"><xsl:value-of select="$feature_title" /></a>
@@ -19,7 +19,7 @@
       <xsl:value-of select="$term_title" />
     </xsl:when>
     <xsl:otherwise>
-      <xsl:value-of select="$feature_id" />
+      <xsl:value-of select="$feature_id" />a
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -175,13 +175,13 @@
               <xsl:for-each select="information/changes/change">
                 <xsl:choose>
                   <xsl:when test="@type = 'subtraction'">
-                    <li style="color: #FF0000;">- <xsl:value-of select="current()" /></li>
+                    <li style="color: #FF0000;">- <xsl:apply-templates /></li>
                   </xsl:when>
                   <xsl:when test="@type = 'addition'">
-                    <li style="color: #008800;">+ <xsl:value-of select="current()" /></li>
+                    <li style="color: #008800;">+ <xsl:apply-templates /></li>
                   </xsl:when>
                   <xsl:otherwise>
-                    <li><xsl:value-of select="current()" /></li>
+                    <li><xsl:apply-templates /></li>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:for-each>
