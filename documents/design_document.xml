@@ -6,11 +6,12 @@
 	<information>
 		<title>Boomtown</title>
 		<graphic>http://boomtowngame.com/facebook/design/main_header.jpg</graphic>
-		<modified>0.25 - May 3rd, 2011</modified>
+		<modified>0.26 - May 4th, 2011</modified>
 		<changes>
+			<change>Updated the '<link>soldier</link>' feature</change>
+			<change>Updated the '<link>skill</link>' feature</change>
 			<change>Updated the '<link>warehouse</link>' feature</change>
-			<change>Updated the '<link>marketplace</link>' feature</change>
-			<change>Updated the '<link>mail</link>' feature</change>
+			<change>Updated the '<link>equipment</link>' feature</change>
 		</changes>
 		
 		<description>
@@ -502,7 +503,7 @@
 				
 				The <t /> has limited amount of space for <link>equipment</link>, indicated by a weight capacity ratio somewhere near the <link>equipment</link> panel.  The player is allowed to go one item over the capacity, but after the total weight of all the player's <link>equipment</link> surpasses the weight capacity, they are no longer allowed to perform actions that add <link>equipment</link> to their inventory, and any involuntary actions that would give the player items would see those items disappear.  <plink>resource</plink> and <plink>soldier</plink> do not contribute to the <t />'s weight capacity.<br /><br />
 				
-				The top of the screen should have a <link>soldier</link> listing.  Similar to the <link>equipment</link> listing, it should be a grid layout, only with one row.  Each <link>soldier</link> should be represented by a square block with an image that represents them.  The list should consist of already recruited <plink>soldier</plink> first, and after them there should be a pool of potential recruits, or <plink>soldier</plink> that don't belong to the player but are available for purchase.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <link>soldier</link>, or pass on them and remove them from the potential recruit pool.  When a player clicks on a recruited <link>soldier</link>, their attributes and <plink>skill</plink> should show up in the statistics box, and in the main part of the screen, a representation of the <link>soldier</link> should show up, with <link>equipment</link> slots around it for dragging items in and equipping them on the <link>soldier</link>.  The different slots should include:
+				The top of the screen should have a <link>soldier</link> listing.  Similar to the <link>equipment</link> listing, it should be a grid layout, only with one row.  Each <link>soldier</link> should be represented by a square block with an image that represents them.  The list should consist of already recruited <plink>soldier</plink> first, and after them there should be a pool of potential recruits, or <plink>soldier</plink> that don't belong to the player but are available for purchase.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <link>soldier</link>, or pass on them and remove them from the potential recruit pool.  If the player chooses to recruit a new <link>soldier</link>, a new box should pop up allowing them to choose which <link>skill</link> they would like to specialize the <link>soldier</link> in.  When a player clicks on a recruited <link>soldier</link>, their attributes and <plink>skill</plink> should show up in the statistics box, and in the main part of the screen, a representation of the <link>soldier</link> should show up, with <link>equipment</link> slots around it for dragging items in and equipping them on the <link>soldier</link>.  The different slots should include:
 				
 				<ul>
 					<li>Head <link>armor</link></li>
@@ -691,14 +692,69 @@
 			<title>Soldier</title>
 			<plural>Soldiers</plural>
 			<id>soldier</id>
-			<planned>1</planned>
+			
+			<goals>
+				<goal>Provide the player with unique, customizable units to do <link>battle</link> with</goal>
+				<goal>Provide the player with enough differentiation between each unit so that they can devise strategies based on their unit differences</goal>
+			</goals>
+			
+			<background>
+				Due to the advent of cloning sometime around the turn of the century, war is now fought by cloned <p />, grown in tanks aboard the Arpa9 <plink>mcc</plink>, bred toward different goals and <link>skill</link> sets.  A clone, from the point of creation in a test tube, takes less than a day to fully mature, and in that time it's possible to implant special skillset subroutines deep within its brain, essentially training it in whatever the grower wishes.  All clones are not built the same, however, and occasionaly mutations in the cloning process create exceptional specimens, or worthless specimens, depending on luck.
+			</background>
+			
+			<implementation>
+				A <t /> is the player's primary <link>battle</link> unit.  Players manage their <p /> in the <link>warehouse</link>, outfitting them with <link>equipment</link> and assigning them to <plink>vehicle</plink>.<br /><br />
+				
+				All <p /> are essentially the same.  They have a set of attributes, and they have a list of <plink>skill</plink>.  The attributes a <t /> has include:
+				<ul>
+					<li><strong>Health</strong> - Determines the number of <plink>hp</plink> the <t /> has</li>
+					<li><strong>Accuracy</strong> - Affects the base accuracy of any <link>weapon</link> the <t /> may use</li>
+					<li><strong>Perception</strong> - Affects the <t />'s line of sight distance and stealth detection</li>
+					<li><strong>Stealth</strong> - Affects the <t />'s visibility on the battlefield</li>
+				</ul>
+				The attributes work on a total point system, meaning a <t /> gets a set number of attribute points, and upon creation those points are distributed randomly between the attributes.  For example, if we allot 40 attribute points to each <t />, one particular <t /> might have 17 Health, 5 Accuracy, 10 Perception, and 8 Stealth, and another <t /> might have 5 Health, 20 Accuracy, 9 Perception, and 6 Stealth.  The first <t /> might make an excellent heavy weapons operator, and the second would make an excellent sniper.<br /><br />
+				
+				Health is a direct representation of the <t />'s <plink>hp</plink>, or the points taken away when the <t /> is successfully attacked.  Each point of Health represents an arbitrary number of <plink>hp</plink>.  For example, if each point of Health is the equivalent of 5 <plink>hp</plink>, and one <t /> has 12 Health points, they would have 60 <plink>hp</plink> in total.<br /><br />
+				
+				Perception and Stealth are counter attributes, meaning a <t /> with high Stealth will not be visible to a <t /> with low Perception until they are either right next to them, or fire their weapon.  This means that regardless if a <t /> can see 12 tiles ahead of them, if they have low Perception, they may not be able to see enemy <p /> with high Stealth until those enemies are within 3 tiles.  If one <t /> attacks another <t />, all Stealth modifiers are eliminated.  A <t /> with a high Stealth rating would be better employed as a close-combat fighter, or a sniper.<br /><br />
+				
+				Additionally, <p /> have a set of <plink>skill</plink> that they can train up.
+			</implementation>
 		</feature>
 		
 		<feature>
 			<title>Skill</title>
 			<plural>Skills</plural>
 			<id>skill</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>The player needs a way to customize their <plink>soldier</plink> in such a way that benefits their preferred strategy in <link>battle</link></goal>
+			</goals>
+			
+			<implementation>
+				<p /> are the defined areas of expertise that a <link>soldier</link> can train in.  All <p /> partain to a specific class of <link>weapon</link>, with the exception of the Mechanical <t />, which partains to <plink>vehicle</plink>.  There are 8 <p /> in total:
+				<ul>
+					<li><strong>Small Arms</strong> - The use of pistols and submachine guns</li>
+					<li><strong>Scatterguns</strong> - The use of cluster pistols and shotguns</li>
+					<li><strong>Assault Rifles</strong> - The use of long-barreled, automatic and semi-automatic rifles</li>
+					<li><strong>Sniper Rifles</strong> - The use of long range rifles</li>
+					<li><strong>Explosives</strong> - The use of grenade launchers, rocket launchers and flamethrowers</li>
+					<li><strong>Autocannons</strong> - The use of machine guns, miniguns and cannons</li>
+					<li><strong>Mechanical</strong> - The use of <plink>vehicle</plink></li>
+				</ul>
+				Every <link>soldier</link> starts out with 0 points in all of their <p />.  When the player recruits a new <link>soldier</link>, the player is allowed to choose a single <t /> to specialize the <link>soldier</link> in, at which point 10 points are filled into that <t />, giving the <link>soldier</link> a head start in training.<br /><br />
+				
+				Players use <plink>stp</plink> to increase <plink>soldier</plink>' skills gradually.
+			</implementation>
+			
+			<impact>
+				<p /> give a very simple way to diversify a player's army.  By specializing <plink>soldier</plink> in specific <p />, the player can create a cohesive army whose skills mesh together and provide the player with solid strategies for winning in <link>battle</link>.
+			</impact>
 		</feature>
 		
 		<feature>
@@ -732,7 +788,27 @@
 			<title>Equipment</title>
 			<plural>Equipment</plural>
 			<id>equipment</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>The player needs a vast array of different items to attach to their <plink>soldier</plink> to customize their <link>battle</link> ability</goal>
+			</goals>
+			
+			<implementation>
+				All items in the game that a <link>soldier</link> can use or operate are just pieces of <t />.  <plink>weapon</plink>, <plink>armor</plink>, <plink>device</plink>, and <plink>vehicle</plink> are all <t />.  A given piece of <t /> has a type, one of the before-mentioned things, a set of attributes depending on its type, and in some cases, modifier <plink>ability</plink>.  All pieces of <t /> have a Durability attribute, a number out of 100 representing its wear and tear.  As the piece is used, its Durability rating will go down.  If its Durability reaches 0, it is irreversably destroyed.  A player can pay <plink>credit</plink> to have the item repaired.<br /><br />
+				
+				Any given piece of <t /> may have modifier <plink>ability</plink> assigned to it, meaning that when a <link>soldier</link> equips that particular piece, the <link>soldier</link> is able to use those <plink>ability</plink> in <link>battle</link>.  The modifier <plink>ability</plink> are determined during the <link>crafting</link> process, so not all instances of a particular piece will have all of the same <plink>ability</plink>.  Each individual piece of <t /> has its own set of possible modifier <plink>ability</plink> that can be applied during the <link>crafting</link> process.<br /><br />
+				
+				All <t /> comes from the <link>crafting</link> process.  No <t /> is ever looted, or spawned as a reward for something.  The only way a player can acquire <t /> is by <link>crafting</link> it, or buying it from the <link>marketplace</link>.
+			</implementation>
+			
+			<impact>
+				<t /> serves as the tools with which the player performs most of the fun actions in the game.  The player needs to outfit all of their <plink>soldier</plink> with <t /> so that they may attack other <plink>soldier</plink>, defend themselves, and perform actions in <link>battle</link>.  
+			</impact>
 		</feature>
 		
 		<feature>
@@ -744,7 +820,7 @@
 		
 		<feature>
 			<title>Armor</title>
-			<plural>Armors</plural>
+			<plural>Armor</plural>
 			<id>armor</id>
 			<planned>1</planned>
 		</feature>
