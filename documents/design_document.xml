@@ -6,17 +6,11 @@
 	<information>
 		<title>Boomtown</title>
 		<graphic>http://boomtowngame.com/facebook/design/main_header.jpg</graphic>
-		<modified>0.24 - May 2nd, 2011</modified>
+		<modified>0.25 - May 3rd, 2011</modified>
 		<changes>
-			<change>Updated '<link>fnn</link>' feature</change>
-			<change>Updated '<link>credit</link>' feature</change>
-			<change>Updated '<link>zone</link>' feature</change>		
-			<change>Updated '<link>mcc</link>' feature</change>			
-			<change>Updated '<link>notification</link>' feature</change>
-			<change>Updated '<link>scenario</link>' feature</change>
-			<change>Updated '<link>marketplace</link>' feature</change>
-			<change type="addition">Added '<link>mail</link>' feature</change>
-			<change>Moved the '<link>warehouse</link>' feature to the 'Inventory and Economy' featureset</change>
+			<change>Updated the '<link>warehouse</link>' feature</change>
+			<change>Updated the '<link>marketplace</link>' feature</change>
+			<change>Updated the '<link>mail</link>' feature</change>
 		</changes>
 		
 		<description>
@@ -491,7 +485,42 @@
 			<title>Warehouse</title>
 			<plural>Warehouses</plural>
 			<id>warehouse</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide the player with a central place to manage all of their assets</goal>
+			</goals>
+			
+			<implementation>
+				The <t /> is linked from the <link>world_map</link>.  The <t /> is all one screen, but broken up into sections.<br /><br />
+				
+				Along the bottom of the screen, in a tabbed layout, is the <link>equipment</link> management panel.  It should be a sideways scrolling grid of the <link>equipment</link> that a player owns that is not currently attached to a <link>soldier</link> or <link>vehicle</link>.  Each piece of <link>equipment</link> takes up a certain amount of grid space.  The left side of the screen should be taken up by a statistics box, and when a player clicks on a piece of <link>equipment</link>, its statistics and <plink>ability</plink>, and maybe a better image of the piece should show up in the statistics box.  To the right of the <link>equipment</link> grid should be a 'trash' area, and the player should be able to click and drag pieces of <link>equipment</link> into it.  A small question mark or button in the 'trash' area should explain to the player that when they 'trash' a piece of <link>equipment</link> it removes it from their possession permanently and puts it on the <link>marketplace</link> for a cheap price.<br /><br />
+				
+				The <t /> has limited amount of space for <link>equipment</link>, indicated by a weight capacity ratio somewhere near the <link>equipment</link> panel.  The player is allowed to go one item over the capacity, but after the total weight of all the player's <link>equipment</link> surpasses the weight capacity, they are no longer allowed to perform actions that add <link>equipment</link> to their inventory, and any involuntary actions that would give the player items would see those items disappear.  <plink>resource</plink> and <plink>soldier</plink> do not contribute to the <t />'s weight capacity.<br /><br />
+				
+				The top of the screen should have a <link>soldier</link> listing.  Similar to the <link>equipment</link> listing, it should be a grid layout, only with one row.  Each <link>soldier</link> should be represented by a square block with an image that represents them.  The list should consist of already recruited <plink>soldier</plink> first, and after them there should be a pool of potential recruits, or <plink>soldier</plink> that don't belong to the player but are available for purchase.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <link>soldier</link>, or pass on them and remove them from the potential recruit pool.  When a player clicks on a recruited <link>soldier</link>, their attributes and <plink>skill</plink> should show up in the statistics box, and in the main part of the screen, a representation of the <link>soldier</link> should show up, with <link>equipment</link> slots around it for dragging items in and equipping them on the <link>soldier</link>.  The different slots should include:
+				
+				<ul>
+					<li>Head <link>armor</link></li>
+					<li>Body <link>armor</link></li>
+					<li>Leg <link>armor</link></li>
+					<li>Left-hand <link>weapon</link></li>
+					<li>Right-hand <link>weapon</link></li>
+					<li>Backpack</li>
+				</ul>
+				
+				The <link>armor</link> slots cover a basic representation of a <link>soldier</link>, so the player drags <link>armor</link> pieces onto the head, body, and legs of the representation to equip those pieces.  The other slots should just be boxes covering the general area of the <link>soldier</link> that they are associated with, the left hand being near the left arm, right hand being near the right arm, and backpack being somewhere near the shoulders.  Each slot can only receive one piece of <link>equipment</link>, the <link>armor</link> slots can only receive <link>armor</link>, the <link>weapon</link> slots can only receive <plink>weapon</plink>, and the backpack slot can only receive <plink>device</plink>.<br /><br />
+				
+				If the player clicks on a <link>vehicle</link>, an equipping screen specific to that vehicle should show up in the main part of the screen, and the vehicles statistics should show up like a normal piece of <link>equipment</link> in the statistics box.  Additionally, in the equipping side of the screen, depending on the size of the <link>vehicle</link> and the number of <plink>soldier</plink> it requires to operate, there should be that many boxes sized for <plink>soldier</plink> that the player can drag them into to assign them to the <link>vehicle</link>.
+			</implementation>
+			
+			<impact>
+				The <t /> is the main hub where the player manages their assets.  In the <t />, the player outfits their <plink>soldier</plink>, inspects their <link>equipment</link>, and recruits new <plink>soldier</plink>.  It is meant to be a place the player spends a lot of time before sending squads of <plink>soldier</plink> out to <plink>battle</plink>.
+			</impact>
 		</feature>
 		
 		<feature>
@@ -518,7 +547,7 @@
 			</implementation>
 			
 			<impact>
-				The <t /> will be the center of the game's economy.  Players will always have old <link>equipment</link> that they can't use, so it would be beneficial to them to place it on the <t /> and sell it for a few credits to a beginning player who needs some extra <link>equipment</link>.  The <t /> also gives support players a place to make a lot of money to either advance their <link>crafting</link> or support their friends.
+				The <t /> will be the center of the game's economy.  The <t /> mainly gives support players a place to make a lot of money to either advance their <link>crafting</link> or support their friends.  Beginning players will also find the <t /> useful for finding beginning equipment that Flying <link>mcc</link> operators have made, or that Rolling <link>mcc</link> have 'trashed'.
 			</impact>
 		</feature>
 		
@@ -526,7 +555,29 @@
 			<title>Mail</title>
 			<plural>Mails</plural>
 			<id>mail</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide a way for players to send messages, <link>equipment</link>, <plink>resource</plink>, and <plink>credit</plink> to one another</goal>
+			</goals>
+			
+			<implementation>
+				A player's <t /> is accessed from the <link>world_map</link>, and new <t /> messages show up as <plink>notification</plink>.  When the player accesses their <t />, a mailbox of sorts should show up, with a list of recently received messages, and a button to allow the player to send a new message.  If the player decides to send a new message, they should be able to title it, and type in a body message.  Additionally, there should be a field or slider allowing the player to send <plink>credit</plink> along with the message, and another box that lets them browse for <plink>resource</plink> or <link>equipment</link> to send along with the message.<br /><br />
+				
+				Should the player decide to send <link>equipment</link>, they should be able to specify that a return message needs to be received and confirmed before the <t /> transaction takes place, meaning if player A sends some <link>equipment</link> to player B and wants something in return, either <plink>credit</plink> or <plink>resource</plink> or some other type of <link>equipment</link>, player A can flag his or her message as needing a confirmed response, so that when player B sends back a response, player A can either cancel the entire transaction, or confirm that an acceptable message was received and complete the transaction.  In this manner, until player A confirms the transaction, neither player receives the items in the message.<br /><br />
+				
+				<link>faction</link> does not play a role in sending messages.  Players from one <link>faction</link> can still send messages to players of another.
+			</implementation>
+			
+			<impact>
+				Friends may want to send friends <plink>credit</plink> or old <link>equipment</link>, or maybe <plink>resource</plink> to help with <link>crafting</link>, so the <t /> system allows them to communicate in a basic way and send these things back and forth easily.<br /><br />
+				
+				I'll note here, it is intended that players use outside methods of communication to coordinate things with friends and form guilds and the like, making in-game chat or things like that unnecessary.
+			</impact>
 		</feature>
 		
 		<feature>
