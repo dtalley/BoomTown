@@ -168,7 +168,7 @@ package com.boomtown.modules.worldmap {
     }
     
     private function nodeOver( e:WorldGridNodeEvent ):void {
-      
+      addChild( WorldGridNode( e.target ) );
     }
     
     private function nodeClicked( e:WorldGridNodeEvent ):void {
