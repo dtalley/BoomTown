@@ -47,9 +47,8 @@
     
     private static var fontList:Array;
     
-    private static var currentFont:Number;
-    
-    private static var loadingFont:String;
+    private static var currentFont:int;
+    private static var totalFonts:int;
     
     private static var fullURL:String = "";
 		
@@ -73,38 +72,46 @@
     /* Load an array of font files one by one
      */
     public static function loadFonts( list:Array ):Sprite {
-      var totalFonts:Number = list.length;
+      totalFonts = list.length;
       fontList = new Array();
       currentFont = 0;
       for( var i:int = 0; i < totalFonts; i++ ) {
         fontList.push( list.pop() );
       }
       var loader:Sprite = new Sprite();
-      beginLoadingFonts(loader);
+      beginLoadingFonts(null, loader);
       return loader;
     }
     
-    private static function beginLoadingFonts( holder:Sprite = null, loader:Sprite = null ):void {
-      if ( loader ) {
-        loader.removeEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        KuroExpress.removeListener( loader, Event.COMPLETE, beginLoadingFonts );
+    private static function beginLoadingFonts( e:Event, holder:Sprite = null ):void {
+      if ( e ) {
+        e.target.removeEventListener( ProgressEvent.PROGRESS, fontListProgress );
+        e.target.removeEventListener( Event.COMPLETE, beginLoadingFonts );
       }
-      if ( currentFont < fontList.length ) {
+      if ( currentFont < totalFonts ) {
         var loader:Sprite = loadFont( fontList[currentFont] );
         loader.addEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        KuroExpress.addListener( loader, Event.COMPLETE, beginLoadingFonts, holder, loader );
+        loader.addEventListener( Event.COMPLETE, beginLoadingFonts );
         currentFont++;
-        holder.addChild( loader );
-      } else if( holder ) {
+        if ( holder ) {
+          holder.addChild( loader );
+        } else if ( e ) {
+          Sprite( e.target.parent ).addChild( loader );
+        }
+      } else if ( e ) {
         fontList = null;
         currentFont = undefined;
-        holder.dispatchEvent( new Event( Event.COMPLETE ) );
+        Sprite( e.target.parent ).dispatchEvent( new Event( Event.COMPLETE ) );
       }
     }
     
     private static function fontListProgress( e:ProgressEvent ):void {
-      var bytesLoaded:Number = ( e.bytesLoaded ) + Math.round( ( e.bytesLoaded / e.bytesTotal ) );
-      Sprite( e.target.parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, bytesLoaded, e.bytesTotal ) );
+      var bytesLoaded:Number = ( e.bytesLoaded * 100 ) + Math.round( ( e.bytesLoaded / e.bytesTotal ) * 100 );
+      var span:Number = 100 / totalFonts;
+      var currentSpan:Number = ( currentFont - 1 ) * span;
+      var totalLoaded:Number = currentSpan + ( span * e.bytesLoaded / e.bytesTotal );
+      trace( span + "/" + currentSpan + "/" + totalLoaded + "/100" );
+      Sprite( e.target.parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, totalLoaded, 100 ) );
     }
     
     /* Load a font file and then register that particular
@@ -112,7 +119,7 @@
      */
     public static function loadFont( font:String ):Sprite {
       loadingFont = font;
-      var request:URLRequest = new URLRequest( fullURL + "fonts/" + font + ".swf" );
+      var request:URLRequest = new URLRequest( "fonts/" + font + ".swf" );
       var loader:Loader = new Loader();
       var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
       loader.load( request, context );
@@ -135,15 +142,14 @@
 			var fontClass:Class = getDefinitionByName( loadingFont ) as Class;
 			Font.registerFont( fontClass );
       loadingFont = null;
+			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
       var fontList:Array = Font.enumerateFonts(false);
-      var traceValue:String = "Current font list ---------------------------\n";
+      trace( "Current Font List: ---------------------------------------" );
       for ( var i:int = 0; i < fontList.length; i++ ) {
-        traceValue += "Font Loaded: " + fontList[i].fontName;
+        trace( "Font Loaded: " + fontList[i].fontName );
       }
-      traceValue += "\n----------------------------------------------------------\n\n";
-      KuroExpress.broadcast( traceValue, 
-        { label:"KuroExpress::fontComplete()" } );
-      Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
+      trace( "----------------------------------------------------------" );
+      trace( "" );
 		}
     
     private static function fontError( e:IOErrorEvent ):void {
