@@ -6,9 +6,11 @@
 	<information>
 		<title>Boomtown</title>
 		<graphic>http://boomtowngame.com/facebook/design/main_header.jpg</graphic>
-		<modified>0.27 - May 13th, 2011</modified>
+		<modified>0.27 - May 18th, 2011</modified>
 		<changes>
-			
+			<change type="addition">Started the <link>workshop</link> feature</change>
+			<change type="addition">Started the <link>natural_resource</link> feature</change>
+			<change type="addition">Started the <link>mining</link> feature</change>
 		</changes>
 		
 		<description>
@@ -465,7 +467,7 @@
 					<li><link>marketplace</link>: a <t /> having to do with an item on the marketplace, maybe the player won it in an auction or successfully sold it</li>
 					<li><link>soldier</link>: a <t /> having to do with one of the player's <plink>soldier</plink>, maybe they have fully regenerated or all of their <plink>training_point</plink> have run out</li>
 					<li><link>territory</link>: a <t /> having to do with the current <link>zone</link> the player is on, maybe the <link>resource</link> distribution changed in the player's current <link>zone</link>, or the <link>zone</link> or <link>territory</link> is disputed or is no longer controlled by the player's <link>faction</link></li>
-					<li><link>equipment</link>: a <t /> having to do with <link>equipment</link> the player owns, perhaps a <link>crafing</link> operation finished, or maybe an item's durability degraded and the item was destroyed, or maybe a <link>faction</link>'s <link>kovanite</link> meter filled up and the player is awarded an item</li>
+					<li><link>equipment</link>: a <t /> having to do with <link>equipment</link> the player owns, perhaps a <link>crafting</link> operation finished, or maybe an item's durability degraded and the item was destroyed, or maybe a <link>faction</link>'s <link>kovanite</link> meter filled up and the player is awarded an item</li>
 				</ul>
 			</implementation>
 			
@@ -500,7 +502,7 @@
 				
 				The <t /> has limited amount of space for <link>equipment</link>, indicated by a weight capacity ratio somewhere near the <link>equipment</link> panel.  The player is allowed to go one item over the capacity, but after the total weight of all the player's <link>equipment</link> surpasses the weight capacity, they are no longer allowed to perform actions that add <link>equipment</link> to their inventory, and any involuntary actions that would give the player items would see those items disappear.  <plink>resource</plink> and <plink>soldier</plink> do not contribute to the <t />'s weight capacity.<br /><br />
 				
-				The top of the screen should have a <link>soldier</link> listing.  Similar to the <link>equipment</link> listing, it should be a grid layout, only with one row.  Each <link>soldier</link> should be represented by a square block with an image that represents them.  The list should consist of already recruited <plink>soldier</plink> first, and after them there should be a pool of potential recruits, or <plink>soldier</plink> that don't belong to the player but are available for purchase.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <link>soldier</link>, or pass on them and remove them from the potential recruit pool.  If the player chooses to recruit a new <link>soldier</link>, a new box should pop up allowing them to choose which <link>skill</link> they would like to specialize the <link>soldier</link> in.  When a player clicks on a recruited <link>soldier</link>, their attributes and <plink>skill</plink> should show up in the statistics box, and in the main part of the screen, a representation of the <link>soldier</link> should show up, with <link>equipment</link> slots around it for dragging items in and equipping them on the <link>soldier</link>.  The different slots should include:
+				The top of the screen should have a <link>soldier</link> listing.  Similar to the <link>equipment</link> listing, it should be a grid layout, only with one row.  Each <link>soldier</link> should be represented by a square block with an image that represents them.  The <link>soldier</link> listing should be split in two.  The left listing should only have enlisted <plink>soldier</plink>, or <plink>soldier</plink> that the player has already recruited, and the right list should only have potential recruits that the player may acquire.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <link>soldier</link>, or pass on them and remove them from the potential recruit pool.  If the player chooses to recruit a new <link>soldier</link>, a new box should pop up allowing them to choose which <link>skill</link> they would like to specialize the <link>soldier</link> in.  When a player clicks on a recruited <link>soldier</link>, their attributes and <plink>skill</plink> should show up in the statistics box, and in the main part of the screen, a representation of the <link>soldier</link> should show up, with <link>equipment</link> slots around it for dragging items in and equipping them on the <link>soldier</link>.  The different slots should include:
 				
 				<ul>
 					<li>Head <link>armor</link></li>
@@ -617,7 +619,23 @@
 				<email>dtalley@gmail.com</email>
 			</contact>
 			
+			<goals>
+				<goal>Give the player a central place to manage <link>resource</link> gathering and <link>crafting</link> operations.</goal>
+			</goals>
 			
+			<implementation>
+				The <t /> is linked from the <link>world_map</link>.  The <t /> consists of one main screen and a few modal screens accessible via buttons.<br /><br />
+				
+				When the player first visits the <t />, a large part of the left side of the screen should be taken up with <link>mining</link> management.  A panel should show what the player is currently <link>mining</link>, the <link>resource</link> distribution of the <link>zone</link> their <link>mcc</link> is currently stationed on, and buttons to allow the player to change which <link>resource</link> the player wants to acquire.  A progress bar should also show how long until the next batch of <plink>resource</plink> will be pulled up.<br /><br />
+				
+				The right side of the screen should be taken up by a grid layout showing the player what current <plink>resource</plink> they have in their possession.  Each <link>resource</link> should have an icon, and number representing the quantity.<br /><br />
+				
+				The bottom of the screen should be the <link>crafting</link> interface.  It doesn't need to be very big, mostly just a large space to indicate the current <link>crafting</link> processes, and a button to open the <link>crafting</link> table.  On the left side of the panel should be a grid layout where current processes can go.  Each item in the grid should have an icon of what's being created, a progress bar indicating how much longer it has to complete, and the title of whatever's being created.  On the right of the panel should be a button that when clicked launches the <link>crafting</link> window.
+			</implementation>
+			
+			<impact>
+				<link>crafting</link> and waging war in the game will be a combination of <link>mining</link> and managing the proper <link>resource</link>.  The <t /> will give the player a central place to inspect what they have, so that they may properly plan to acquire what they need.  
+			</impact>
 		</feature>
 		
 		<feature>
@@ -631,7 +649,25 @@
 			<title>Mining</title>
 			<plural>Mining</plural>
 			<id>mining</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Give the player an easy way to acquire <plink>resource</plink></goal>
+			</goals>
+			
+			<implementation>
+				<t /> is a passive operation performed by the player from the <link>workshop</link>.  In general, the player is always <t />, but to do it effectively means selecting the proper <link>resource</link> to acquire.<br /><br />
+				
+				<t /> is an interval activity, meaning the act of <t /> only happens every so often, whether it be minutes or hours, the player pulls in a certain amount of one kind of <link>resource</link> after every interval, depending on the <link>resource</link> distribution of the <link>zone</link> the player's <link>mcc</link> is currently stationed in.  The <link>resource</link> distribution also affects the quality of the <plink>resource</plink> acquired through <t />.
+			</implementation>
+			
+			<impact>
+				<t /> is the only way to acquire <link>natural_resource</link>, which are in turn needed in the <link>crafting</link> process to create <link>equipment</link>.
+			</impact>
 		</feature>
 		
 		<feature>
@@ -645,7 +681,25 @@
 			<title>Natural Resource</title>
 			<plural>Natural Resources</plural>
 			<id>natural_resource</id>
-			<planned>1</planned>
+			
+			<contact>
+				<author>David Talley</author>
+				<email>dtalley@gmail.com</email>
+			</contact>
+			
+			<goals>
+				<goal>Provide a basic building block of the game, with which players can create more and more complicated items</goal>
+			</goals>
+			
+			<implementation>
+				The <p /> in the game are simple <plink>resource</plink> that players can acquire through <link>mining</link>.  <p /> are always the main ingredient in simple <plink>synthetic_resource</plink>, and are usually used in the manufacture of more complicated <plink>synthetic_resource</plink> and <plink>equipment</plink>.<br /><br />
+				
+				The possible <p /> include <link>kovanite</link>, as well as <link>resource1</link>, <link>resource2</link>, and <link>resource3</link>.
+			</implementation>
+			
+			<impact>
+				<p /> give all players a passive way of acquiring things in the game.  Creation of all <link>equipment</link> starts with <p />.
+			</impact>
 		</feature>
 		
 		<feature>
