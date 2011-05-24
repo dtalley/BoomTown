@@ -73,7 +73,11 @@
 				}
         textarea {
           border: 0;
+          margin: 0;
           padding: 0;
+          resize: none;
+          font-size: 11px;
+					font-family: Verdana, Geneva, sans-serif;
         }
         ul {
           padding-top: 10px;
@@ -90,9 +94,9 @@
           background-position: 0px -14px;
         }
         .ico_text_link {
+          display: inline-block;
+          height: 14px;
           padding-left: 19px;
-          line-height: 14px;
-          padding-bottom: 1px;
         }
         a.ico_text_link:hover, a.ico_text_link:active {
           background-position: 0px -14px;
@@ -109,7 +113,10 @@
         .delete_link {
           background: transparent url( './delete_ico.gif' ) top left no-repeat;
         }
-        a, a:link, a:visited {
+        .check_link {
+          background: transparent url( './check_ico.gif' ) top left no-repeat;
+        }
+        a:link, a:visited {
           color: #0066AA;
           text-decoration: none;
         }
@@ -206,12 +213,11 @@
         }
         .impact_edit {
           width: 100%;
-          font-size: 11px;
-					font-family: Verdana, Geneva, sans-serif;
         }
         .goals_list li {
           padding-top: 5px;
           padding-bottom: 5px;
+          line-height: 14px;
         }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -294,6 +300,8 @@
                   <xsl:text>feature</xsl:text>
                   <xsl:if test="planned = '1'"> planned</xsl:if>
                 </xsl:attribute>
+                <input type="hidden" id="feature_title" value="{title}" />
+                <input type="hidden" id="feature_plural" value="{plural}" />
                 <div class="feature_title">
                   <xsl:if test="planned = '1'">Planned </xsl:if>Feature:
                   <span style="font-weight: bold;" class="feature_title_text">
@@ -326,9 +334,17 @@
                     <ul>
                       <xsl:for-each select="goals/goal">
                         <li>
-                          <a href="#" class="edit_goal ico_link edit_link" title="Edit Goal" style="float: left; margin-right: 5px;">.</a>
-                          <a href="#" class="delete_goal ico_link delete_link" title="Delete Goal" style="float: left; margin-right: 5px;">.</a>
-                          <xsl:apply-templates />
+                          <span class="view_goal_section">
+                            <a href="#" class="edit_goal ico_link edit_link" title="Edit Goal" style="float: left; margin-right: 5px;">.</a>
+                            <a href="#" class="delete_goal ico_link delete_link" title="Delete Goal" style="float: left; margin-right: 5px;">.</a>
+                            <span class="edit_goal_text"><xsl:apply-templates /></span>
+                          </span>
+                          <span class="edit_goal_section" style="display: none;">
+                            <a href="#" class="save_goal ico_link check_link" title="Save Goal" style="float: left; margin-right: 5px;">.</a>
+                            <div style="padding-left: 19px;">
+                              <textarea style="width: 100%; height: 14px;" class="edit_goal_edit"><xsl:copy-of select="node()" /></textarea>
+                            </div>
+                          </span>
                         </li>
                       </xsl:for-each>
                       <li><a href="#" class="add_goal ico_text_link add_link">Add Goal</a></li>
@@ -425,6 +441,13 @@
           <br />
         </xsl:for-each>
       </div>
+
+      <script type="text/javascript" src="jquery.js">
+        /* A script */
+      </script>
+      <script type="text/javascript" src="scripts.js">
+        /* A script */
+      </script>
     </body>
   </xsl:template>
 
