@@ -89,14 +89,25 @@
         a.ico_link:hover, a.ico_link:active {
           background-position: 0px -14px;
         }
+        .ico_text_link {
+          padding-left: 19px;
+          line-height: 14px;
+          padding-bottom: 1px;
+        }
+        a.ico_text_link:hover, a.ico_text_link:active {
+          background-position: 0px -14px;
+        }
         .edit_link {          
           background: transparent url( './edit_ico.gif' ) top left no-repeat;
         }
         .add_link {
-          background: transparent url( './edit_ico.gif' ) top left no-repeat;
+          background: transparent url( './add_ico.gif' ) top left no-repeat;
         }
-        .edit_link {
-          background: transparent url( './edit_ico.gif' ) top left no-repeat;
+        .up_link {
+          background: transparent url( './up_ico.gif' ) top left no-repeat;
+        }
+        .delete_link {
+          background: transparent url( './delete_ico.gif' ) top left no-repeat;
         }
         a, a:link, a:visited {
           color: #0066AA;
@@ -292,7 +303,7 @@
                 </div>
                 <br />
                 <div class="contact">
-                  <div class="contact_title"><a href="#" class="edit_link" style="float: right;">.</a> Contact</div>
+                  <div class="contact_title"><a href="#" class="edit_contact ico_link edit_link" title="Edit Contact" style="float: right;">.</a> Contact</div>
                   <div class="contact_description">
                     <span style="font-style: italic; color: #888888;">Contact information for the individual that maintains this section.</span>
                     <br /><br />
@@ -308,29 +319,30 @@
                 <div class="goals">
                   <div class="goals_title">Goals</div>
                   <div class="goals_description">
-                    <span style="font-style: italic; color: #888888;">Clear, concise goals that this feature is meant to achieve.</span>
+                    <span style="font-style: italic; color: #888888;">What problems should this feature solve? What objectives should this feature achieve?</span>
                     <br />
                   </div>
                   <div class="goals_list">
                     <ul>
                       <xsl:for-each select="goals/goal">
                         <li>
-                          <a href="#" class="edit_link" style="float: left; margin-right: 5px;">.</a>
+                          <a href="#" class="edit_goal ico_link edit_link" title="Edit Goal" style="float: left; margin-right: 5px;">.</a>
+                          <a href="#" class="delete_goal ico_link delete_link" title="Delete Goal" style="float: left; margin-right: 5px;">.</a>
                           <xsl:apply-templates />
                         </li>
                       </xsl:for-each>
-                      <li><a href="#" class="add_goal">+ Add Goal</a></li>
+                      <li><a href="#" class="add_goal ico_text_link add_link">Add Goal</a></li>
                     </ul>
                   </div>
                 </div>
                 <br />
                 <div class="background">
-                  <div class="background_title"><a href="#" class="edit_link" style="float: right;">.</a> Background</div>
+                  <div class="background_title"><a href="#" class="edit_background ico_link edit_link" title="Edit Background" style="float: right;">.</a> Background</div>
                   <div class="background_description">
                     <xsl:attribute name="style">
                       <xsl:if test="string-length( background ) = 0">display: none;</xsl:if>
                     </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span>
+                    <span style="font-style: italic; color: #888888;">What is the fictional origin of this feature?</span>
                     <br />
                     <br />
                   </div>
@@ -352,12 +364,12 @@
                 </div>
                 <br />
                 <div class="implementation">
-                  <div class="implementation_title"><a href="#" class="edit_link" style="float: right;">.</a> Implementation</div>
+                  <div class="implementation_title"><a href="#" class="edit_implementation ico_link edit_link" title="Edit Implementation" style="float: right;">.</a> Implementation</div>
                   <div class="implementation_description">
                     <xsl:attribute name="style">
                       <xsl:if test="string-length( implementation ) = 0">display: none;</xsl:if>
                     </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span>
+                    <span style="font-style: italic; color: #888888;">How does the player experience this feature?  What are the different aspects of it when the player actually encounters or interacts with this feature in the game?</span>
                     <br />
                     <br />
                   </div>
@@ -379,12 +391,12 @@
                 </div>
                 <br />
                 <div class="impact">
-                  <div class="impact_title"><a href="#" class="edit_link" style="float: right;">.</a> Impact</div>
+                  <div class="impact_title"><a href="#" class="edit_impact ico_link edit_link" title="Edit Impact" style="float: right;">.</a> Impact</div>
                   <div class="impact_description">
                     <xsl:attribute name="style">
                       <xsl:if test="string-length( impact ) = 0">display: none;</xsl:if>
                     </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span>
+                    <span style="font-style: italic; color: #888888;">Why does this feature matter?  How important is it in the scope of the game as a whole?  How does it affect the player's gameplay experience?</span>
                     <br />
                     <br />
                   </div>
@@ -406,7 +418,7 @@
                 </div>
               </div><br />
               <div style="text-align: right; padding-right: 10px;">
-                <a href="#toc">Table of Contents</a>
+                <a href="#toc" class="ico_text_link up_link">Table of Contents</a>
               </div><br />
             </xsl:for-each>
           </div>
