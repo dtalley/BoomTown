@@ -214,10 +214,20 @@
         .impact_edit {
           width: 100%;
         }
+        .background_edit {
+          width: 100%;
+        }
+        .implementation_edit {
+          width: 100%;
+        }
         .goals_list li {
           padding-top: 5px;
           padding-bottom: 5px;
           line-height: 14px;
+        }
+        .edit_goal_edit {
+          width: 100%;
+          height: 14px;
         }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -235,9 +245,11 @@
         </div>
         <br />
         <div id="description">
-          <xsl:for-each select="information/description">
-            <xsl:apply-templates />
-          </xsl:for-each>
+          <a href="#" class="edit_description ico_link edit_link" title="Edit Description" style="float: left; margin-right: 5px;">.</a>
+          <strong>Description</strong><br /><br />
+          <span class="description_text" style="clear: left;">
+            <xsl:apply-templates select="information/description" />
+          </span>
         </div>
         <br />
             This is a feature oriented design document.  Each feature is organized by a feature set, and listed broadest to most specific.
@@ -295,15 +307,11 @@
             </div>
             <br />
             <xsl:for-each select="feature">
-              <div id="{id}">
-                <xsl:attribute name="class">
-                  <xsl:text>feature</xsl:text>
-                  <xsl:if test="planned = '1'"> planned</xsl:if>
-                </xsl:attribute>
+              <div id="{id}" class="feature">
                 <input type="hidden" id="feature_title" value="{title}" />
                 <input type="hidden" id="feature_plural" value="{plural}" />
                 <div class="feature_title">
-                  <xsl:if test="planned = '1'">Planned </xsl:if>Feature:
+                  Feature:
                   <span style="font-weight: bold;" class="feature_title_text">
                     <xsl:value-of select="title" />
                   </span>
@@ -317,10 +325,26 @@
                     <br /><br />
                   </div>
                   <div class="contact_info">
-                    Author:
-                    <a href="mailto:{contact/email}" class="contact_link">
-                      <xsl:value-of select="contact/author" />
-                    </a>
+                    <xsl:choose>
+                      <xsl:when test="string-length( contact/author ) = 0">
+                        No contact information provided
+                      </xsl:when>
+                      <xsl:otherwise>
+                        Author:
+                        <a href="mailto:{contact/email}" class="contact_link">
+                          <xsl:value-of select="contact/author" />
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </div>
+                  <div class="edit_contact_info" style="display: none;">
+                    <strong>Author:</strong><br />
+                    <input type="text" size="50" style="border: 1px solid #666666;" value="{contact/author}" class="edit_author" /><br /><br />
+
+                    <strong>E-mail:</strong><br />
+                    <input type="text" size="50" style="border: 1px solid #666666;" value="{contact/email}" class="edit_email" /><br /><br />
+
+                    <input type="button" value="Save Contact Information" class="save_contact" />
                   </div>
                 </div>
                 <br />
@@ -333,7 +357,7 @@
                   <div class="goals_list">
                     <ul>
                       <xsl:for-each select="goals/goal">
-                        <li>
+                        <li class="goal">
                           <span class="view_goal_section">
                             <a href="#" class="edit_goal ico_link edit_link" title="Edit Goal" style="float: left; margin-right: 5px;">.</a>
                             <a href="#" class="delete_goal ico_link delete_link" title="Delete Goal" style="float: left; margin-right: 5px;">.</a>
@@ -347,100 +371,135 @@
                           </span>
                         </li>
                       </xsl:for-each>
-                      <li><a href="#" class="add_goal ico_text_link add_link">Add Goal</a></li>
+                      <li class="goal_template" style="display: none;">
+                        <span class="view_goal_section">
+                          <a href="#" class="edit_goal ico_link edit_link" title="Edit Goal" style="float: left; margin-right: 5px;">.</a>
+                          <a href="#" class="delete_goal ico_link delete_link" title="Delete Goal" style="float: left; margin-right: 5px;">.</a>
+                          <span class="edit_goal_text">na</span>
+                        </span>
+                        <span class="edit_goal_section" style="display: none;">
+                          <a href="#" class="save_goal ico_link check_link" title="Save Goal" style="float: left; margin-right: 5px;">.</a>
+                          <div style="padding-left: 19px;">
+                            <textarea class="edit_goal_edit">na</textarea>
+                          </div>
+                        </span>
+                      </li>
+                      <li class="add_goal_item">
+                        <span class="view_goal_section">
+                          <a href="#" class="add_goal ico_text_link add_link">Add Goal</a>
+                        </span>
+                        <span class="edit_goal_section" style="display: none;">
+                          <a href="#" class="save_new_goal ico_link check_link" title="Save Goal" style="float: left; margin-right: 5px;">.</a>
+                          <div style="padding-left: 19px;" class="edit_goal_holder">
+                            
+                          </div>
+                        </span>
+                      </li>
                     </ul>
                   </div>
                 </div>
                 <br />
                 <div class="background">
-                  <div class="background_title"><a href="#" class="edit_background ico_link edit_link" title="Edit Background" style="float: right;">.</a> Background</div>
+                  <div class="background_title"><a href="#" class="edit_background_btn ico_link edit_link" title="Edit Background" style="float: right;">.</a> Background</div>
                   <div class="background_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( background ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
                     <span style="font-style: italic; color: #888888;">What is the fictional origin of this feature?</span>
-                    <br />
-                    <br />
                   </div>
-                  <textarea class="background_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( background ) > 0">
-                        <xsl:copy-of select="background/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( background ) > 0">
-                    <div class="background_text">
-                      <xsl:apply-templates select="background" />
-                    </div>
-                  </xsl:if>
+                  <div class="edit_background" style="display: none;">
+                    <br />
+                    <textarea class="background_edit">
+                      <xsl:choose>
+                        <xsl:when test="string-length( background ) > 0">
+                          <xsl:copy-of select="background/node()" />
+                        </xsl:when>
+                        <xsl:otherwise>Edit here!</xsl:otherwise>
+                      </xsl:choose>
+                    </textarea><br /><br />
+                    <input type="button" value="Save Background" class="save_background" />
+                  </div>
+                  <div class="background_body">
+                    <br />
+                    <span class="background_text">
+                      <xsl:if test="string-length( background ) > 0">
+                        <xsl:apply-templates select="background" />
+                      </xsl:if>
+                      <xsl:if test="string-length( background ) = 0">
+                        No background provided
+                      </xsl:if>
+                    </span>
+                  </div>
                 </div>
                 <br />
                 <div class="implementation">
-                  <div class="implementation_title"><a href="#" class="edit_implementation ico_link edit_link" title="Edit Implementation" style="float: right;">.</a> Implementation</div>
+                  <div class="implementation_title"><a href="#" class="edit_implementation_btn ico_link edit_link" title="Edit Implementation" style="float: right;">.</a> Implementation</div>
                   <div class="implementation_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( implementation ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
                     <span style="font-style: italic; color: #888888;">How does the player experience this feature?  What are the different aspects of it when the player actually encounters or interacts with this feature in the game?</span>
-                    <br />
-                    <br />
                   </div>
-                  <textarea class="implementation_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( implementation ) > 0">
-                        <xsl:copy-of select="implementation/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( implementation ) > 0">
-                    <div class="implementation_text">
-                      <xsl:apply-templates select="implementation" />
-                    </div>
-                  </xsl:if>
+                  <div class="edit_implementation" style="display: none;">
+                    <br />
+                    <textarea class="implementation_edit">
+                      <xsl:choose>
+                        <xsl:when test="string-length( implementation ) > 0">
+                          <xsl:copy-of select="implementation/node()" />
+                        </xsl:when>
+                        <xsl:otherwise>Edit here!</xsl:otherwise>
+                      </xsl:choose>
+                    </textarea><br /><br />
+                    <input type="button" value="Save Implementation" class="save_implementation" />
+                  </div>
+                  <div class="implementation_body">
+                    <br />
+                    <span class="implementation_text">
+                      <xsl:if test="string-length( implementation ) > 0">
+                        <xsl:apply-templates select="implementation" />
+                      </xsl:if>
+                      <xsl:if test="string-length( implementation ) = 0">
+                        No implementation provided
+                      </xsl:if>
+                    </span>
+                  </div>
                 </div>
                 <br />
                 <div class="impact">
-                  <div class="impact_title"><a href="#" class="edit_impact ico_link edit_link" title="Edit Impact" style="float: right;">.</a> Impact</div>
+                  <div class="impact_title"><a href="#" class="edit_impact_btn ico_link edit_link" title="Edit Impact" style="float: right;">.</a> Impact</div>
                   <div class="impact_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( impact ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
                     <span style="font-style: italic; color: #888888;">Why does this feature matter?  How important is it in the scope of the game as a whole?  How does it affect the player's gameplay experience?</span>
-                    <br />
-                    <br />
                   </div>
-                  <textarea class="impact_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( impact ) > 0">
-                        <xsl:copy-of select="impact/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( impact ) > 0">
-                    <div class="impact_text">
-                      <xsl:apply-templates select="impact" />
-                    </div>
-                  </xsl:if>
+                  <div class="edit_impact" style="display: none;">
+                    <br />
+                    <textarea class="impact_edit">
+                      <xsl:choose>
+                        <xsl:when test="string-length( impact ) > 0">
+                          <xsl:copy-of select="impact/node()" />
+                        </xsl:when>
+                        <xsl:otherwise>Edit here!</xsl:otherwise>
+                      </xsl:choose>
+                    </textarea><br /><br />
+                    <input type="button" value="Save Impact" class="save_impact" />
+                  </div>
+                  <div class="impact_body">
+                    <br />
+                    <span class="impact_text">
+                      <xsl:if test="string-length( impact ) > 0">
+                        <xsl:apply-templates select="impact" />
+                      </xsl:if>
+                      <xsl:if test="string-length( impact ) = 0">
+                        No impact provided
+                      </xsl:if>
+                    </span>
+                  </div>
                 </div>
               </div><br />
               <div style="text-align: right; padding-right: 10px;">
                 <a href="#toc" class="ico_text_link up_link">Table of Contents</a>
               </div><br />
+              <div style="text-align: right;">
+                <input type="button" value="Save Document" class="save_document" />
+              </div><br />
             </xsl:for-each>
           </div>
           <br />
         </xsl:for-each>
-      </div>
+      </div><br />
 
       <script type="text/javascript" src="jquery.js">
         /* A script */

@@ -11,9 +11,7 @@
 			
 		</changes>
 		
-		<description>
-			BoomTown is an online, social strategy game where players assume control of a <l>mcc</l> and a standing army of <pl>soldier</pl> and wage war against other <pl>faction</pl>, mining <pl>resource</pl> and crafting <pl>equipment</pl> to give them an advantage.
-		</description>		
+		<description>BoomTown is an online, social strategy game where players assume control of a <l>mcc</l> and a standing army of <pl>soldier</pl> and wage war against other <pl>faction</pl>, mining <pl>resource</pl> and crafting <pl>equipment</pl> to give them an advantage.</description>		
 	</information>
 	
 	<featureset>
@@ -34,10 +32,9 @@
 				<goal>Provide context for most or all of the player's actions within the game</goal>
 			</goals>
 			
-			<background>				
-				The year is 2106.  Humankind sent probes into deep, unexplored space, only to find it absent interesting or useful planets, with the exception of <t />, a planet devoid of life, but rich in consumable resources.  <l>kovanite</l>, a mineral not found on Earth, proved to be invaluable in the manufacture of mankind's most advanced technology, and many large companies rushed equipment and manpower to the planet in order to extract it.  The surface deposits ran out, causing companies to establish mining facilities, which naturally became points of conflict.  Almost a century later, three organizations control most of the planet, and wage an all out war against each other to claim the richest mineral deposits, intent on mining valuable <pl>resource</pl> from beneath the planet’s surface and utilizing them for their own ends.<br /><br />
+			<background>The year is 2106.  Humankind sent probes into deep, unexplored space, only to find it absent interesting or useful planets, with the exception of <t />, a planet devoid of life, but rich in consumable resources.  <l>kovanite</l>, a mineral not found on Earth, proved to be invaluable in the manufacture of mankind's most advanced technology, and many large companies rushed equipment and manpower to the planet in order to extract it.  The surface deposits ran out, causing companies to establish mining facilities, which naturally became points of conflict.  Almost a century later, three organizations control most of the planet, and wage an all out war against each other to claim the richest mineral deposits, intent on mining valuable <pl>resource</pl> from beneath the planet’s surface and utilizing them for their own ends.<br /><br />
 				
-				Players take on the role of a military <l>commander</l>, in command of an immense <l>Mobile Command Center</l> and a small army of <pl>soldier</pl> within, tasked by their chosen <l>faction</l> to secure <l>kovanite</l> and transport it back to <l>faction_headquarters</l>, and hinder enemy <pl>faction</pl> from doing so wherever possible.</background>
+Players take on the role of a military <l>commander</l>, in command of an immense <l>mcc</l> and a small army of <pl>soldier</pl> within, tasked by their chosen <l>faction</l> to secure <l>kovanite</l> and transport it back to <l>faction_headquarters</l>, and hinder enemy <pl>faction</pl> from doing so wherever possible.</background>
 			
 			<implementation><t /> is the planet upon which the game takes place.  From the moment players launch the game, even if they aren't logged in, the setting of <t /> should permeate the experience.  They should feel as though they have suddenly become part of this world, as though their presence on <t /> is immediately requested.  An unregistered player should be plasterd with "Visit <t />" propoganda from each <l>faction</l>, enticing them to "join the fight for <l>kovanite</l>."</implementation>
 			
@@ -84,9 +81,9 @@
 			
 			<implementation>A <l>commander</l>'s <t /> is essentially an identifier letting other players know how long the <l>commander</l> has been playing.  The <t /> should always be visible any time the <l>commander</l>'s information is displayed on screen, and a history of the <p /> and when the <l>commander</l> achieved them should be kept for each <l>commander</l>.<br /><br />
 				
-				Additionally, many things the player may attempt to do will require a certain <t />.  Certain actions or buttons may be unavailable, grayed out, etc. and should display a "You must achieve <t /> X before you can do this" message to the player.<br /><br />
+Additionally, many things the player may attempt to do will require a certain <t />.  Certain actions or buttons may be unavailable, grayed out, etc. and should display a "You must achieve <t /> X before you can do this" message to the player.<br /><br />
 				
-				The <l>commander</l> gains new <p /> by gaining <l>experience</l>.</implementation>
+The <l>commander</l> gains new <p /> by gaining <l>experience</l>.</implementation>
 			
 			<impact><p /> are mostly a way to easily tell powerful players from beginning players.  <p /> will also be an easy, tiered way to keep beginning players from performing certain actions meant for more experienced players.</impact>
 		</feature>
@@ -108,9 +105,9 @@
 			
 			<implementation>The player should always be able to tell how much <t /> their <l>commander</l> currently has, whether it be a little progress bar incorporated into their <l>commander</l> card, or one of the statistics that shows up on one of the <l>world_map</l> overlay panels.<br /><br />
 				
-				A player gains <t /> by performing actions.  For example, winning a <l>battle</l> might grant the player a good amount of <t />, and even losing a <l>battle</l> might grant a fraction of that <t />.  Successfully <l>crafting</l> something should yield <t />, and failing a <l>crafting</l> attempt should grant a fraction of that <t />.  Anything that takes effort on the player's part should grant <t />, and in contrast, simple things like equipping <pl>soldier</pl> or <l>mining</l> should not grant any <t />.<br /><br />
+A player gains <t /> by performing actions.  For example, winning a <l>battle</l> might grant the player a good amount of <t />, and even losing a <l>battle</l> might grant a fraction of that <t />.  Successfully <l>crafting</l> something should yield <t />, and failing a <l>crafting</l> attempt should grant a fraction of that <t />.  Anything that takes effort on the player's part should grant <t />, and in contrast, simple things like equipping <pl>soldier</pl> or <l>mining</l> should not grant any <t />.<br /><br />
 				
-				One minor exception to the latter rule should be that a player can give <l>kovanite</l> to their <l>faction</l> in exchange for <t />, among other things.</implementation>
+One minor exception to the latter rule should be that a player can give <l>kovanite</l> to their <l>faction</l> in exchange for <t />, among other things.</implementation>
 			
 			<impact><t /> serves as the universal progress tracker.  When a player gains <t />, they know they're progressing in the game, and it should motivate them to continue doing whatever it is they were doing to gain <t /> in the first place.</impact>
 		</feature>
@@ -133,20 +130,20 @@
 			
 			<background>The three (3) <p /> within the game are:<br /><br />
 				
-				<strong>The Interplanetary Kova Company</strong> <em>(IKC)</em><br />
-				A defense powerhouse, responsible for a substantial part of Earth's arms trade.  War is an eventuality on Earth, and the need for weapons never waivered.  The IKC is fighting to secure a steady supply of <l>kovanite</l> to its factories on Earth to support the armies of the future.  The IKC is responsible for designing most of the <pl>weapon</pl> used by <pl>commander</pl> of all <pl>faction</pl> on <l>setting</l>.<br /><br />
+<strong>The Interplanetary Kova Company</strong> <em>(IKC)</em><br />
+A defense powerhouse, responsible for a substantial part of Earth's arms trade.  War is an eventuality on Earth, and the need for weapons never waivered.  The IKC is fighting to secure a steady supply of <l>kovanite</l> to its factories on Earth to support the armies of the future.  The IKC is responsible for designing most of the <pl>weapon</pl> used by <pl>commander</pl> of all <pl>faction</pl> on <l>setting</l>.<br /><br />
 				
-				<strong>Ekova, Inc.</strong> <em>(EKV)</em><br />
-				A family-owned industrialist corporation responsible for many of Earth's environmentally friendly advances.  Ekova handles many of Earth's major metropolitan infrastructure contracts, building roads, apartments, parks, and many other civil installations.  Ekova uses Kovanite in many of its projects, and has a vested interest in its continued export from Kova to Earth, preferrably via its own transport ships to internal storage facilities.  Ekova is responsible for designing most of the vehicles used by commanders on Kova, including the standard <pl>mcc</pl>.<br /><br />
+<strong>Ekova, Inc.</strong> <em>(EKV)</em><br />
+A family-owned industrialist corporation responsible for many of Earth's environmentally friendly advances.  Ekova handles many of Earth's major metropolitan infrastructure contracts, building roads, apartments, parks, and many other civil installations.  Ekova uses Kovanite in many of its projects, and has a vested interest in its continued export from Kova to Earth, preferrably via its own transport ships to internal storage facilities.  Ekova is responsible for designing most of the vehicles used by commanders on Kova, including the standard <pl>mcc</pl>.<br /><br />
 				
-				<strong>Kovanant</strong> <em>(KVN)</em><br />
-				A rogue, technology-obsessed umbrella corporation fighting to take absolute control over <l>setting</l> and turn it into a space-faring utopia.  Many of its subsidiaries on Earth are simply buffer companies used to filter money around the planet and especially offworld to support its military engagements on <l>setting</l> itself.  Kovanant is responsible for many of the <pl>device</pl> used by <pl>soldier</pl> on <l>setting</l>.</background>
+<strong>Kovanant</strong> <em>(KVN)</em><br />
+A rogue, technology-obsessed umbrella corporation fighting to take absolute control over <l>setting</l> and turn it into a space-faring utopia.  Many of its subsidiaries on Earth are simply buffer companies used to filter money around the planet and especially offworld to support its military engagements on <l>setting</l> itself.  Kovanant is responsible for many of the <pl>device</pl> used by <pl>soldier</pl> on <l>setting</l>.</background>
 			
 			<implementation>There are three (3) <p /> within the game, and upon signing up the player must choose one to join.  The decision is permanent, so the player cannot switch <p /> later on.  On the <t /> select screen, it should be readily apparent whether or not they have friends playing for a specific <t />, or all 3 if that happens to be the case.  The player should also be able to see specifically which of their friends is on which <t />.<br /><br />
 				
-				Each <t /> is distinguished by a color, a pattern, and a logo, where each color is easily discernable from the next, more than likely Red, Blue, and Yellow for the most accessibility.  Each logo should also be easily recognizable by its silhouette alone.  When a <t />'s color is painted anywhere, it should be painted in that <t />'s pattern, for example dashed lines, curvy lines, circles, etc.  Each pattern should also be easily distinguishable.<br /><br />
+Each <t /> is distinguished by a color, a pattern, and a logo, where each color is easily discernable from the next, more than likely Red, Blue, and Yellow for the most accessibility.  Each logo should also be easily recognizable by its silhouette alone.  When a <t />'s color is painted anywhere, it should be painted in that <t />'s pattern, for example dashed lines, curvy lines, circles, etc.  Each pattern should also be easily distinguishable.<br /><br />
 				
-				Each player should also have a <l>fnn</l> panel on the screen that pulls in broadcasts from their <t />, giving them small tidbits of story development.</implementation>
+Each player should also have a <l>fnn</l> panel on the screen that pulls in broadcasts from their <t />, giving them small tidbits of story development.</implementation>
 			
 			<impact><p /> provide animosity for players, meaning a player from one <t /> wants to defeat players from other <p />, so it gives all players on one <t /> a unified goal: to promote and progress their <t /> while hindering enemy <p />.  A <t /> should also provide benefits to its players, depending on the throughput of <l>kovaite</l> or other <plural>resources</plural> and <pl>equipment</pl>, meaning if players substantially contribute to their <t />'s success, either by winning <pl>battle</pl> and securing <pl>territory</pl>, or sending sufficient <l>kovanite</l> back to the <t />, the players should receive perks relative to their actions, such as attack bonuses, <l>equipment</l>, or any temporary improvements to any of the actions they may perform in the game.</impact>
 			
@@ -173,15 +170,15 @@
 			
 			<implementation>A <t /> can either be 'Flying' or 'Rolling', which is to say one flies through the air and one rolls over the ground.  The player chooses which <t /> they would like to control when they first sign up.  The <t /> is also what holds all of the player's <pl>soldier</pl>, <pl>equipment</pl>, <pl>vehicle</pl>, and <pl>resource</pl>.  The <t /> is always stationed within a <l>zone</l> inside a <l>territory</l>, and the player's first <t /> starts out in a random <l>zone</l> within their <l>faction_headquarters</l>.<br /><br />
 				
-				The <t /> is always mobile, meaning the player can move it around the <l>world_map</l>.  Moving is not always instant, however, with Rolling <p />, unless the use of a <l>faction_dropship</l> is employed.  Without a <l>faction_dropship</l>, it could take a few hours for a <t /> to move from one <l>territory</l> to another.  When a <t /> is in motion, it is essentially not stationed anywhere until the move is complete.  A player can only move their <t /> to a <l>zone</l> that is controlled by their <l>faction</l>.  If the target <l>zone</l> is taken over by an enemy <l>faction</l> while the <t /> is in motion, it will instantly return to a random <l>zone</l> within the player's <l>faction_headquarters</l>.  The <t />'s position on the map also determines how long it takes <pl>soldier</pl> to travel to their target <l>battle</l> if <pl>faction_dropship</pl> are not used.<br /><br />
+The <t /> is always mobile, meaning the player can move it around the <l>world_map</l>.  Moving is not always instant, however, with Rolling <p />, unless the use of a <l>faction_dropship</l> is employed.  Without a <l>faction_dropship</l>, it could take a few hours for a <t /> to move from one <l>territory</l> to another.  When a <t /> is in motion, it is essentially not stationed anywhere until the move is complete.  A player can only move their <t /> to a <l>zone</l> that is controlled by their <l>faction</l>.  If the target <l>zone</l> is taken over by an enemy <l>faction</l> while the <t /> is in motion, it will instantly return to a random <l>zone</l> within the player's <l>faction_headquarters</l>.  The <t />'s position on the map also determines how long it takes <pl>soldier</pl> to travel to their target <l>battle</l> if <pl>faction_dropship</pl> are not used.<br /><br />
 				
-				Flying <p /> are a little different than their Rolling counterparts.  Flying <p /> do not need to use <pl>faction_dropship</pl>, as they can instantly move between <pl>territory</pl>.  Flying <p /> have no room for <pl>soldier</pl>, which means <pl>commander</pl> controlling a Flying <t /> will never directly engage in <pl>battle</pl>.  Instead, Flying <p /> provide a support role to their <l>faction</l> and friends.  Flying <p /> get a significant bonus to <l>mining</l>, meaning they can pull up <pl>resource</pl> much faster, which also gives them an advantage in <l>crafting</l>.  Players using a Flying <t /> also have exclusive access to sell items on the <l>marketplace</l>, which players using a Rolling <t /> cannot.<br /><br />
+Flying <p /> are a little different than their Rolling counterparts.  Flying <p /> do not need to use <pl>faction_dropship</pl>, as they can instantly move between <pl>territory</pl>.  Flying <p /> have no room for <pl>soldier</pl>, which means <pl>commander</pl> controlling a Flying <t /> will never directly engage in <pl>battle</pl>.  Instead, Flying <p /> provide a support role to their <l>faction</l> and friends.  Flying <p /> get a significant bonus to <l>mining</l>, meaning they can pull up <pl>resource</pl> much faster, which also gives them an advantage in <l>crafting</l>.  Players using a Flying <t /> also have exclusive access to sell items on the <l>marketplace</l>, which players using a Rolling <t /> cannot.<br /><br />
 				
-				Travel between <pl>zone</pl> in the same <l>territory</l> is instant regardless of what type of <t /> a player is using.</implementation>
+Travel between <pl>zone</pl> in the same <l>territory</l> is instant regardless of what type of <t /> a player is using.</implementation>
 			
 			<impact>The <t /> mainly provides a physical manifestation of the player on the <l>world_map</l>.  Wherever the <t /> is stationed is where the player can mine for <pl>resource</pl>, and the location affects travel times for squads of <pl>soldier</pl> to their target <pl>battle</pl>.<br /><br />
 				
-				Having two different types of <p /> allows for two completely different playstyles.  Players who enjoy direct conflict should employ a Rolling <t />, and players who enjoy <l>crafting</l> or simply supporting their friends would use a Flying <t />.</impact>		
+Having two different types of <p /> allows for two completely different playstyles.  Players who enjoy direct conflict should employ a Rolling <t />, and players who enjoy <l>crafting</l> or simply supporting their friends would use a Flying <t />.</impact>		
 		</feature>
 		
 		<feature>
@@ -200,7 +197,7 @@
 			
 			<implementation>The player is provided with a small number of tokens that they can turn over for the use of a <t />.  A <t /> can transport <pl>mcc</pl> and <pl>soldier</pl>.  Travel using a <t /> is instant, where otherwise it may take minutes or hours for a player to move an object across the <l>world_map</l>.  The player should not have to take any special actions to use a <t />.  When the player selects a button or menu item to perform a move or attack action, if the player has <t /> tokens left, a box should pop up asking them if they want a lift from their <l>faction</l>.  If they say yes, the action is performed instantly, otherwise the action takes however long it would normally take.<br /><br />
 				
-				The players <t /> tokens should replenish over time.  Beginning players below a certain <l>rank</l> should have access to unlimited <p />.</implementation>
+The players <t /> tokens should replenish over time.  Beginning players below a certain <l>rank</l> should have access to unlimited <p />.</implementation>
 			
 			<impact><p /> serve to limit the player's ability to perform a lot of move actions in a small timeframe.  This way, say a player is out of <t /> tokens, and they want to move their <l>mcc</l> to a different <l>territory</l> with a good <l>resource</l> distribution.  Without <t /> tokens, they have to wait a while, so they can't instantly reap the benefits being over a good <l>zone</l>.</impact>
 		</feature>
@@ -229,24 +226,24 @@
 			
 			<implementation>The <t /> is where the player manages the locations of all of their actions.  They can see a full view off all of the <pl>territory</pl> in the game, which ones are disputed, which ones their <l>faction</l> is defending, and which ones their <l>faction</l> is attacking.  Each of the <pl>territory</pl> is color coded, depending on which <l>faction</l> currently holds the <l>territory</l>.  Some <pl>territory</pl> may not be occupied, in which case their color will not reflect any of the <pl>faction</pl>.<br /><br />
 				
-				Some <pl>territory</pl> are clickable, namely <pl>territory</pl> owned by the player's <l>faction</l> and open enemy <pl>territory</pl> next to <pl>territory</pl> owned by the player's <l>faction</l>.  When the player clicks on one, a radial menu pops up with the following potential options (not all will show up, depending on the status and owner):
-				<ul>
-					<li>An icon allowing them to zoom into the <l>territory</l> to view its zones</li>
-				</ul>
+Some <pl>territory</pl> are clickable, namely <pl>territory</pl> owned by the player's <l>faction</l> and open enemy <pl>territory</pl> next to <pl>territory</pl> owned by the player's <l>faction</l>.  When the player clicks on one, a radial menu pops up with the following potential options (not all will show up, depending on the status and owner):
+<ul>
+<li>An icon allowing them to zoom into the <l>territory</l> to view its zones</li>
+</ul>
 				
-				The overlay of the world map should include most of the information vital to the player's gameplay, including:
-				<ul>
-					<li>The number of <pl>dropship_credit</pl> the player has left</li>
-					<li>The <l>commander</l>'s current <l>experience</l> level, and an indicator of how much <l>experience</l> the player still needs to get before the <l>commander</l> achieves the next rank</li>
-					<li>The used and unused <l>bandwidth</l> of the player's <l>mcc</l></li>
-					<li>The total number of <pl>credit</pl> in their bank</li>
-					<li>A link to the <l>workshop</l></li>
-					<li>A link to the <l>warehouse</l></li>
-					<li>A link to the <l>marketplace</l></li>
-					<li>A link or small section dedicated to the player's <l>mail</l></li>
-					<li>Either a link or small portion of the screen dedicated to the <l>fnn</l></li>
-					<li>A small portion of the screen dedicated to <pl>notification</pl></li>
-				</ul></implementation>
+The overlay of the world map should include most of the information vital to the player's gameplay, including:
+<ul>
+<li>The number of <pl>dropship_credit</pl> the player has left</li>
+<li>The <l>commander</l>'s current <l>experience</l> level, and an indicator of how much <l>experience</l> the player still needs to get before the <l>commander</l> achieves the next rank</li>
+<li>The used and unused <l>bandwidth</l> of the player's <l>mcc</l></li>
+<li>The total number of <pl>credit</pl> in their bank</li>
+<li>A link to the <l>workshop</l></li>
+<li>A link to the <l>warehouse</l></li>
+<li>A link to the <l>marketplace</l></li>
+<li>A link or small section dedicated to the player's <l>mail</l></li>
+<li>Either a link or small portion of the screen dedicated to the <l>fnn</l></li>
+<li>A small portion of the screen dedicated to <pl>notification</pl></li>
+</ul></implementation>
 			
 			<impact>The <t /> is the center of the global conflict in the game.  It allows the player to easily see where the action is, and allows them to easily jump into it.  The <t /> also serves as the initial entry point for the game.  It is the first screen the player sees when logging in, and links through to all of the major actions the player can perform within the game.</impact>
 		</feature>
@@ -267,17 +264,17 @@
 			
 			<implementation>A <t /> is an individual region on the <l>world_map</l>.  When the player clicks a <t />, a new window will transition in showing them statistics about that <t /> and a map of the <pl>zone</pl> within it.  The information about a <t /> that is publicly available to a player should be:
 				
-				<ul>
-					<li>Whether or not the <t /> is disputed.  It's disputed if there are currently battles going on within it, so the player should also be able to see which <pl>zone</pl> have battles active within them.</li>
-					<li>If the <t /> is controlled by the player's <l>faction</l>, there may be friendly <pl>mcc</pl> stationed within the <t />, so the player should see how many there are and which <pl>zone</pl> they're stationed in.</li>
-					<li>In contrast, if the <t /> is controlled by an enemy <l>faction</l>, there may be enemy <pl>mcc</pl> stationed within the <t />, so if the <t /> is currently open to attack from the player, or is currently disputed by the player's <l>faction</l>, they should be able to see how many enemy <pl>mcc</pl> there are, and where they are on the map.</li>
-				</ul>
-				
-				<t /> control works on a timed sequence of events.  If more than one <l>faction</l>'s <p /> are adjacent to one another on the world map, and neither <t /> is currently in a 'locked' state, those <p /> are concidered to be 'open.'  Any player from any of the adjoining <pl>faction</pl> can attack an enemy <l>faction</l>'s open <t /> at will, and once the first <l>battle</l> starts within a <t /> after it has been opened, the <t /> becomes 'disputed.'  Players from any of the <pl>faction</pl> participating in the dispute can attack individual <pl>zone</pl> within the <t />.  After the <t /> becomes disputed, a timer is started and should be visible to players within the <t /> view, showing them how long until the dispute is automatically resolved.  While the timer is running, players attempt to gain control of a majority of the <pl>zone</pl> within the <t />, and once the timer is complete, the <l>faction</l> with the most controlled <pl>zone</pl> is awarded the <t />.  Once a dispute is resolved, the <t /> goes into a 'lock' state, and cannot be attacked for a small period of time.<br /><br />
-				
-				If the <t /> is currently controlled by the player's <l>faction</l> and they click on a <l>zone</l>, an option should pop up allowing them to station their <l>mcc</l> on that <l>zone</l>.  This action should be <l>rank</l> restricted, meaning if a player is below a certain rank, they may only move their <l>mcc</l> around within their <l>faction_headquarters</l>, and can't move to other <p /> until they achieve the proper <l>rank</l>.<br /><br />
-				
-				A <t /> also determines the <l>resource</l> distributions in the <pl>zone</pl> it contains.  The farther a <t /> is from all of the <pl>faction_headquarters</pl>, the better the quality of <pl>resource</pl> a player will get from its <pl>zone</pl> while <l>mining</l>.</implementation>
+<ul>
+<li>Whether or not the <t /> is disputed.  It's disputed if there are currently battles going on within it, so the player should also be able to see which <pl>zone</pl> have battles active within them.</li>
+<li>If the <t /> is controlled by the player's <l>faction</l>, there may be friendly <pl>mcc</pl> stationed within the <t />, so the player should see how many there are and which <pl>zone</pl> they're stationed in.</li>
+<li>In contrast, if the <t /> is controlled by an enemy <l>faction</l>, there may be enemy <pl>mcc</pl> stationed within the <t />, so if the <t /> is currently open to attack from the player, or is currently disputed by the player's <l>faction</l>, they should be able to see how many enemy <pl>mcc</pl> there are, and where they are on the map.</li>
+</ul>
+
+<t /> control works on a timed sequence of events.  If more than one <l>faction</l>'s <p /> are adjacent to one another on the world map, and neither <t /> is currently in a 'locked' state, those <p /> are concidered to be 'open.'  Any player from any of the adjoining <pl>faction</pl> can attack an enemy <l>faction</l>'s open <t /> at will, and once the first <l>battle</l> starts within a <t /> after it has been opened, the <t /> becomes 'disputed.'  Players from any of the <pl>faction</pl> participating in the dispute can attack individual <pl>zone</pl> within the <t />.  After the <t /> becomes disputed, a timer is started and should be visible to players within the <t /> view, showing them how long until the dispute is automatically resolved.  While the timer is running, players attempt to gain control of a majority of the <pl>zone</pl> within the <t />, and once the timer is complete, the <l>faction</l> with the most controlled <pl>zone</pl> is awarded the <t />.  Once a dispute is resolved, the <t /> goes into a 'lock' state, and cannot be attacked for a small period of time.<br /><br />
+
+If the <t /> is currently controlled by the player's <l>faction</l> and they click on a <l>zone</l>, an option should pop up allowing them to station their <l>mcc</l> on that <l>zone</l>.  This action should be <l>rank</l> restricted, meaning if a player is below a certain rank, they may only move their <l>mcc</l> around within their <l>faction_headquarters</l>, and can't move to other <p /> until they achieve the proper <l>rank</l>.<br /><br />
+
+A <t /> also determines the <l>resource</l> distributions in the <pl>zone</pl> it contains.  The farther a <t /> is from all of the <pl>faction_headquarters</pl>, the better the quality of <pl>resource</pl> a player will get from its <pl>zone</pl> while <l>mining</l>.</implementation>
 			
 			<impact></impact>
 		</feature>
@@ -299,7 +296,7 @@
 			
 			<implementation>Each <l>faction</l> has a <l>territory</l> on the <l>world_map</l> that serves as their <t />.  The <t /> should be clearly defined from the player's perspective on the <l>world_map</l>.  The <t />, in general, works exactly like a normal <l>territory</l> with the exception that enemy <pl>faction</pl> cannot attack it.  All beginning players start out on the <t /> <l>territory</l>, and are not allowed to leave until they reach a specific <l>rank</l>.  Within the <t /> are the same number of <pl>zone</pl> as in a normal <l>territory</l>.<br /><br />
 				
-				The <t /> also affects the global <l>resource</l> distribution, meaning <pl>zone</pl> within <pl>territory</pl> that are close to a <t /> will have low quality <pl>resource</pl>, especially <pl>zone</pl> within the <t /> itself, and <pl>zone</pl> within <pl>territory</pl> that are far away from all of the <p /> will have better quality <pl>resource</pl>.</implementation>
+The <t /> also affects the global <l>resource</l> distribution, meaning <pl>zone</pl> within <pl>territory</pl> that are close to a <t /> will have low quality <pl>resource</pl>, especially <pl>zone</pl> within the <t /> itself, and <pl>zone</pl> within <pl>territory</pl> that are far away from all of the <p /> will have better quality <pl>resource</pl>.</implementation>
 			
 			<impact>The <t /> serves as a safe haven for new players that have just joined the <l>faction</l>.  Players are free to move their <pl>mcc</pl> around within the <t />' borders, and mine the <pl>resource</pl> within.  This gives new players a sort of training ground to learn the basics of the game without actually venturing out into the world and having to deal with the hardships that more experienced players go through.<br /><br /></impact>
 		</feature>
@@ -321,12 +318,12 @@
 			
 			<implementation><p /> are the regions within a <l>territory</l>.  When a player clicks on a <t />, one of two things happens.  If the <l>territory</l> that the zone is in is disputed, and the <t /> belongs to an enemy <l>faction</l> or is currently being attacked by an enemy <l>faction</l>, a new screen transitions in with a localized map view of the <t />, and a few <pl>scenario</pl> dotted around it.  The number of <pl>scenario</pl> is randomized and changes every time the containing <l>territory</l> becomes open to attack.  At this point the player can choose a scenario to participate in, or zoom back out.<br /><br />
 				
-				If the <t /> is controlled by the player's <l>faction</l>, clicking on the <t /> brings up a simple radial menu.  The menu should include a set of options depending on what the player can do, including:
-				<ul>
-					<li>An option to move the player's <l>mcc</l> to this <t /> if they're of sufficient <l>rank</l></li>
-					<li>An option to bring up a panel with this <t />'s <l>resource</l> distribution</li>
-				</ul>				
-				<p /> have a <l>resource</l> distribution that is determined partly by the containing <l>territory</l>'s distance from each <l>faction_headquarters</l>, and partly by random.  The <t />'s <l>resource</l> distribution should be refreshed every so often.</implementation>
+If the <t /> is controlled by the player's <l>faction</l>, clicking on the <t /> brings up a simple radial menu.  The menu should include a set of options depending on what the player can do, including:
+<ul>
+<li>An option to move the player's <l>mcc</l> to this <t /> if they're of sufficient <l>rank</l></li>
+<li>An option to bring up a panel with this <t />'s <l>resource</l> distribution</li>
+</ul>				
+<p /> have a <l>resource</l> distribution that is determined partly by the containing <l>territory</l>'s distance from each <l>faction_headquarters</l>, and partly by random.  The <t />'s <l>resource</l> distribution should be refreshed every so often.</implementation>
 			
 			<impact></impact>
 		</feature>
@@ -347,13 +344,13 @@
 			
 			<implementation><pl>zone</pl> are divided up into different <p />.  The number of <p /> within a <l>zone</l> varies, changing each time the parent <l>territory</l> becomes open to attack.  <p /> are only visible when a <l>territory</l> is open to attack.  Some <p /> may be occupied, as only one <l>battle</l> can be going on within a <t /> at a time, and some <p /> may be locked, as once a <t /> has been won by a particular <l>faction</l>, it remains locked until the parent <l>territory</l> dispute is resolved and subsequently opens up to attack again.  By this mechanism, once all <p /> in a <l>zone</l> are locked, the <l>zone</l> itself becomes locked until the next attack cycle.  When a player clicks on an available, unlocked, unoccupied <t /> within a zone owned by an enemy <l>faction</l>, a simple menu pops up asking them if they would like to enter.  If the zone is owned by the player's <l>faction</l>, they may only click on <p /> that have enemy squads already within or en route.  If the player confirms, a spot in that <t /> for them is reserved.  Afterwards, a screen pops up allowing them to select which <pl>soldier</pl> they would like to send to the <t />.  This can be done later if the player wishes to outfit their squad first.  A simple way to return to the <t /> deployment screen should be available from the <l>world_map</l>, should the player not wish to immediately deploy their squad.  If the player chooses to deploy a squad to the <t />, but does not do so within a certain time period, their reserved position in the <t /> will be given up.<br /><br />
 				
-				After the player selects the squad they would like to send to the <t />, they are either allowed to use a <l>faction_dropship</l> to send their squad in immediately, or manually send the squad in on one of the <l>mcc</l>'s small shuttles, which could take a while depending on how far the player's <l>mcc</l> is stationed from the target <l>territory</l>.  After all players who have reserved a position in the <t /> send their squads in, they must wait for all squads to arrive.  Currently the plan is to only allow a maximum of 2 players in each <t />, which means only two <pl>faction</pl> can fight over a specific <t />.<br /><br />
-				
-				Once all players' squads have arrived at the target <t />, a new <l>battle</l> begins.  Additionally, should a player who sends their squad in manually choose to not partake in the <l>battle</l>, they may retract their squad, giving up their position in the <t /> in the process.<br /><br />
-				
-				If all three <pl>faction</pl> have an interest in a <l>territory</l>, meaning two <pl>faction</pl> own a <l>territory</l> that's next to a third <l>faction</l>'s open territory, it's possible that all 3 <pl>faction</pl> could be fighting within the same <l>territory</l>.  In this case, it's possible that within a single <l>zone</l>, a stalemate could occur if there are 3 <p /> and each <t /> has been locked by a different <l>faction</l>.  If this event happens, all of the <p /> unlock, with the <l>zone</l> still under control of the original owning <l>faction</l>.  If all <p /> within the <l>zone</l> are locked, the <l>zone</l> is awarded to the <l>faction</l> with the most locked <p /><br /><br />
-				
-				If a player sends a squad to a <t /> within an enemy owned <l>zone</l>, a timer begins once the squad arrives.  If no <l>battle</l> begins over the <t /> before the timer ends, the <t /> locks, with the player who sent the squad essentially 'winning' the <t />.  Once a <l>battle</l> begins, however, that timer is rendered null, and a player must win the battle for the <t /> to lock.</implementation>
+After the player selects the squad they would like to send to the <t />, they are either allowed to use a <l>faction_dropship</l> to send their squad in immediately, or manually send the squad in on one of the <l>mcc</l>'s small shuttles, which could take a while depending on how far the player's <l>mcc</l> is stationed from the target <l>territory</l>.  After all players who have reserved a position in the <t /> send their squads in, they must wait for all squads to arrive.  Currently the plan is to only allow a maximum of 2 players in each <t />, which means only two <pl>faction</pl> can fight over a specific <t />.<br /><br />
+
+Once all players' squads have arrived at the target <t />, a new <l>battle</l> begins.  Additionally, should a player who sends their squad in manually choose to not partake in the <l>battle</l>, they may retract their squad, giving up their position in the <t /> in the process.<br /><br />
+
+If all three <pl>faction</pl> have an interest in a <l>territory</l>, meaning two <pl>faction</pl> own a <l>territory</l> that's next to a third <l>faction</l>'s open territory, it's possible that all 3 <pl>faction</pl> could be fighting within the same <l>territory</l>.  In this case, it's possible that within a single <l>zone</l>, a stalemate could occur if there are 3 <p /> and each <t /> has been locked by a different <l>faction</l>.  If this event happens, all of the <p /> unlock, with the <l>zone</l> still under control of the original owning <l>faction</l>.  If all <p /> within the <l>zone</l> are locked, the <l>zone</l> is awarded to the <l>faction</l> with the most locked <p /><br /><br />
+
+If a player sends a squad to a <t /> within an enemy owned <l>zone</l>, a timer begins once the squad arrives.  If no <l>battle</l> begins over the <t /> before the timer ends, the <t /> locks, with the player who sent the squad essentially 'winning' the <t />.  Once a <l>battle</l> begins, however, that timer is rendered null, and a player must win the battle for the <t /> to lock.</implementation>
 			
 			<impact><p /> give a lot of versatility to the way <pl>territory</pl> change hands within the game.  If each <t /> is slightly different, either in play style or terrain type or map, or anything really, it makes it so taking over each <l>zone</l> is a different experience for players.  Taking over one <l>zone</l> might only require completing 2 <p />, whereas another <l>zone</l> may require completing 5 or 6 <p />.  If each <t /> represents a different game type within the <l>battle</l>, it could also allow players who enjoy one type of strategy game but not another to pick and choose their <pl>battle</pl> and only partake in the games that they like, and let other players handle the rest.</impact>
 		</feature>
@@ -392,19 +389,19 @@
 			</goals>
 			
 			<implementation><p /> should show up in their own section on the <l>world_map</l>, clearly visible, and depending on the importance of the <t />, blinking, or doing something that will surely grab the player's attention.  <p /> will essentially be a history of events that affect the player but that the player did not initiate.  Some examples of notifications could be:
-				<ul>
-					<li>An enemy player has made a move in a <l>battle</l> that the player is participating in</li>
-					<li>An enemy <l>faction</l> has taken over a zone that the player's <l>mcc</l> is stationed in</li>
-					<li>A friend of the player has just entered into a <l>battle</l></li>
-				</ul>
-				<p /> should have differentiating characteristics, or classes, so the player can clearly pick out the most vital <p /> over minor ones that don't require action.  The different classes could be:
-				<ul>
-					<li><l>battle</l>: a <t /> having to do with a battle that the player is currently participating in</li>
-					<li><l>marketplace</l>: a <t /> having to do with an item on the marketplace, maybe the player won it in an auction or successfully sold it</li>
-					<li><l>soldier</l>: a <t /> having to do with one of the player's <pl>soldier</pl>, maybe they have fully regenerated or all of their <pl>training_point</pl> have run out</li>
-					<li><l>territory</l>: a <t /> having to do with the current <l>zone</l> the player is on, maybe the <l>resource</l> distribution changed in the player's current <l>zone</l>, or the <l>zone</l> or <l>territory</l> is disputed or is no longer controlled by the player's <l>faction</l></li>
-					<li><l>equipment</l>: a <t /> having to do with <l>equipment</l> the player owns, perhaps a <l>crafting</l> operation finished, or maybe an item's durability degraded and the item was destroyed, or maybe a <l>faction</l>'s <l>kovanite</l> meter filled up and the player is awarded an item</li>
-				</ul></implementation>
+<ul>
+<li>An enemy player has made a move in a <l>battle</l> that the player is participating in</li>
+<li>An enemy <l>faction</l> has taken over a zone that the player's <l>mcc</l> is stationed in</li>
+<li>A friend of the player has just entered into a <l>battle</l></li>
+</ul>
+<p /> should have differentiating characteristics, or classes, so the player can clearly pick out the most vital <p /> over minor ones that don't require action.  The different classes could be:
+<ul>
+<li><l>battle</l>: a <t /> having to do with a battle that the player is currently participating in</li>
+<li><l>marketplace</l>: a <t /> having to do with an item on the marketplace, maybe the player won it in an auction or successfully sold it</li>
+<li><l>soldier</l>: a <t /> having to do with one of the player's <pl>soldier</pl>, maybe they have fully regenerated or all of their <pl>training_point</pl> have run out</li>
+<li><l>territory</l>: a <t /> having to do with the current <l>zone</l> the player is on, maybe the <l>resource</l> distribution changed in the player's current <l>zone</l>, or the <l>zone</l> or <l>territory</l> is disputed or is no longer controlled by the player's <l>faction</l></li>
+<li><l>equipment</l>: a <t /> having to do with <l>equipment</l> the player owns, perhaps a <l>crafting</l> operation finished, or maybe an item's durability degraded and the item was destroyed, or maybe a <l>faction</l>'s <l>kovanite</l> meter filled up and the player is awarded an item</li>
+</ul></implementation>
 			
 			<impact>Since Boomtown is a slow, turn-based game, things may happen to the player's <l>commander</l> while the player is not logged in or actively playing, so there needs to be a way to clearly notify the player of all important, relevant events that happened in the world since they last logged in.</impact>
 		</feature>
@@ -430,24 +427,24 @@
 			
 			<implementation>The <t /> is linked from the <l>world_map</l>.  The <t /> is all one screen, but broken up into sections.<br /><br />
 				
-				Along the bottom of the screen, in a tabbed layout, is the <l>equipment</l> management panel.  It should be a sideways scrolling grid of the <l>equipment</l> that a player owns that is not currently attached to a <l>soldier</l> or <l>vehicle</l>.  Each piece of <l>equipment</l> takes up a certain amount of grid space.  The left side of the screen should be taken up by a statistics box, and when a player clicks on a piece of <l>equipment</l>, its statistics and <pl>ability</pl>, and maybe a better image of the piece should show up in the statistics box.  To the right of the <l>equipment</l> grid should be a 'trash' area, and the player should be able to click and drag pieces of <l>equipment</l> into it.  A small question mark or button in the 'trash' area should explain to the player that when they 'trash' a piece of <l>equipment</l> it removes it from their possession permanently and puts it on the <l>marketplace</l> for a cheap price.<br /><br />
-				
-				The <t /> has limited amount of space for <l>equipment</l>, indicated by a weight capacity ratio somewhere near the <l>equipment</l> panel.  The player is allowed to go one item over the capacity, but after the total weight of all the player's <l>equipment</l> surpasses the weight capacity, they are no longer allowed to perform actions that add <l>equipment</l> to their inventory, and any involuntary actions that would give the player items would see those items disappear.  <pl>resource</pl> and <pl>soldier</pl> do not contribute to the <t />'s weight capacity.<br /><br />
-				
-				The top of the screen should have a <l>soldier</l> listing.  Similar to the <l>equipment</l> listing, it should be a grid layout, only with one row.  Each <l>soldier</l> should be represented by a square block with an image that represents them.  The <l>soldier</l> listing should be split in two.  The left listing should only have enlisted <pl>soldier</pl>, or <pl>soldier</pl> that the player has already recruited, and the right list should only have potential recruits that the player may acquire.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <l>soldier</l>, or pass on them and remove them from the potential recruit pool.  If the player chooses to recruit a new <l>soldier</l>, a new box should pop up allowing them to choose which <l>skill</l> they would like to specialize the <l>soldier</l> in.  When a player clicks on a recruited <l>soldier</l>, their attributes and <pl>skill</pl> should show up in the statistics box, and in the main part of the screen, a representation of the <l>soldier</l> should show up, with <l>equipment</l> slots around it for dragging items in and equipping them on the <l>soldier</l>.  The different slots should include:
-				
-				<ul>
-					<li>Head <l>armor</l></li>
-					<li>Body <l>armor</l></li>
-					<li>Leg <l>armor</l></li>
-					<li>Left-hand <l>weapon</l></li>
-					<li>Right-hand <l>weapon</l></li>
-					<li>Backpack</li>
-				</ul>
-				
-				The <l>armor</l> slots cover a basic representation of a <l>soldier</l>, so the player drags <l>armor</l> pieces onto the head, body, and legs of the representation to equip those pieces.  The other slots should just be boxes covering the general area of the <l>soldier</l> that they are associated with, the left hand being near the left arm, right hand being near the right arm, and backpack being somewhere near the shoulders.  Each slot can only receive one piece of <l>equipment</l>, the <l>armor</l> slots can only receive <l>armor</l>, the <l>weapon</l> slots can only receive <pl>weapon</pl>, and the backpack slot can only receive <pl>device</pl>.<br /><br />
-				
-				If the player clicks on a <l>vehicle</l>, an equipping screen specific to that vehicle should show up in the main part of the screen, and the vehicles statistics should show up like a normal piece of <l>equipment</l> in the statistics box.  Additionally, in the equipping side of the screen, depending on the size of the <l>vehicle</l> and the number of <pl>soldier</pl> it requires to operate, there should be that many boxes sized for <pl>soldier</pl> that the player can drag them into to assign them to the <l>vehicle</l>.</implementation>
+Along the bottom of the screen, in a tabbed layout, is the <l>equipment</l> management panel.  It should be a sideways scrolling grid of the <l>equipment</l> that a player owns that is not currently attached to a <l>soldier</l> or <l>vehicle</l>.  Each piece of <l>equipment</l> takes up a certain amount of grid space.  The left side of the screen should be taken up by a statistics box, and when a player clicks on a piece of <l>equipment</l>, its statistics and <pl>ability</pl>, and maybe a better image of the piece should show up in the statistics box.  To the right of the <l>equipment</l> grid should be a 'trash' area, and the player should be able to click and drag pieces of <l>equipment</l> into it.  A small question mark or button in the 'trash' area should explain to the player that when they 'trash' a piece of <l>equipment</l> it removes it from their possession permanently and puts it on the <l>marketplace</l> for a cheap price.<br /><br />
+
+The <t /> has limited amount of space for <l>equipment</l>, indicated by a weight capacity ratio somewhere near the <l>equipment</l> panel.  The player is allowed to go one item over the capacity, but after the total weight of all the player's <l>equipment</l> surpasses the weight capacity, they are no longer allowed to perform actions that add <l>equipment</l> to their inventory, and any involuntary actions that would give the player items would see those items disappear.  <pl>resource</pl> and <pl>soldier</pl> do not contribute to the <t />'s weight capacity.<br /><br />
+
+The top of the screen should have a <l>soldier</l> listing.  Similar to the <l>equipment</l> listing, it should be a grid layout, only with one row.  Each <l>soldier</l> should be represented by a square block with an image that represents them.  The <l>soldier</l> listing should be split in two.  The left listing should only have enlisted <pl>soldier</pl>, or <pl>soldier</pl> that the player has already recruited, and the right list should only have potential recruits that the player may acquire.  When a player clicks on a potential recruit, only their attributes should show up in the statistics box, as their skills will be at default levels.  Additionally, two buttons should show up in the statistics box that let the player either recruit the <l>soldier</l>, or pass on them and remove them from the potential recruit pool.  If the player chooses to recruit a new <l>soldier</l>, a new box should pop up allowing them to choose which <l>skill</l> they would like to specialize the <l>soldier</l> in.  When a player clicks on a recruited <l>soldier</l>, their attributes and <pl>skill</pl> should show up in the statistics box, and in the main part of the screen, a representation of the <l>soldier</l> should show up, with <l>equipment</l> slots around it for dragging items in and equipping them on the <l>soldier</l>.  The different slots should include:
+
+<ul>
+<li>Head <l>armor</l></li>
+<li>Body <l>armor</l></li>
+<li>Leg <l>armor</l></li>
+<li>Left-hand <l>weapon</l></li>
+<li>Right-hand <l>weapon</l></li>
+<li>Backpack</li>
+</ul>
+
+The <l>armor</l> slots cover a basic representation of a <l>soldier</l>, so the player drags <l>armor</l> pieces onto the head, body, and legs of the representation to equip those pieces.  The other slots should just be boxes covering the general area of the <l>soldier</l> that they are associated with, the left hand being near the left arm, right hand being near the right arm, and backpack being somewhere near the shoulders.  Each slot can only receive one piece of <l>equipment</l>, the <l>armor</l> slots can only receive <l>armor</l>, the <l>weapon</l> slots can only receive <pl>weapon</pl>, and the backpack slot can only receive <pl>device</pl>.<br /><br />
+
+If the player clicks on a <l>vehicle</l>, an equipping screen specific to that vehicle should show up in the main part of the screen, and the vehicles statistics should show up like a normal piece of <l>equipment</l> in the statistics box.  Additionally, in the equipping side of the screen, depending on the size of the <l>vehicle</l> and the number of <pl>soldier</pl> it requires to operate, there should be that many boxes sized for <pl>soldier</pl> that the player can drag them into to assign them to the <l>vehicle</l>.</implementation>
 			
 			<impact>The <t /> is the main hub where the player manages their assets.  In the <t />, the player outfits their <pl>soldier</pl>, inspects their <l>equipment</l>, and recruits new <pl>soldier</pl>.  It is meant to be a place the player spends a lot of time before sending squads of <pl>soldier</pl> out to <pl>battle</pl>.</impact>
 		</feature>
@@ -469,9 +466,9 @@
 			
 			<implementation>The <t /> is accessed via the <l>world_map</l>, and consists of a main screen with either one tab (in which case it's just one screen), or two tabs if a player is controlling a Flying <l>mcc</l>.  The first tab is the 'Buy' tab, which lists pieces of <l>equipment</l> available to buy that other players have listed.  It should be catagorized by <l>equipment</l> type, and probably searchable.  When a player clicks on an available piece, its <l>equipment</l> card should pop up showing the player its statistics.  Additionally there should be a 'Buy' button on the listing, and if the player clicks it a confirmation pops up asking them if they're sure they would like to buy it.  If they click yes, the piece is transferred to their <l>mcc</l>'s <l>warehouse</l> and is immediately available to them.  Each piece of <l>equipment</l> has a <l>credit</l> value associated with it that will be taken out of the player's bank if they decide to buy that piece.<br /><br />
 				
-				Additionally, support players controlling a Flying <l>mcc</l> are given access to the 'Sell' tab.  The screen should list the player's current inventory of <l>equipment</l>, categorized by type, and when the player clicks on a piece of <l>equipment</l> a screen pops up allowing them to set a price for it and add it to the <t />.  When the player adds a piece to the <t />, it is removed from the player's inventory until it either sells, or the player removes it from the <t />.<br /><br />
-				
-				Sellers should have access to sale metrics of whatever piece of <l>equipment</l> they're trying to sell, meaning a chart or list or something of the prices the specific piece sold for within some time period.</implementation>
+Additionally, support players controlling a Flying <l>mcc</l> are given access to the 'Sell' tab.  The screen should list the player's current inventory of <l>equipment</l>, categorized by type, and when the player clicks on a piece of <l>equipment</l> a screen pops up allowing them to set a price for it and add it to the <t />.  When the player adds a piece to the <t />, it is removed from the player's inventory until it either sells, or the player removes it from the <t />.<br /><br />
+
+Sellers should have access to sale metrics of whatever piece of <l>equipment</l> they're trying to sell, meaning a chart or list or something of the prices the specific piece sold for within some time period.</implementation>
 			
 			<impact>The <t /> will be the center of the game's economy.  The <t /> mainly gives support players a place to make a lot of money to either advance their <l>crafting</l> or support their friends.  Beginning players will also find the <t /> useful for finding beginning equipment that Flying <l>mcc</l> operators have made, or that Rolling <l>mcc</l> have 'trashed'.</impact>
 		</feature>
@@ -492,13 +489,13 @@
 			
 			<implementation>A player's <t /> is accessed from the <l>world_map</l>, and new <t /> messages show up as <pl>notification</pl>.  When the player accesses their <t />, a mailbox of sorts should show up, with a list of recently received messages, and a button to allow the player to send a new message.  If the player decides to send a new message, they should be able to title it, and type in a body message.  Additionally, there should be a field or slider allowing the player to send <pl>credit</pl> along with the message, and another box that lets them browse for <pl>resource</pl> or <l>equipment</l> to send along with the message.<br /><br />
 				
-				Should the player decide to send <l>equipment</l>, they should be able to specify that a return message needs to be received and confirmed before the <t /> transaction takes place, meaning if player A sends some <l>equipment</l> to player B and wants something in return, either <pl>credit</pl> or <pl>resource</pl> or some other type of <l>equipment</l>, player A can flag his or her message as needing a confirmed response, so that when player B sends back a response, player A can either cancel the entire transaction, or confirm that an acceptable message was received and complete the transaction.  In this manner, until player A confirms the transaction, neither player receives the items in the message.<br /><br />
-				
-				<l>faction</l> does not play a role in sending messages.  Players from one <l>faction</l> can still send messages to players of another.</implementation>
+Should the player decide to send <l>equipment</l>, they should be able to specify that a return message needs to be received and confirmed before the <t /> transaction takes place, meaning if player A sends some <l>equipment</l> to player B and wants something in return, either <pl>credit</pl> or <pl>resource</pl> or some other type of <l>equipment</l>, player A can flag his or her message as needing a confirmed response, so that when player B sends back a response, player A can either cancel the entire transaction, or confirm that an acceptable message was received and complete the transaction.  In this manner, until player A confirms the transaction, neither player receives the items in the message.<br /><br />
+
+<l>faction</l> does not play a role in sending messages.  Players from one <l>faction</l> can still send messages to players of another.</implementation>
 			
 			<impact>Friends may want to send friends <pl>credit</pl> or old <l>equipment</l>, or maybe <pl>resource</pl> to help with <l>crafting</l>, so the <t /> system allows them to communicate in a basic way and send these things back and forth easily.<br /><br />
 				
-				I'll note here, it is intended that players use outside methods of communication to coordinate things with friends and form guilds and the like, making in-game chat or things like that unnecessary.</impact>
+I'll note here, it is intended that players use outside methods of communication to coordinate things with friends and form guilds and the like, making in-game chat or things like that unnecessary.</impact>
 		</feature>
 		
 		<feature>
@@ -542,11 +539,11 @@
 			
 			<implementation>The <t /> is linked from the <l>world_map</l>.  The <t /> consists of one main screen and a few modal screens accessible via buttons.<br /><br />
 				
-				When the player first visits the <t />, a large part of the left side of the screen should be taken up with <l>mining</l> management.  A panel should show what the player is currently <l>mining</l>, the <l>resource</l> distribution of the <l>zone</l> their <l>mcc</l> is currently stationed on, and buttons to allow the player to change which <l>resource</l> the player wants to acquire.  A progress bar should also show how long until the next batch of <pl>resource</pl> will be pulled up.<br /><br />
-				
-				The right side of the screen should be taken up by a grid layout showing the player what current <pl>resource</pl> they have in their possession.  Each <l>resource</l> should have an icon, and number representing the quantity.<br /><br />
-				
-				The bottom of the screen should be the <l>crafting</l> interface.  It doesn't need to be very big, mostly just a large space to indicate the current <l>crafting</l> processes, and a button to open the <l>crafting</l> table.  On the left side of the panel should be a grid layout where current processes can go.  Each item in the grid should have an icon of what's being created, a progress bar indicating how much longer it has to complete, and the title of whatever's being created.  On the right of the panel should be a button that when clicked launches the <l>crafting</l> window.</implementation>
+When the player first visits the <t />, a large part of the left side of the screen should be taken up with <l>mining</l> management.  A panel should show what the player is currently <l>mining</l>, the <l>resource</l> distribution of the <l>zone</l> their <l>mcc</l> is currently stationed on, and buttons to allow the player to change which <l>resource</l> the player wants to acquire.  A progress bar should also show how long until the next batch of <pl>resource</pl> will be pulled up.<br /><br />
+
+The right side of the screen should be taken up by a grid layout showing the player what current <pl>resource</pl> they have in their possession.  Each <l>resource</l> should have an icon, and number representing the quantity.<br /><br />
+
+The bottom of the screen should be the <l>crafting</l> interface.  It doesn't need to be very big, mostly just a large space to indicate the current <l>crafting</l> processes, and a button to open the <l>crafting</l> table.  On the left side of the panel should be a grid layout where current processes can go.  Each item in the grid should have an icon of what's being created, a progress bar indicating how much longer it has to complete, and the title of whatever's being created.  On the right of the panel should be a button that when clicked launches the <l>crafting</l> window.</implementation>
 			
 			<impact><l>crafting</l> and waging war in the game will be a combination of <l>mining</l> and managing the proper <l>resource</l> to get.  The <t /> will give the player a central place to inspect what they have, so that they may properly plan to acquire what they need.</impact>
 		</feature>
@@ -578,7 +575,7 @@
 			
 			<implementation><t /> is a passive operation performed by the player from the <l>workshop</l>.  In general, the player is always <t />, but to do it effectively means selecting the proper <l>resource</l> to acquire.<br /><br />
 				
-				<t /> is an interval activity, meaning the act of <t /> only happens every so often, whether it be minutes or hours, the player pulls in a certain amount of one kind of <l>resource</l> after every interval, depending on the <l>resource</l> distribution of the <l>zone</l> the player's <l>mcc</l> is currently stationed in.  The <l>resource</l> distribution also affects the quality of the <pl>resource</pl> acquired through <t />.</implementation>
+<t /> is an interval activity, meaning the act of <t /> only happens every so often, whether it be minutes or hours, the player pulls in a certain amount of one kind of <l>resource</l> after every interval, depending on the <l>resource</l> distribution of the <l>zone</l> the player's <l>mcc</l> is currently stationed in.  The <l>resource</l> distribution also affects the quality of the <pl>resource</pl> acquired through <t />.</implementation>
 			
 			<impact><t /> is the only way to acquire <l>natural_resource</l>, which are in turn needed in the <l>crafting</l> process to create <l>equipment</l>.</impact>
 		</feature>
@@ -618,7 +615,7 @@
 			
 			<implementation>The <p /> in the game are simple <pl>resource</pl> that players can acquire through <l>mining</l>.  <p /> are always the main ingredient in simple <pl>synthetic_resource</pl>, and are usually used in the manufacture of more complicated <pl>synthetic_resource</pl> and <pl>equipment</pl>.<br /><br />
 				
-				The possible <p /> include <l>kovanite</l>, as well as <l>resource1</l>, <l>resource2</l>, and <l>resource3</l>.</implementation>
+The possible <p /> include <l>kovanite</l>, as well as <l>resource1</l>, <l>resource2</l>, and <l>resource3</l>.</implementation>
 			
 			<impact><p /> give all players a passive way of acquiring things in the game.  Creation of all <l>equipment</l> starts with <p />.</impact>
 		</feature>
@@ -688,20 +685,20 @@
 			
 			<implementation>A <t /> is the player's primary <l>battle</l> unit.  Players manage their <p /> in the <l>warehouse</l>, outfitting them with <l>equipment</l> and assigning them to <pl>vehicle</pl>.<br /><br />
 				
-				All <p /> are essentially the same.  They have a set of attributes, and they have a list of <pl>skill</pl>.  The attributes a <t /> has include:
-				<ul>
-					<li><strong>Health</strong> - Determines the number of <pl>hp</pl> the <t /> has</li>
-					<li><strong>Accuracy</strong> - Affects the base accuracy of any <l>weapon</l> the <t /> may use</li>
-					<li><strong>Perception</strong> - Affects the <t />'s line of sight distance and stealth detection</li>
-					<li><strong>Stealth</strong> - Affects the <t />'s visibility on the battlefield</li>
-				</ul>
-				The attributes work on a total point system, meaning a <t /> gets a set number of attribute points, and upon creation those points are distributed randomly between the attributes.  For example, if we allot 40 attribute points to each <t />, one particular <t /> might have 17 Health, 5 Accuracy, 10 Perception, and 8 Stealth, and another <t /> might have 5 Health, 20 Accuracy, 9 Perception, and 6 Stealth.  The first <t /> might make an excellent heavy weapons operator, and the second would make an excellent sniper.<br /><br />
-				
-				Health is a direct representation of the <t />'s <pl>hp</pl>, or the points taken away when the <t /> is successfully attacked.  Each point of Health represents an arbitrary number of <pl>hp</pl>.  For example, if each point of Health is the equivalent of 5 <pl>hp</pl>, and one <t /> has 12 Health points, they would have 60 <pl>hp</pl> in total.<br /><br />
-				
-				Perception and Stealth are counter attributes, meaning a <t /> with high Stealth will not be visible to a <t /> with low Perception until they are either right next to them, or fire their weapon.  This means that regardless if a <t /> can see 12 tiles ahead of them, if they have low Perception, they may not be able to see enemy <p /> with high Stealth until those enemies are within 3 tiles.  If one <t /> attacks another <t />, all Stealth modifiers are eliminated.  A <t /> with a high Stealth rating would be better employed as a close-combat fighter, or a sniper.<br /><br />
-				
-				Additionally, <p /> have a set of <pl>skill</pl> that they can train up.</implementation>
+All <p /> are essentially the same.  They have a set of attributes, and they have a list of <pl>skill</pl>.  The attributes a <t /> has include:
+<ul>
+<li><strong>Health</strong> - Determines the number of <pl>hp</pl> the <t /> has</li>
+<li><strong>Accuracy</strong> - Affects the base accuracy of any <l>weapon</l> the <t /> may use</li>
+<li><strong>Perception</strong> - Affects the <t />'s line of sight distance and stealth detection</li>
+<li><strong>Stealth</strong> - Affects the <t />'s visibility on the battlefield</li>
+</ul>
+The attributes work on a total point system, meaning a <t /> gets a set number of attribute points, and upon creation those points are distributed randomly between the attributes.  For example, if we allot 40 attribute points to each <t />, one particular <t /> might have 17 Health, 5 Accuracy, 10 Perception, and 8 Stealth, and another <t /> might have 5 Health, 20 Accuracy, 9 Perception, and 6 Stealth.  The first <t /> might make an excellent heavy weapons operator, and the second would make an excellent sniper.<br /><br />
+
+Health is a direct representation of the <t />'s <pl>hp</pl>, or the points taken away when the <t /> is successfully attacked.  Each point of Health represents an arbitrary number of <pl>hp</pl>.  For example, if each point of Health is the equivalent of 5 <pl>hp</pl>, and one <t /> has 12 Health points, they would have 60 <pl>hp</pl> in total.<br /><br />
+
+Perception and Stealth are counter attributes, meaning a <t /> with high Stealth will not be visible to a <t /> with low Perception until they are either right next to them, or fire their weapon.  This means that regardless if a <t /> can see 12 tiles ahead of them, if they have low Perception, they may not be able to see enemy <p /> with high Stealth until those enemies are within 3 tiles.  If one <t /> attacks another <t />, all Stealth modifiers are eliminated.  A <t /> with a high Stealth rating would be better employed as a close-combat fighter, or a sniper.<br /><br />
+
+Additionally, <p /> have a set of <pl>skill</pl> that they can train up.</implementation>
 		</feature>
 		
 		<feature>
@@ -719,18 +716,18 @@
 			</goals>
 			
 			<implementation><p /> are the defined areas of expertise that a <l>soldier</l> can train in.  All <p /> partain to a specific class of <l>weapon</l>, with the exception of the Mechanical <t />, which partains to <pl>vehicle</pl>.  There are 8 <p /> in total:
-				<ul>
-					<li><strong>Small Arms</strong> - The use of pistols and submachine guns</li>
-					<li><strong>Scatterguns</strong> - The use of cluster pistols and shotguns</li>
-					<li><strong>Assault Rifles</strong> - The use of long-barreled, automatic and semi-automatic rifles</li>
-					<li><strong>Sniper Rifles</strong> - The use of long range rifles</li>
-					<li><strong>Explosives</strong> - The use of grenade launchers, rocket launchers and flamethrowers</li>
-					<li><strong>Autocannons</strong> - The use of machine guns, miniguns and cannons</li>
-					<li><strong>Mechanical</strong> - The use of <pl>vehicle</pl></li>
-				</ul>
-				Every <l>soldier</l> starts out with 0 points in all of their <p />.  When the player recruits a new <l>soldier</l>, the player is allowed to choose a single <t /> to specialize the <l>soldier</l> in, at which point 10 points are filled into that <t />, giving the <l>soldier</l> a head start in training.<br /><br />
-				
-				Players use <pl>stp</pl> to increase <pl>soldier</pl>' skills gradually.</implementation>
+<ul>
+<li><strong>Small Arms</strong> - The use of pistols and submachine guns</li>
+<li><strong>Scatterguns</strong> - The use of cluster pistols and shotguns</li>
+<li><strong>Assault Rifles</strong> - The use of long-barreled, automatic and semi-automatic rifles</li>
+<li><strong>Sniper Rifles</strong> - The use of long range rifles</li>
+<li><strong>Explosives</strong> - The use of grenade launchers, rocket launchers and flamethrowers</li>
+<li><strong>Autocannons</strong> - The use of machine guns, miniguns and cannons</li>
+<li><strong>Mechanical</strong> - The use of <pl>vehicle</pl></li>
+</ul>
+Every <l>soldier</l> starts out with 0 points in all of their <p />.  When the player recruits a new <l>soldier</l>, the player is allowed to choose a single <t /> to specialize the <l>soldier</l> in, at which point 10 points are filled into that <t />, giving the <l>soldier</l> a head start in training.<br /><br />
+
+Players use <pl>stp</pl> to increase <pl>soldier</pl>' skills gradually.</implementation>
 			
 			<impact><p /> give a very simple way to diversify a player's army.  By specializing <pl>soldier</pl> in specific <p />, the player can create a cohesive army whose skills mesh together and provide the player with solid strategies for winning in <l>battle</l>.</impact>
 		</feature>
@@ -753,7 +750,7 @@
 			
 			<implementation><p /> are the 'currency' with which <pl>soldier</pl> heal and train up in <pl>skill</pl>.  At a specific interval, every <l>soldier</l> uses a <t />.  If the <l>soldier</l> is not at maximum health, the <t /> is put toward health, meaning for every <t /> the <l>soldier</l> uses, a specific number of <pl>hp</pl> are regenerated.  If the <l>soldier</l> is at maximum health, the <t /> is put toward <l>skill</l> training, so that specific <t /> will increase whatever <l>skill</l> the <l>soldier</l> is training in by 1 or more points.<br /><br />
 				
-				Any time a <l>soldier</l> participates in a <l>battle</l>, they earn <p />.  The number of <t /> earned depends on whether or not the player was victorious in battle.  After every <l>battle</l>, each <l>soldier</l> is given enough <p /> to regenerate to full health, and past that they will receive a few extra <p /> depending on whether or not the player won the battle, and how much damage the individual <l>soldier</l> caused to the enemy <pl>soldier</pl>.  If a player lost a battle, and a specific <l>soldier</l> did no or very little damage to the enemy, that <l>soldier</l> might not receive any extra <p />.  If a player won the battle, and a specific <l>soldier</l> did a lot of damage to the enemy, that <l>soldier</l> might receive a significant number of <p />.</implementation>
+Any time a <l>soldier</l> participates in a <l>battle</l>, they earn <p />.  The number of <t /> earned depends on whether or not the player was victorious in battle.  After every <l>battle</l>, each <l>soldier</l> is given enough <p /> to regenerate to full health, and past that they will receive a few extra <p /> depending on whether or not the player won the battle, and how much damage the individual <l>soldier</l> caused to the enemy <pl>soldier</pl>.  If a player lost a battle, and a specific <l>soldier</l> did no or very little damage to the enemy, that <l>soldier</l> might not receive any extra <p />.  If a player won the battle, and a specific <l>soldier</l> did a lot of damage to the enemy, that <l>soldier</l> might receive a significant number of <p />.</implementation>
 			
 			<impact><p /> serve to help players improve their armies, but at the same time slow gameplay and progression down a degree by discouraging players from using injured <pl>soldier</pl> in <l>battle</l> after <l>battle</l>.</impact>
 		</feature>
@@ -774,9 +771,9 @@
 			
 			<implementation>All items in the game that a <l>soldier</l> can use or operate are just pieces of <t />.  <pl>weapon</pl>, <pl>armor</pl>, <pl>device</pl>, and <pl>vehicle</pl> are all <t />.  A given piece of <t /> has a type, one of the before-mentioned things, a set of attributes depending on its type, and in some cases, modifier <pl>ability</pl>.  All pieces of <t /> have a Durability attribute, a number out of 100 representing its wear and tear.  As the piece is used, its Durability rating will go down.  If its Durability reaches 0, it is irreversably destroyed.  A player can pay <pl>credit</pl> to have the item repaired.<br /><br />
 				
-				Any given piece of <t /> may have modifier <pl>ability</pl> assigned to it, meaning that when a <l>soldier</l> equips that particular piece, the <l>soldier</l> is able to use those <pl>ability</pl> in <l>battle</l>.  The modifier <pl>ability</pl> are determined during the <l>crafting</l> process, so not all instances of a particular piece will have all of the same <pl>ability</pl>.  Each individual piece of <t /> has its own set of possible modifier <pl>ability</pl> that can be applied during the <l>crafting</l> process.<br /><br />
-				
-				All <t /> comes from the <l>crafting</l> process.  No <t /> is ever looted, or spawned as a reward for something.  The only way a player can acquire <t /> is by <l>crafting</l> it, or buying it from the <l>marketplace</l>.</implementation>
+Any given piece of <t /> may have modifier <pl>ability</pl> assigned to it, meaning that when a <l>soldier</l> equips that particular piece, the <l>soldier</l> is able to use those <pl>ability</pl> in <l>battle</l>.  The modifier <pl>ability</pl> are determined during the <l>crafting</l> process, so not all instances of a particular piece will have all of the same <pl>ability</pl>.  Each individual piece of <t /> has its own set of possible modifier <pl>ability</pl> that can be applied during the <l>crafting</l> process.<br /><br />
+
+All <t /> comes from the <l>crafting</l> process.  No <t /> is ever looted, or spawned as a reward for something.  The only way a player can acquire <t /> is by <l>crafting</l> it, or buying it from the <l>marketplace</l>.</implementation>
 			
 			<impact><t /> serves as the tools with which the player performs most of the fun actions in the game.  The player needs to outfit all of their <pl>soldier</pl> with <t /> so that they may attack other <pl>soldier</pl>, defend themselves, and perform actions in <l>battle</l>.</impact>
 		</feature>
