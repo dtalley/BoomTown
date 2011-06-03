@@ -1,4 +1,4 @@
-package com.kuro.kurogui {
+package com.kuro.kurogui.core {
   import com.kuro.kurogui.events.GUIElementEvent;
   import com.kuro.kurogui.utils.GUIDrawState;
   import flash.display.DisplayObject;
@@ -18,6 +18,9 @@ package com.kuro.kurogui {
     
     private var _hasFocus:Boolean = false;
     private var _hasTab:Boolean = false;
+    
+    protected var _contentX:Number = 0;
+    protected var _contentY:Number = 0;
     
     public function GUIElement( lock:GUIElementLock ) {}
     
@@ -174,6 +177,22 @@ package com.kuro.kurogui {
         return stage.globalToLocal(localToGlobal(new Point(0, 0)).y;
       }
       return 0;
+    }
+    
+    public function get parentX():Number {
+      
+    }
+    
+    public function get parentY():Number {
+      
+    }
+    
+    public function get contentX():Number {
+      return _contentX;
+    }
+    
+    public function get contentY():Number {
+      return _contentY;
     }
     
     protected function draw( state:GUIDrawState = null ):void {}

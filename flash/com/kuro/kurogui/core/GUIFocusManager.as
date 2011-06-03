@@ -1,4 +1,4 @@
-package com.kuro.kurogui {
+package com.kuro.kurogui.core {
   import com.kuro.kuroexpress.KuroExpress;
   import flash.display.Stage;
   import flash.events.MouseEvent;
