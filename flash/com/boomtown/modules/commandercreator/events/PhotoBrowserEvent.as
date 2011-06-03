@@ -17,9 +17,7 @@ package com.boomtown.modules.commandercreator.events {
       return _photo;
     }
     
-    public static function get PHOTO_CLICKED():String {
-      return "photo_clicked";
-    }
+    public static const PHOTO_CLICKED:String = "photo_clicked";
     
   }
 

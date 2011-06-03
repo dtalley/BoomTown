@@ -18,21 +18,10 @@ package com.boomtown.events {
       return _prompt;
     }
     
-    public static function get PROMPT_ISSUED():String {
-      return "prompt_issued";
-    }
-    
-    public static function get CLOSE_PROMPT():String {
-      return "close_prompt";
-    }
-    
-    public static function get PROMPT_ACCEPTED():String {
-      return "prompt_accepted";
-    }
-    
-    public static function get PROMPT_CANCELED():String {
-      return "prompt_canceled";
-    }
+    public static const PROMPT_ISSUED:String = "prompt_issued";    
+    public static const CLOSE_PROMPT:String = "close_prompt";    
+    public static const PROMPT_ACCEPTED:String = "prompt_accepted";    
+    public static const PROMPT_CANCELED:String = "prompt_canceled";
     
   }
 

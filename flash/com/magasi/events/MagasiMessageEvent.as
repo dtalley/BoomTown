@@ -26,7 +26,7 @@
       return _body;
     }
     
-    public static function get USER_MESSAGE():String { return "ms_user_message" }
+    public static const USER_MESSAGE:String = "ms_user_message";
     
   }
   

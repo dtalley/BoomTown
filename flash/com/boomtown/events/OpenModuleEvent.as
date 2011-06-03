@@ -14,9 +14,7 @@
       return _module;
     }
     
-    public static function get OPEN_MODULE():String {
-      return "open_module";
-    }
+    public static const OPEN_MODULE:String = "open_module";
     
   }
   

@@ -10,13 +10,8 @@ package com.boomtown.modules.commandercreator.events {
       super( type );
     }
     
-    public static function get SCREEN_SAVED():String {
-      return "screen_saved";
-    }
-    
-    public static function get SAVE_COMMANDER():String {
-      return "save_commander";
-    }
+    public static const SCREEN_SAVED:String = "screen_saved";    
+    public static const SAVE_COMMANDER:String = "save_commander";
     
   }
 

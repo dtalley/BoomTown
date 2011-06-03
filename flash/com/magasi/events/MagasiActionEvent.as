@@ -50,7 +50,7 @@
       return _extra;
     }
     
-    public static function get MAGASI_ACTION():String { return "magasi_action"; }
+    public static const MAGASI_ACTION:String = "magasi_action";
     
   }
   

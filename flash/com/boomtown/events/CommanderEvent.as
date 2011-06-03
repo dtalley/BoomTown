@@ -7,13 +7,8 @@
       super(type);
     }
     
-    public static function get TOKEN_REFRESHED():String {
-      return "token_refreshed";
-    }
-    
-    public static function get COMMANDER_SAVED():String {
-      return "commander_saved";
-    }
+    public static const TOKEN_REFRESHED:String = "token_refreshed";    
+    public static const COMMANDER_SAVED:String = "commander_saved";
     
   }
   

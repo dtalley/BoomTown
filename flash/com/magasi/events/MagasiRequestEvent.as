@@ -14,7 +14,7 @@
       return _data;
     }
     
-    public static function get MAGASI_REQUEST():String { return "magasi_request"; }
+    public static const MAGASI_REQUEST:String = "magasi_request";
     
   }
   

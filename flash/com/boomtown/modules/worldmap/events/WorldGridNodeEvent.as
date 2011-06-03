@@ -10,13 +10,8 @@ package com.boomtown.modules.worldmap.events {
       super( type );
     }
     
-    public static function get NODE_CLICKED():String {
-      return "node_clicked";
-    }
-    
-    public static function get NODE_OVER():String {
-      return "node_over";
-    }
+    public static const NODE_CLICKED:String = "node_clicked";    
+    public static const NODE_OVER:String = "node_over";
     
   }
 

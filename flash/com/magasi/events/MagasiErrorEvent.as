@@ -31,12 +31,12 @@
       return _object;
     }
     
-    public static function get SYSTEM_ERROR():String { return "ms_system_error" }
-    public static function get APPLICATION_ERROR():String { return "ms_application_error" }
-    public static function get USER_ERROR():String { return "ms_user_error" }
-    public static function get AUTHENTICATION_ERROR():String { return "ms_authentication_error" }
-    public static function get MAINTENANCE_ERROR():String { return "ms_maintenance_error" }
-    public static function get NOTFOUND_ERROR():String { return "ms_notfound_error" }
+    public static const SYSTEM_ERROR:String = "ms_system_error";
+    public static const APPLICATION_ERROR:String = "ms_application_error";
+    public static const USER_ERROR:String = "ms_user_error";
+    public static const AUTHENTICATION_ERROR:String = "ms_authentication_error";
+    public static const MAINTENANCE_ERROR:String = "ms_maintenance_error";
+    public static const NOTFOUND_ERROR:String = "ms_notfound_error";
     
   }
   

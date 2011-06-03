@@ -10,9 +10,7 @@ package com.boomtown.modules.commandercreator.events {
       super(type);
     }
     
-    public static function get PHOTO_NOT_LOADED():String {
-      return "photo_not_loaded";
-    }
+    public static const PHOTO_NOT_LOADED:String = "photo_not_loaded";
     
   }
 
