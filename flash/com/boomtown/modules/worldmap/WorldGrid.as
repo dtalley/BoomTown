@@ -40,6 +40,7 @@ package com.boomtown.modules.worldmap {
     
     private function init():void {
       WorldGridCache.init();
+      WorldGridNodeCache.init();
       _pool = new ObjectPool( 100, WorldGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Beginning pool population", 

@@ -19,7 +19,6 @@
       private static function get_territory() {
         $territory_x = sys::input( "territory_x", null );
         $territory_y = sys::input( "territory_y", null );
-        $faction_id = sys::input( "faction_id", null );
         if( $territory_x == null || $territory_y == null ) {
           sys::message(
             USER_ERROR,

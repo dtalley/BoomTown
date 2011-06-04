@@ -18,6 +18,8 @@
   public class ActionRequest {
     
     private static var _address:String;
+    
+    private static var _requests:Array;
   
     public static function saveAddress( url:String ):void {
       _address = url;
@@ -27,7 +29,6 @@
       KuroExpress.broadcast( "Sending request.",
         { label:"ActionRequest::sendRequest()" } );
       
-        
       var request:URLRequest = PostGenerator.getRequest( _address, params );
       
       var dispatcher:Sprite = new Sprite();
@@ -36,22 +37,39 @@
       KuroExpress.addListener( loader, Event.COMPLETE, requestLoaded, loader, dispatcher );
       KuroExpress.addListener( loader, IOErrorEvent.IO_ERROR, requestError, loader );
       loader.load( request );
+
+      _requests.push( { dispatcher:dispatcher, loader:loader } );
       
-      return dispatcher;
-      
+      return dispatcher;      
+    }
+    
+    public static function cancelRequest( dispatcher:Sprite ):Boolean {
+      return cleanRequest( null, dispatcher );
+    }
+    
+    private static function cleanRequest( loader:URLLoader = null, dispatcher:Sprite = null ):Boolean {
+      if( loader || dispatcher ) {
+        var total:uint = _requests.length;
+        for ( var i:int = 0; i < total; i++ ) {
+          if ( _requests[i].loader == loader || _requests[i].dispatcher == dispatcher ) {
+            _requests[i].loader.close();
+            KuroExpress.removeListener( _requests[i].loader, Event.COMPLETE, requestLoaded );
+            KuroExpress.removeListener( _requests[i].loader, IOErrorEvent.IO_ERROR, requestError );
+            _requests.splice( i, 1 );
+            return true;
+          }
+        }
+      }
+      return false;
     }
     
     private static function requestError( loader:URLLoader ):void {
-      KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded );
-      KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, requestError );
+      cleanRequest( loader );
       KuroExpress.broadcast( "An error occurred in processing the request.", 
         { label:"ActionRequest::requestError()", color:0xFF0000 } );
     }
     
     private static function requestLoaded( loader:URLLoader, dispatcher:Sprite ):void {      
-      KuroExpress.removeListener( loader, Event.COMPLETE, requestLoaded );
-      KuroExpress.removeListener( loader, IOErrorEvent.IO_ERROR, requestError );
-      
       try {
         var response:XML = new XML( loader.data );
       } catch ( e:Error ) { 
@@ -59,7 +77,7 @@
           { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
         return;
       }
-      
+      cleanRequest( loader );
       KuroExpress.broadcast( "Response from Magasi was properly returned.", 
         { label:"ActionRequest::requestLoaded()", color:0x00FF00 } );
       

@@ -6,6 +6,9 @@ package com.boomtown.modules.worldmap {
   import com.greensock.motionPaths.RectanglePath2D;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.util.IQueueLoadable;
+  import com.magasi.events.MagasiErrorEvent;
+  import com.magasi.events.MagasiRequestEvent;
+  import com.magasi.util.ActionRequest;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Sprite;
@@ -29,6 +32,9 @@ package com.boomtown.modules.worldmap {
     private var _hit:Sprite;
     private var _details:Sprite;
     private var _map:Bitmap;
+    
+    private var _loader:Sprite;
+    private var _loaded:Boolean;
     
     public function WorldGridNode() {
       _hit = new Sprite();
@@ -100,15 +106,49 @@ package com.boomtown.modules.worldmap {
     }
     
     public function load():void {
-      
+      var store:WorldGridNodeStore = WorldGridNodeCache.retrieveNode( _hx, _hy );
+      var expires:uint = WorldGridCache.nodeExpires( _hx, _hy );
+      var date:Date = new Date();
+      if ( expires > date.getTime() && store && store.complete ) {
+        
+      } else {
+        _loader = ActionRequest.sendRequest( { map_action:"get_territory", territory_x:_hx, territory_y:_hy } );
+        _loader.addEventListener( MagasiErrorEvent.USER_ERROR, territoryUserError );
+        _loader.addEventListener( MagasiRequestEvent.MAGASI_REQUEST, territoryRequest );
+      }
+    }
+    
+    private function territoryUserError( e:MagasiErrorEvent ):void {
+      KuroExpress.broadcast( "Territory was not in the database.",
+        { obj:this, label:"WorldGridNode::territoryUserError()" } );
+      _loaded = true;
+      cleanLoader();
+    }
+    
+    private function territoryRequest( e:MagasiRequestEvent ):void {
+      KuroExpress.broadcast( "Territory was loaded successfully.",
+        { obj:this, label:"WorldGridNode::territoryUserError()" } );
+      _loaded = true;
+      cleanLoader();
+      var territory:XML = e.data.map.territory;
+      WorldGridNodeCache.storeNode( _hx, _hy, uint(territory.status.id.toString()), uint(territory.faction.id.toString()) );
     }
     
     public function cancel():void {
-      
+      if ( !_loaded ) {
+        ActionRequest.cancelRequest( _loader );
+      }
+    }
+    
+    private function cleanLoader():void {
+      if ( _loader ) {
+        _loader.removeEventListener( MagasiErrorEvent.USER_ERROR, territoryUserError );
+        _loader.removeEventListener( MagasiRequestEvent.MAGASI_REQUEST, territoryRequest );
+      }
     }
     
     public function get loaded():Boolean {
-      return false;
+      return _loaded;
     }
     
     private function draw( over:Boolean = false ):void {
