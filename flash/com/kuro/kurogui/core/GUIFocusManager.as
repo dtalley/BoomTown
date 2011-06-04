@@ -38,6 +38,14 @@ package com.kuro.kurogui.core {
     }
     
     /**
+     * Place focus on a given element
+     * @param	element The element to focus on
+     */
+    public static function focus( element:GUIElement ):void {
+      elementClicked( element, null );
+    }
+    
+    /**
      * Register an element with this focus manager, so that when the user clicks on that element, it gains focus.
      * @param	element The element that we want to add to the focus list
      */
@@ -66,7 +74,7 @@ package com.kuro.kurogui.core {
           _focused.splice( focusIndex, 1 );
         }
         _elements.splice( index, 1 );
-        KuroExpress.removeListener( element, MouseEvent.CLICK, elementClicked );
+        KuroExpress.removeListener( element, MouseEvent.MOUSE_DOWN, elementClicked );
       }
     }
     
@@ -87,7 +95,9 @@ package com.kuro.kurogui.core {
       }
       _focused.push( element );
       element.focused();
-      e.stopImmediatePropagation();
+      if( e ) {
+        e.stopImmediatePropagation();
+      }
     }
     
   }

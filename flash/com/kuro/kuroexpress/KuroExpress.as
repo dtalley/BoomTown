@@ -49,6 +49,7 @@
     
     private static var currentFont:int;
     private static var totalFonts:int;
+    private static var loadingFont:String;
     
     private static var fullURL:String = "";
 		

@@ -24,6 +24,8 @@
     private var _grid:WorldGrid;
     private var _offset:Point;
     
+    private var _clicks:Boolean = true;
+    
     public function WorldMap():void {
       _id = "WorldMap";
     }
@@ -42,7 +44,7 @@
       TweenLite.from( _background, .3, { alpha:0 } );
       
       _grid = new WorldGrid();
-      _grid.addEventListener( WorldGridEvent.GRID_READY, gridReady );
+      _grid.addEventListener( WorldGridEvent.READY, gridReady );
       KuroExpress.broadcast( "Creating grid and beginning its pool population", 
         { obj:this, label:"WorldMap::start()" } );
     }
@@ -50,19 +52,19 @@
     private function gridReady( e:WorldGridEvent ):void {
       KuroExpress.broadcast( "Grid has signaled that it is ready for population", 
         { obj:this, label:"WorldMap::gridReady()" } );
-      _grid.removeEventListener( WorldGridEvent.GRID_READY, gridReady );
+      _grid.removeEventListener( WorldGridEvent.READY, gridReady );
       
       addChild( _grid );
       _grid.position( 10, 10 );
       _grid.visible = false;
-      _grid.addEventListener( WorldGridEvent.GRID_POPULATED, gridPopulated );
+      _grid.addEventListener( WorldGridEvent.POPULATED, gridPopulated );
       _grid.populate();
     }
     
     private function gridPopulated( e:WorldGridEvent ):void {
       KuroExpress.broadcast( "Grid has signaled that it is populated.",
         { obj:this, label:"WorldMap::gridPopulated()" } );
-      _grid.removeEventListener( WorldGridEvent.GRID_POPULATED, gridPopulated );
+      _grid.removeEventListener( WorldGridEvent.POPULATED, gridPopulated );
       
       _land = new WorldBackground();
       _land.addEventListener( WorldBackgroundEvent.BACKGROUND_READY, backgroundReady );
@@ -84,6 +86,8 @@
       KuroExpress.broadcast( "Background has signaled that it is populated", 
         { obj:this, label:"WorldMap::backgroundPopulated()" } );
       _land.removeEventListener( WorldBackgroundEvent.BACKGROUND_POPULATED, backgroundPopulated );
+      
+      _grid.addEventListener( WorldGridEvent.CLICK_REQUESTED, clickRequested );
       
       _grid.visible = true;
       _land.visible = true;
@@ -110,12 +114,14 @@
     }
     
     private function enableNav( e:TimerEvent ):void {
+      _clicks = false;
       KuroExpress.removeListener( stage, MouseEvent.MOUSE_UP, interceptNav );
       stage.addEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
       stage.addEventListener( MouseEvent.MOUSE_UP, mouseUp );
     }
     
     private function mouseUp( e:MouseEvent ):void {
+      _clicks = true;
       stage.removeEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
       stage.removeEventListener( MouseEvent.MOUSE_UP, mouseUp );
     }
@@ -124,17 +130,26 @@
       TweenLite.to( _grid, .2, { x:mouseX - _offset.x, y:mouseY - _offset.y, onUpdate:updateGrid, onComplete:updateGrid } );
     }
     
+    private function clickRequested( e:WorldGridEvent ):void {
+      KuroExpress.broadcast( "A click was requested", 
+        { obj:this, label:"WorldMap::clickRequested()" } );
+      if ( _clicks ) {
+        _grid.confirmClick();
+      } else {
+        _grid.cancelClick();
+      }
+    }
+    
     private function updateGrid():void {
       _grid.x = Math.round( _grid.x );
       _grid.y = Math.round( _grid.y );
       _land.x = Math.round( _grid.x );
       _land.y = Math.round( _grid.y );
       _grid.populate();
-      _land.populate();
+      _land.populate();      
     }
     
-    override public function close():void {
-      
+    override public function close():void {      
       super.close();
     }
     

@@ -10,8 +10,9 @@ package com.boomtown.modules.worldmap.events {
       super( type );
     }
     
-    public static const GRID_READY:String = "grid_ready";    
-    public static const GRID_POPULATED:String = "grid_populated";
+    public static const READY:String = "world_grid_ready";    
+    public static const POPULATED:String = "world_grid_populated";
+    public static const CLICK_REQUESTED:String = "world_grid_click_requested";
     
   }
 

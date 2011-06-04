@@ -1,9 +1,10 @@
 package com.kuro.kurogui.core {
   import com.kuro.kurogui.events.GUIElementEvent;
-  import com.kuro.kurogui.utils.GUIDrawState;
+  import com.kuro.kurogui.util.GUIDrawState;
   import flash.display.DisplayObject;
 	import flash.display.Sprite;
   import flash.geom.Point;
+  import flash.geom.Rectangle;
 	
   public class GUIElement extends Sprite {
     
@@ -21,31 +22,53 @@ package com.kuro.kurogui.core {
     
     protected var _contentX:Number = 0;
     protected var _contentY:Number = 0;
+    protected var _contentWidth:Number = 0;
+    protected var _contentHeight:Number = 0;
+    
+    private var _enabled:Boolean = true;
+    
+    private var _drawState:GUIDrawState;
     
     public function GUIElement( lock:GUIElementLock ) {}
     
-    public function enableFocus():void {
+    public function disable():void {
+      _enabled = false;
+      _drawState = GUIDrawState.DISABLED;
+      draw();
+    }
+    
+    public function enable():void {
+      _enabled = true;
+      if ( _hasFocus ) {
+        _drawState = GUIDrawState.FOCUSED;
+      } else {
+        _drawState = GUIDrawState.UNFOCUSED;
+      }
+      draw();
+    }
+    
+    protected function enableFocus():void {
       if( !_focusEnabled ) {
         GUIFocusManager.registerElement( this );
         _focusEnabled = true;
       }
     }
     
-    public function disableFocus():void {
+    protected function disableFocus():void {
       if( _focusEnabled ) {
         GUIFocusManager.unregisterElement( this );
         _focusEnabled = false;
       }
     }
     
-    public function enableTab( position:int = -1 ):void {
+    protected function enableTab( position:int = -1 ):void {
       if( !_tabEnabled ) {
         GUITabManager.registerElement( this, position );
         _tabEnabled = true;
       }
     }
     
-    public function disableTab():void {
+    protected function disableTab():void {
       if( _tabEnabled ) {
         GUITabManager.unregisterElement( this );
         _tabEnabled = false;
@@ -53,23 +76,26 @@ package com.kuro.kurogui.core {
     }
     
     public function focused():void {
-      _hasFocus = true;      
-      draw( GUIDrawState.FOCUSED );      
+      _hasFocus = true;    
+      _drawState = GUIDrawState.FOCUSED;
+      draw();      
       dispatchEvent( new GUIElementEvent( GUIElementEvent.GAINED_FOCUS ) );
     }
     
     public function tabbed():void {
       _hasTab = true;
       if ( !_hasFocus ) {
+        _drawState = GUIDrawState.FOCUSED;
         _hasFocus = true;
-        draw( GUIDrawState.FOCUSED );
+        draw();
       }
     }
     
     public function unfocused():void {
       _hasFocus = false;
       _hasTab = false;      
-      draw( GUIDrawState.UNFOCUSED );      
+      _drawState = GUIDrawState.UNFOCUSED;
+      draw();      
       dispatchEvent( new GUIElementEvent( GUIElementEvent.LOST_FOCUS ) );
     }
     
@@ -147,21 +173,28 @@ package com.kuro.kurogui.core {
       disableTab();
     }
     
-    public function set width( val:Number ):void {
+    public function position( x:Number, y:Number ):void {
+      if ( _parent ) {
+        this.x = _parent.contentX + x;
+        this.y = _parent.contentY + y;
+      }
+    }
+    
+    override public function set width( val:Number ):void {
       _width = val;
       draw();
     }
     
-    public function set height( val:Number ):void {
+    override public function set height( val:Number ):void {
       _height = val;
       draw();
     }
     
-    public override function get width():Number {
+    override public function get width():Number {
       return _width;
     }
     
-    public override function get height():Number {
+    override public function get height():Number {
       return _height;
     }
     
@@ -180,22 +213,18 @@ package com.kuro.kurogui.core {
     }
     
     public function get parentX():Number {
-      
+      return x - _parent.content.x;
     }
     
     public function get parentY():Number {
-      
+      return y - _parent.content.y;
     }
     
-    public function get contentX():Number {
-      return _contentX;
+    public function get content():Rectangle {
+      return new Rectangle( _contentX, _contentY, _contentWidth, _contentHeight );
     }
     
-    public function get contentY():Number {
-      return _contentY;
-    }
-    
-    protected function draw( state:GUIDrawState = null ):void {}
+    protected function draw():void {}
     
   }
 

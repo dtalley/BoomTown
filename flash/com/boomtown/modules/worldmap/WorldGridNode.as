@@ -4,6 +4,8 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.utils.HexagonLevelGrid;
   import com.boomtown.utils.HexagonMetrics;
   import com.greensock.motionPaths.RectanglePath2D;
+  import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.util.IQueueLoadable;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Sprite;
@@ -15,7 +17,7 @@ package com.boomtown.modules.worldmap {
    * ...
    * @author David Talley
    */
-  internal class WorldGridNode extends Sprite {
+  internal class WorldGridNode extends Sprite implements IQueueLoadable {
     
     private var _metrics:HexagonMetrics;
     
@@ -85,7 +87,7 @@ package com.boomtown.modules.worldmap {
     }
     
     private function nodeOver( e:MouseEvent ):void {
-      dispatchEvent( new WorldGridNodeEvent( WorldGridNodeEvent.NODE_OVER ) );
+      dispatchEvent( new WorldGridNodeEvent( WorldGridNodeEvent.OVER ) );
       draw( true );
     }
     
@@ -94,7 +96,19 @@ package com.boomtown.modules.worldmap {
     }
     
     private function nodeClick( e:MouseEvent ):void {
-      dispatchEvent( new WorldGridNodeEvent( WorldGridNodeEvent.NODE_CLICKED ) );
+      dispatchEvent( new WorldGridNodeEvent( WorldGridNodeEvent.CLICKED ) );
+    }
+    
+    public function load():void {
+      
+    }
+    
+    public function cancel():void {
+      
+    }
+    
+    public function get loaded():Boolean {
+      return false;
     }
     
     private function draw( over:Boolean = false ):void {
