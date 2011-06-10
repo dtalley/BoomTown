@@ -2,7 +2,9 @@
 
 <settings>
   <debug>1</debug>
-  <magasi_url>http://boomtowngame.com/facebook/index.php</magasi_url>
+  <magasi_urls>
+    <url>http://boomtowngame.com/facebook/index.php</url>
+  </magasi_urls>
   <site_path>http://boomtowngame.com/facebook/</site_path>
   <default_user>100002260212840</default_user>
   <default_token>202115116472856|2.d6nSg5fKgr6tOv8TMUNoHQ__.3600.1301907600-100002260212840|6HLc6s36ldzP-yWbjKOqa9aPCPU</default_token>

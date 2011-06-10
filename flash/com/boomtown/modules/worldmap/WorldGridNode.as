@@ -1,4 +1,5 @@
 package com.boomtown.modules.worldmap {
+  import com.boomtown.core.Faction;
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
@@ -12,6 +13,7 @@ package com.boomtown.modules.worldmap {
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Sprite;
+  import flash.events.Event;
   import flash.events.MouseEvent;
   import flash.geom.Matrix;
   import flash.geom.Point;
@@ -34,13 +36,14 @@ package com.boomtown.modules.worldmap {
     private var _map:Bitmap;
     
     private var _loader:Sprite;
-    private var _loaded:Boolean;
+    private var _loaded:Boolean = false;
+    private var _selected:Boolean = false;
+    
+    private var _faction:Faction;
     
     public function WorldGridNode() {
       _hit = new Sprite();
       _details = new Sprite();
-      _details.mouseChildren = false;
-      _details.mouseEnabled = false;
     }
     
     public function init( metrics:HexagonMetrics, x:int, y:int ):void {
@@ -110,7 +113,8 @@ package com.boomtown.modules.worldmap {
       var expires:uint = WorldGridCache.nodeExpires( _hx, _hy );
       var date:Date = new Date();
       if ( expires > date.getTime() && store && store.complete ) {
-        
+        _loaded = true;
+        dispatchEvent( new Event( Event.COMPLETE ) );
       } else {
         _loader = ActionRequest.sendRequest( { map_action:"get_territory", territory_x:_hx, territory_y:_hy } );
         _loader.addEventListener( MagasiErrorEvent.USER_ERROR, territoryUserError );
@@ -119,24 +123,25 @@ package com.boomtown.modules.worldmap {
     }
     
     private function territoryUserError( e:MagasiErrorEvent ):void {
-      KuroExpress.broadcast( "Territory was not in the database.",
-        { obj:this, label:"WorldGridNode::territoryUserError()" } );
       _loaded = true;
       cleanLoader();
+      dispatchEvent( new Event( Event.COMPLETE ) );
+      draw();
     }
     
     private function territoryRequest( e:MagasiRequestEvent ):void {
-      KuroExpress.broadcast( "Territory was loaded successfully.",
-        { obj:this, label:"WorldGridNode::territoryUserError()" } );
       _loaded = true;
       cleanLoader();
-      var territory:XML = e.data.map.territory;
+      var territory:XMLList = e.data.map.territory;
       WorldGridNodeCache.storeNode( _hx, _hy, uint(territory.status.id.toString()), uint(territory.faction.id.toString()) );
+      dispatchEvent( new Event( Event.COMPLETE ) );
+      draw();
     }
     
     public function cancel():void {
       if ( !_loaded ) {
         ActionRequest.cancelRequest( _loader );
+        cleanLoader();
       }
     }
     
@@ -144,6 +149,7 @@ package com.boomtown.modules.worldmap {
       if ( _loader ) {
         _loader.removeEventListener( MagasiErrorEvent.USER_ERROR, territoryUserError );
         _loader.removeEventListener( MagasiRequestEvent.MAGASI_REQUEST, territoryRequest );
+        _loader = null;
       }
     }
     
@@ -151,14 +157,37 @@ package com.boomtown.modules.worldmap {
       return _loaded;
     }
     
+    public function select():void {
+      _selected = true;
+      draw();
+      mouseChildren = false;
+    }
+    
+    public function deselect():void {
+      _selected = false;
+      draw();
+      mouseChildren = true;
+    }
+    
     private function draw( over:Boolean = false ):void {
       graphics.clear();
-      graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
-      Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
-      graphics.endFill();
-      graphics.beginFill( over ? 0xDDDDDD : 0xFFFFFF );
-      Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
-      graphics.endFill();
+      if( !_loaded ) {
+        graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
+        Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
+        graphics.endFill();
+        graphics.beginFill( over ? 0x222222 : 0x444444 );
+        Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
+        graphics.endFill();
+      } else {
+        var factionColor:uint = _faction ? 0xFF0000 : 0xFFFFFF;
+        var factionOverColor:uint = _faction ? 0x550000 : 0xDDDDDD;
+        graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
+        Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
+        graphics.endFill();
+        graphics.beginFill( over || _selected ? factionOverColor : factionColor );
+        Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
+        graphics.endFill();
+      }
     }
     
     public function clear():void {
@@ -166,6 +195,10 @@ package com.boomtown.modules.worldmap {
       _details.removeChild( _map );
       _map = null;
       _type = UNDEFINED;
+      if ( _loader ) {
+        cancel();
+      }
+      _loaded = false;
       
       _hit.graphics.clear();
       _hit.removeEventListener( MouseEvent.MOUSE_OVER, nodeOver );

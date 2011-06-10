@@ -4,7 +4,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:php="http://www.php.net/">
 
-  <xsl:output method="xml"
+  <xsl:output method="html"
               omit-xml-declaration="yes" />
 
   <xsl:template match="l">
@@ -75,30 +75,7 @@
           border: 0;
           padding: 0;
         }
-        ul {
-          padding-top: 10px;
-          padding-bottom: 10px;
-        }
-        .ico_link {
-          display: block;
-          width: 14px;
-          height: 14px;
-          text-indent: -1000px;
-          overflow: hidden;
-        }
-        a.ico_link:hover, a.ico_link:active {
-          background-position: 0px -14px;
-        }
-        .edit_link {          
-          background: transparent url( './edit_ico.gif' ) top left no-repeat;
-        }
-        .add_link {
-          background: transparent url( './edit_ico.gif' ) top left no-repeat;
-        }
-        .edit_link {
-          background: transparent url( './edit_ico.gif' ) top left no-repeat;
-        }
-        a, a:link, a:visited {
+        a:link, a:visited {
           color: #0066AA;
           text-decoration: none;
         }
@@ -193,11 +170,6 @@
         .impact_description {
           padding-top: 5px;
         }
-        .impact_edit {
-          width: 100%;
-          font-size: 11px;
-					font-family: Verdana, Geneva, sans-serif;
-        }
         .goals_list li {
           padding-top: 5px;
           padding-bottom: 5px;
@@ -266,8 +238,8 @@
                 </a>
               </li>
             </xsl:for-each>
-          </ul><br />
-        </xsl:for-each>
+          </ul>
+        </xsl:for-each><br />
         <xsl:for-each select="featureset">
           <div id="{id}" class="featureset">
             <div class="featureset_title">
@@ -281,10 +253,9 @@
               <div id="{id}">
                 <xsl:attribute name="class">
                   <xsl:text>feature</xsl:text>
-                  <xsl:if test="planned = '1'"> planned</xsl:if>
                 </xsl:attribute>
                 <div class="feature_title">
-                  <xsl:if test="planned = '1'">Planned </xsl:if>Feature:
+                  Feature:
                   <span style="font-weight: bold;" class="feature_title_text">
                     <xsl:value-of select="title" />
                   </span>
@@ -292,7 +263,7 @@
                 </div>
                 <br />
                 <div class="contact">
-                  <div class="contact_title"><a href="#" class="edit_link" style="float: right;">.</a> Contact</div>
+                  <div class="contact_title">Contact</div>
                   <div class="contact_description">
                     <span style="font-style: italic; color: #888888;">Contact information for the individual that maintains this section.</span>
                     <br /><br />
@@ -315,95 +286,63 @@
                     <ul>
                       <xsl:for-each select="goals/goal">
                         <li>
-                          <a href="#" class="edit_link" style="float: left; margin-right: 5px;">.</a>
                           <xsl:apply-templates />
                         </li>
                       </xsl:for-each>
-                      <li><a href="#" class="add_goal">+ Add Goal</a></li>
                     </ul>
                   </div>
                 </div>
                 <br />
-                <div class="background">
-                  <div class="background_title"><a href="#" class="edit_link" style="float: right;">.</a> Background</div>
-                  <div class="background_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( background ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span>
-                    <br />
-                    <br />
-                  </div>
-                  <textarea class="background_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( background ) > 0">
-                        <xsl:copy-of select="background/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( background ) > 0">
+                <xsl:if test="string-length( background ) > 0">
+                  <div class="background">
+                    <div class="background_title">Background</div>
+                    <div class="background_description">
+                      <xsl:attribute name="style">
+                        <xsl:if test="string-length( background ) = 0">display: none;</xsl:if>
+                      </xsl:attribute>
+                      <span style="font-style: italic; color: #888888;">Fictional or functional background information on this feature.</span>
+                      <br />
+                      <br />
+                    </div>
                     <div class="background_text">
                       <xsl:apply-templates select="background" />
                     </div>
-                  </xsl:if>
-                </div>
-                <br />
-                <div class="implementation">
-                  <div class="implementation_title"><a href="#" class="edit_link" style="float: right;">.</a> Implementation</div>
-                  <div class="implementation_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( implementation ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span>
-                    <br />
-                    <br />
                   </div>
-                  <textarea class="implementation_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( implementation ) > 0">
-                        <xsl:copy-of select="implementation/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( implementation ) > 0">
+                  <br />
+                </xsl:if>
+                <xsl:if test="string-length( implementation ) > 0">
+                  <div class="implementation">
+                    <div class="implementation_title">Implementation</div>
+                    <div class="implementation_description">
+                      <xsl:attribute name="style">
+                        <xsl:if test="string-length( implementation ) = 0">display: none;</xsl:if>
+                      </xsl:attribute>
+                      <span style="font-style: italic; color: #888888;">How this feature should work from the player's perspective.</span>
+                      <br />
+                      <br />
+                    </div>
                     <div class="implementation_text">
                       <xsl:apply-templates select="implementation" />
                     </div>
-                  </xsl:if>
-                </div>
-                <br />
-                <div class="impact">
-                  <div class="impact_title"><a href="#" class="edit_link" style="float: right;">.</a> Impact</div>
-                  <div class="impact_description">
-                    <xsl:attribute name="style">
-                      <xsl:if test="string-length( impact ) = 0">display: none;</xsl:if>
-                    </xsl:attribute>
-                    <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span>
-                    <br />
-                    <br />
                   </div>
-                  <textarea class="impact_edit" style="display: none;">
-                    <xsl:choose>
-                      <xsl:when test="string-length( impact ) > 0">
-                        <xsl:copy-of select="impact/node()" />
-                      </xsl:when>
-                      <xsl:otherwise>
-                        Edit here!
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </textarea>
-                  <xsl:if test="string-length( impact ) > 0">
+                  <br />
+                </xsl:if>
+                <xsl:if test="string-length( impact ) > 0">
+                  <div class="impact">
+                    <div class="impact_title">Impact</div>
+                    <div class="impact_description">
+                      <xsl:attribute name="style">
+                        <xsl:if test="string-length( impact ) = 0">display: none;</xsl:if>
+                      </xsl:attribute>
+                      <span style="font-style: italic; color: #888888;">How this feature impacts the player's experience or the overall gameplay.</span>
+                      <br />
+                      <br />
+                    </div>
                     <div class="impact_text">
                       <xsl:apply-templates select="impact" />
                     </div>
-                  </xsl:if>
-                </div>
+                  </div>
+                </xsl:if>
               </div><br />
               <div style="text-align: right; padding-right: 10px;">
                 <a href="#toc">Table of Contents</a>

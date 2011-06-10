@@ -4,11 +4,13 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.boomtown.utils.HexagonMetrics;
+  import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.LoadQueue;
   import com.kuro.kuroexpress.ObjectPool;
   import flash.display.Sprite;
   import flash.events.Event;
+  import flash.filters.GlowFilter;
 	/**
    * ...
    * @author David Talley
@@ -19,11 +21,13 @@ package com.boomtown.modules.worldmap {
     private var _height:Number = 78;
     private var _rotation:Number = 90;
     
-    private var _pool:ObjectPool;
     private var _queue:LoadQueue;
+    private var _pool:ObjectPool;
     
     private var _potential:WorldGridNode;
     private var _clicked:WorldGridNode;
+    
+    private var _menu:WorldGridNodeMenu;
     
     internal function setMetrics( width:Number, height:Number, rotation:Number ):void {
       _width = width;
@@ -39,8 +43,10 @@ package com.boomtown.modules.worldmap {
     }
     
     private function init():void {
+      resetMetrics();
       WorldGridCache.init();
       WorldGridNodeCache.init();
+      _queue = new LoadQueue(20,true);
       _pool = new ObjectPool( 100, WorldGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Beginning pool population", 
@@ -52,8 +58,6 @@ package com.boomtown.modules.worldmap {
       KuroExpress.broadcast( "Pool has been populated", 
         { obj:this, label:"WorldGrid::poolReady()" } );
       dispatchEvent( new WorldGridEvent( WorldGridEvent.READY ) );
-      
-      _queue = new LoadQueue(10);
     }
     
     internal function resetMetrics():void {
@@ -68,8 +72,6 @@ package com.boomtown.modules.worldmap {
     }
     
     internal function position( x:int, y:int ):void {
-      resetMetrics();
-      
       this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
       this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
     }
@@ -87,10 +89,20 @@ package com.boomtown.modules.worldmap {
       _queue.flush();
     }
     
+    private var _prevSX:int = NaN;
+    private var _prevSY:int = NaN;
     internal function populate():void {
-      resetMetrics();
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
+      var hX:int = HexagonAxisGrid.calculateHexX( sX, sY );
+      var hY:int = HexagonAxisGrid.calculateHexY( sX, sY );
+      if ( _prevSX == hX && _prevSY == hY ) {
+        dispatchEvent( new WorldGridEvent( WorldGridEvent.POPULATED ) );
+        return;
+      }
+      resetMetrics();
+      _prevSX = hX;
+      _prevSY = hY;
       var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - _width );
       var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - _height );
       var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + _width );
@@ -110,8 +122,8 @@ package com.boomtown.modules.worldmap {
           }
         }
       }
-      createGrid( Math.round( HexagonAxisGrid.calculateHexX( sX, sY ) ), 
-                  Math.round( HexagonAxisGrid.calculateHexY( sX, sY ) ), 
+      createGrid( Math.round( hX ), 
+                  Math.round( hY ), 
                   0, tLX, tLY, bRX, bRY );
     }
     
@@ -121,6 +133,10 @@ package com.boomtown.modules.worldmap {
       var quadrant:int = 0;
       var created:int = 0;
       while ( quadrant < 4 ) {
+        if ( level == 0 && ( quadrant == 1 || quadrant == 2 ) ) {
+          quadrant++;
+          continue;
+        }
         var addx = ( quadrant == 0 || quadrant == 1 ) ? 1 : -1;
         var addy = ( quadrant == 0 || quadrant == 2 ) ? 1 : -1;
         var nsx:int = sx + addx * level;
@@ -128,6 +144,10 @@ package com.boomtown.modules.worldmap {
         var count:int = 0;
         var distance:int = 0;
         while ( count < 2 ) {
+          if ( level == 0 && quadrant > 0 && distance == 0 && count == 0 ) {
+            distance++;
+            continue;
+          }
           var cx:int = nsx;
           var cy:int = nsy;
           if ( count == 0 ) {
@@ -154,6 +174,9 @@ package com.boomtown.modules.worldmap {
         createGrid( sx, sy, level + 1, tLX, tLY, bRX, bRY );
       } else {
         dispatchEvent( new WorldGridEvent( WorldGridEvent.POPULATED ) );
+        if ( !_queue.loading ) {
+          _queue.load();
+        }
       }
     }
     
@@ -173,10 +196,12 @@ package com.boomtown.modules.worldmap {
         if ( newNode.type == WorldGridNode.ACTIVE ) {
           newNode.addEventListener( WorldGridNodeEvent.OVER, nodeOver );
           newNode.addEventListener( WorldGridNodeEvent.CLICKED, nodeClicked );
-          _queue.load( newNode );
+          _queue.add( newNode );
         }
       }
     }
+    
+    
     
     private function destroyNode( node:WorldGridNode ):void {
       WorldGridCache.removeNode( node.hX, node.hY );
@@ -192,9 +217,18 @@ package com.boomtown.modules.worldmap {
     
     private function nodeOver( e:WorldGridNodeEvent ):void {
       addChild( WorldGridNode( e.target ) );
+      if ( _menu ) {
+        addChild( _menu );
+      }
+      if ( _clicked ) {
+        addChild( _clicked );
+      }
     }
     
     private function nodeClicked( e:WorldGridNodeEvent ):void {
+      if ( _menu ) {
+        closeMenu();
+      }      
       _potential = WorldGridNode( e.target );
       dispatchEvent( new WorldGridEvent( WorldGridEvent.CLICK_REQUESTED ) );
     }
@@ -204,11 +238,34 @@ package com.boomtown.modules.worldmap {
     }
     
     internal function confirmClick():void {
+      if ( _clicked ) {
+        _clicked.deselect();
+      }
       _clicked = _potential;
       _potential = null;
-      
-      KuroExpress.broadcast( "A node was clicked", 
-        { obj:this, label:"WorldGrid::confirmClick()" } );
+      _clicked.select();
+      addChild( _clicked );      
+      createMenu();
+    }
+    
+    private function createMenu():void {
+      _menu = new WorldGridNodeMenu();
+      addChildAt( _menu, getChildIndex( _clicked ) );
+      _menu.x = _clicked.x;
+      _menu.y = _clicked.y;
+      _menu.filters = [new GlowFilter( 0, .6, 10, 10, 2, 1 )];
+    }
+    
+    private function closeMenu():void {
+      if( _menu ) {
+        _menu.close();
+        KuroExpress.addListener( _menu, Event.CLOSE, menuClosed, _menu );
+      }
+    }
+    
+    private function menuClosed( menu:WorldGridNodeMenu ):void {
+      removeChild( menu );
+      KuroExpress.removeListener( _menu, Event.CLOSE, menuClosed );
     }
     
   }

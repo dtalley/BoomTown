@@ -53,7 +53,7 @@
       var newY:Number = xSlope * newX;
       
       var yDist:Number = Math.sqrt( Math.pow( newY - y, 2 ) + Math.pow( newX - x, 2 ) );
-      if ( y < newY ) {
+      if ( Math.round( y ) < Math.round( newY ) ) {
         yDist *= -1;
       }
       

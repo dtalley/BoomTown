@@ -17,19 +17,27 @@
   
   public class ActionRequest {
     
-    private static var _address:String;
+    private static var _addresses:Array = [];    
+    private static var _requests:Array = [];
     
-    private static var _requests:Array;
+    private static var _debug:Boolean = false;
   
     public static function saveAddress( url:String ):void {
-      _address = url;
+      _addresses.push( url );
+    }
+    
+    public static function enableDebug():void {
+      _debug = true;
     }
     
     public static function sendRequest( params:Object = null ):Sprite {
-      KuroExpress.broadcast( "Sending request.",
-        { label:"ActionRequest::sendRequest()" } );
+      if( _debug )
+        KuroExpress.broadcast( "Sending request.",
+          { label:"ActionRequest::sendRequest()" } );
       
-      var request:URLRequest = PostGenerator.getRequest( _address, params );
+      var rand:uint = Math.round( Math.random() * ( _addresses.length - 1 ) );
+      var address:String = _addresses[rand];
+      var request:URLRequest = PostGenerator.getRequest( address, params );
       
       var dispatcher:Sprite = new Sprite();
       var loader:URLLoader = new URLLoader();
@@ -65,21 +73,24 @@
     
     private static function requestError( loader:URLLoader ):void {
       cleanRequest( loader );
-      KuroExpress.broadcast( "An error occurred in processing the request.", 
-        { label:"ActionRequest::requestError()", color:0xFF0000 } );
+      if( _debug )
+        KuroExpress.broadcast( "An error occurred in processing the request.", 
+          { label:"ActionRequest::requestError()", color:0xFF0000 } );
     }
     
     private static function requestLoaded( loader:URLLoader, dispatcher:Sprite ):void {      
       try {
         var response:XML = new XML( loader.data );
       } catch ( e:Error ) { 
-        KuroExpress.broadcast( "XML document was malformed.\n\n" + loader.data, 
-          { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
+        if( _debug )
+          KuroExpress.broadcast( "XML document was malformed.\n\n" + loader.data, 
+            { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
         return;
       }
       cleanRequest( loader );
-      KuroExpress.broadcast( "Response from Magasi was properly returned.", 
-        { label:"ActionRequest::requestLoaded()", color:0x00FF00 } );
+      if( _debug )
+        KuroExpress.broadcast( "Response from Magasi was properly returned.", 
+          { label:"ActionRequest::requestLoaded()", color:0x00FF00 } );
       
       /**
        * Parse through all of the messages returned from Magasi and dispatch errors
@@ -117,6 +128,9 @@
               messagexml["function"].toString(), 
               messagexml["class"].toString() 
             );
+            if( _debug )
+              KuroExpress.broadcast( "An error was encountered.\n\n" + evt.title + "\n" + evt.body, 
+                { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
             break;
           case USER_MESSAGE:
             evt = new MagasiMessageEvent(
@@ -125,11 +139,12 @@
               messagexml.title.toString(),
               messagexml.body.toString()
             );
+            if( _debug )
+              KuroExpress.broadcast( "A message was encountered.\n\n" + evt.title + "\n" + evt.body, 
+                { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
             break;
         }
         if ( evt != null ) {
-          KuroExpress.broadcast( "An error was encountered.\n\n" + evt.title + "\n" + evt.body, 
-            { label:"ActionRequest::requestLoaded()", color:0xFF0000 } );
           dispatcher.dispatchEvent( evt );
         }
       }
@@ -151,8 +166,9 @@
           Boolean( actionxml.success.toString() ),
           actionxml.extra
         );
-        KuroExpress.broadcast( "An action was encountered, " + act.extension + "::" + act.action,
-          { label:"ActionRequest::requestLoaded()" } );
+        if( _debug )
+          KuroExpress.broadcast( "An action was encountered, " + act.extension + "::" + act.action,
+            { label:"ActionRequest::requestLoaded()" } );
         dispatcher.dispatchEvent( act );
       }
       

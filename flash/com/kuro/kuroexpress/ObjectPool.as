@@ -59,7 +59,7 @@ package com.kuro.kuroexpress {
       if ( _available.indexOf( obj ) >= 0 ) {
         throw new Error( "That object is already in the pool." );
       }
-      _available.push( obj );
+      _available.unshift( obj );
       _used--;
     }
     

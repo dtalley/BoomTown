@@ -12,13 +12,15 @@ package com.kuro.kuroexpress {
    */
   public class LoadQueue extends EventDispatcher {
     
+    private var _shuffle:Boolean = false;
     private var _max:uint;
     
-    public var _queue:Array = [];
-    public var _loading:Array = [];
+    private var _queue:Array = [];
+    private var _loading:Array = [];
     
-    public function LoadQueue( max:uint ) {
+    public function LoadQueue( max:uint, shuffle:Boolean = false ) {
       _max = max;
+      _shuffle = shuffle;
     }
     
     public function get max():uint {
@@ -30,17 +32,19 @@ package com.kuro.kuroexpress {
     }
     
     public function add( obj:IQueueLoadable ):void {
-      if( !obj.loaded && _queue.indexOf( obj ) < 0 && _loading.indexOf( obj ) < 0 ) {
+      if ( !obj.loaded && _queue.indexOf( obj ) < 0 && _loading.indexOf( obj ) < 0 ) {
         _queue.push( obj );
-        if ( _loading.length < _max ) {
-          load();
-        }
       }
     }
     
     public function load():void {
       while ( _loading.length < _max && _queue.length > 0 ) {
-        var obj:IQueueLoadable = _queue.shift();
+        var rand:uint = Math.round( Math.random() * ( _queue.length - 1 ) );
+        if ( !_shuffle ) {
+          rand = 0;
+        }
+        var obj:IQueueLoadable = _queue[rand];
+        _queue.splice( rand, 1 );
         obj.load();
         KuroExpress.addListener( obj, Event.COMPLETE, loaded, obj );
         KuroExpress.addFullListener( obj, ErrorEvent.ERROR, error, obj );
@@ -91,6 +95,10 @@ package com.kuro.kuroexpress {
         KuroExpress.removeListener( _loading[i], ErrorEvent.ERROR, error );
       }
       _loading = null;
+    }
+    
+    public function get loading():Boolean {
+      return _loading.length > 0;
     }
     
   }

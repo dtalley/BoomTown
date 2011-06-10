@@ -10,8 +10,8 @@ package com.boomtown.modules.worldmap.events {
       super( type );
     }
     
-    public static const BACKGROUND_READY:String = "background_ready";    
-    public static const BACKGROUND_POPULATED:String = "background_populated";
+    public static const READY:String = "world_background_ready";    
+    public static const POPULATED:String = "world_background_populated";
     
   }
 

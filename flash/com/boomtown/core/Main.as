@@ -47,7 +47,10 @@
       if ( int( XMLManager.getFile("settings").debug.toString() ) == 1 ) {
         MonsterDebugger.initialize(this);
       }
-      ActionRequest.saveAddress( XMLManager.getFile("settings").magasi_url.toString() );
+      var total:uint = XMLManager.getFile("settings").magasi_urls.url.length();
+      for ( var i:int = 0; i < total; i++ ) {
+        ActionRequest.saveAddress( XMLManager.getFile("settings").magasi_urls.url[i].toString() ); 
+      }
       loadFonts();
     }
     

@@ -7,6 +7,7 @@ package com.boomtown.modules.worldmap {
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.LoadQueue;
   import com.kuro.kuroexpress.ObjectPool;
   import flash.display.Sprite;
   import flash.events.Event;
@@ -19,6 +20,7 @@ package com.boomtown.modules.worldmap {
     private var _width:Number = 200;
     private var _height:Number = 200;
     
+    private var _queue:LoadQueue;
     private var _pool:ObjectPool;
     
     public function setMetrics( width:Number, height:Number ):void {
@@ -34,7 +36,9 @@ package com.boomtown.modules.worldmap {
     }
     
     private function init():void {
+      resetMetrics();
       WorldBackgroundCache.init( 25, 25 );
+      _queue = new LoadQueue(10);
       _pool = new ObjectPool( 100, WorldBackgroundNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Beginning pool population", 
@@ -45,7 +49,7 @@ package com.boomtown.modules.worldmap {
       _pool.removeEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Pool has been populated", 
         { obj:this, label:"WorldBackground::poolReady()" } );
-      dispatchEvent( new WorldBackgroundEvent( WorldBackgroundEvent.BACKGROUND_READY ) );
+      dispatchEvent( new WorldBackgroundEvent( WorldBackgroundEvent.READY ) );
     }
     
     public function resetMetrics():void {
@@ -63,16 +67,24 @@ package com.boomtown.modules.worldmap {
       this.y = y;
     }
     
-    public function populate():void {
-      resetMetrics();
-      
+    private var _prevSX:int = NaN;
+    private var _prevSY:int = NaN;
+    public function populate():void {      
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
+      var hX:int = BlockAxisGrid.calculateBlockX( sX, sY );
+      var hY:int = BlockAxisGrid.calculateBlockY( sX, sY );
+      if ( _prevSX == hX && _prevSY == hY ) {
+        dispatchEvent( new WorldBackgroundEvent( WorldBackgroundEvent.POPULATED ) );
+        return;
+      }
+      resetMetrics();
+      _prevSX = hX;
+      _prevSY = hY;
       var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - _width * 2 );
       var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - _height * 2 );
       var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + _width * 2 );
-      var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + _height * 2 );
-      
+      var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + _height * 2 );      
       var totalChildren:uint = numChildren;
       for ( var i:uint = 0; i < totalChildren; i++ ) {
         if ( getChildAt(i) is WorldBackgroundNode ) {
@@ -100,6 +112,10 @@ package com.boomtown.modules.worldmap {
       var quadrant:int = 0;
       var created:int = 0;
       while ( quadrant < 4 ) {
+        if ( level == 0 && ( quadrant == 1 || quadrant == 2 ) ) {
+          quadrant++;
+          continue;
+        }
         var addx = ( quadrant == 0 || quadrant == 1 ) ? 1 : -1;
         var addy = ( quadrant == 0 || quadrant == 2 ) ? 1 : -1;
         var nsx:int = sx + addx * level;
@@ -107,6 +123,10 @@ package com.boomtown.modules.worldmap {
         var count:int = 0;
         var distance:int = 0;
         while ( count < 2 ) {
+          if ( level == 0 && quadrant > 0 && distance == 0 && count == 0 ) {
+            distance++;
+            continue;
+          }
           var cx:int = nsx;
           var cy:int = nsy;
           if ( count == 0 ) {
@@ -132,7 +152,10 @@ package com.boomtown.modules.worldmap {
       if ( created > 0 ) {
         createGrid( sx, sy, level + 1, tLX, tLY, bRX, bRY );
       } else {
-        dispatchEvent( new WorldBackgroundEvent( WorldBackgroundEvent.BACKGROUND_POPULATED ) );
+        dispatchEvent( new WorldBackgroundEvent( WorldBackgroundEvent.POPULATED ) );
+        if ( !_queue.loading ) {
+          _queue.load();
+        }
       }
     }
     
@@ -145,6 +168,7 @@ package com.boomtown.modules.worldmap {
         addChild( newNode );
         newNode.x = BlockAxisGrid.calculateX( x, y );
         newNode.y = BlockAxisGrid.calculateY( x, y );
+        _queue.add( newNode );
       }
     }
     
@@ -153,6 +177,7 @@ package com.boomtown.modules.worldmap {
       _pool.returnObject( node );
       removeChild( node );
       node.clear();
+      _queue.remove( node );
     }
     
   }

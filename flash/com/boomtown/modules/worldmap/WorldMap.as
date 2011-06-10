@@ -43,10 +43,14 @@
       addChild( _background );
       TweenLite.from( _background, .3, { alpha:0 } );
       
-      _grid = new WorldGrid();
-      _grid.addEventListener( WorldGridEvent.READY, gridReady );
+      prepareGrid();
+    }
+    
+    private function prepareGrid():void {
       KuroExpress.broadcast( "Creating grid and beginning its pool population", 
         { obj:this, label:"WorldMap::start()" } );
+      _grid = new WorldGrid();
+      _grid.addEventListener( WorldGridEvent.READY, gridReady );
     }
     
     private function gridReady( e:WorldGridEvent ):void {
@@ -54,6 +58,23 @@
         { obj:this, label:"WorldMap::gridReady()" } );
       _grid.removeEventListener( WorldGridEvent.READY, gridReady );
       
+      prepareBackground();
+    }
+    
+    private function prepareBackground():void {
+      _land = new WorldBackground();
+      _land.addEventListener( WorldBackgroundEvent.READY, backgroundReady );
+    }
+    
+    private function backgroundReady( e:WorldBackgroundEvent ):void {
+      KuroExpress.broadcast( "Background has signaled that it is ready for population", 
+        { obj:this, label:"WorldMap::backgroundReady()" } );
+      _land.removeEventListener( WorldBackgroundEvent.READY, backgroundReady );
+      
+      populateGrid();
+    }
+    
+    private function populateGrid():void {
       addChild( _grid );
       _grid.position( 10, 10 );
       _grid.visible = false;
@@ -66,29 +87,26 @@
         { obj:this, label:"WorldMap::gridPopulated()" } );
       _grid.removeEventListener( WorldGridEvent.POPULATED, gridPopulated );
       
-      _land = new WorldBackground();
-      _land.addEventListener( WorldBackgroundEvent.BACKGROUND_READY, backgroundReady );
+      populateBackground();
     }
     
-    private function backgroundReady( e:WorldBackgroundEvent ):void {
-      KuroExpress.broadcast( "Background has signaled that it is ready for population", 
-        { obj:this, label:"WorldMap::backgroundReady()" } );
-      _land.removeEventListener( WorldBackgroundEvent.BACKGROUND_READY, backgroundReady );
-      
+    private function populateBackground():void {
       addChild( _land );
       _land.position( _grid.x, _grid.y );
       _land.visible = false;
-      _land.addEventListener( WorldBackgroundEvent.BACKGROUND_POPULATED, backgroundPopulated );
+      _land.addEventListener( WorldBackgroundEvent.POPULATED, backgroundPopulated );
       _land.populate();
     }
     
     private function backgroundPopulated( e:WorldBackgroundEvent ):void {
       KuroExpress.broadcast( "Background has signaled that it is populated", 
         { obj:this, label:"WorldMap::backgroundPopulated()" } );
-      _land.removeEventListener( WorldBackgroundEvent.BACKGROUND_POPULATED, backgroundPopulated );
+      _land.removeEventListener( WorldBackgroundEvent.POPULATED, backgroundPopulated );
       
-      _grid.addEventListener( WorldGridEvent.CLICK_REQUESTED, clickRequested );
-      
+      init();
+    }
+    
+    private function init():void {      
       _grid.visible = true;
       _land.visible = true;
       
@@ -98,6 +116,7 @@
       TweenLite.from( _land, .4, { alpha:1 } );
       TweenLite.from( _grid, .4, { alpha:1, delay:.4 } );
       
+      _grid.addEventListener( WorldGridEvent.CLICK_REQUESTED, clickRequested );
       stage.addEventListener( MouseEvent.MOUSE_DOWN, mouseDown );
     }
     
