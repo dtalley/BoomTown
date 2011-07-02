@@ -7,8 +7,8 @@
       super(type);
     }
     
-    public static const TOKEN_REFRESHED:String = "token_refreshed";    
-    public static const COMMANDER_SAVED:String = "commander_saved";
+    public static const TOKEN_REFRESHED:String = "commander.token_refreshed";    
+    public static const COMMANDER_SAVED:String = "commander.commander_saved";
     
   }
   

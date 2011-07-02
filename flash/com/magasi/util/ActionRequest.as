@@ -30,13 +30,17 @@
       _debug = true;
     }
     
+    private static function getAddress():String {
+      var rand:uint = Math.round( Math.random() * ( _addresses.length - 1 ) );
+      return _addresses[rand];
+    }
+    
     public static function sendRequest( params:Object = null ):Sprite {
       if( _debug )
         KuroExpress.broadcast( "Sending request.",
           { label:"ActionRequest::sendRequest()" } );
       
-      var rand:uint = Math.round( Math.random() * ( _addresses.length - 1 ) );
-      var address:String = _addresses[rand];
+      var address:String = getAddress();
       var request:URLRequest = PostGenerator.getRequest( address, params );
       
       var dispatcher:Sprite = new Sprite();

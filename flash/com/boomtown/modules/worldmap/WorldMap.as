@@ -2,8 +2,10 @@
   import com.boomtown.core.Commander;
   import com.boomtown.events.CommanderEvent;
   import com.boomtown.events.OpenModuleEvent;
+  import com.boomtown.modules.worldmap.background.WorldBackground;
   import com.boomtown.modules.worldmap.events.WorldBackgroundEvent;
   import com.boomtown.modules.worldmap.events.WorldGridEvent;
+  import com.boomtown.modules.worldmap.grid.WorldGrid;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.greensock.TweenLite;

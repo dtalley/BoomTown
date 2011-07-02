@@ -1,4 +1,4 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.grid {
   import com.boomtown.core.Faction;
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
   import com.boomtown.utils.Hexagon;
@@ -29,7 +29,7 @@ package com.boomtown.modules.worldmap {
     private var _hx:int = 0;
     private var _hy:int = 0;
     
-    private var _type:uint = 0;
+    private var _type:WorldGridNodeType;
     
     private var _hit:Sprite;
     private var _details:Sprite;
@@ -53,9 +53,9 @@ package com.boomtown.modules.worldmap {
       
       var info:uint = WorldGridCache.getNode( x, y );
       if ( ( info & 0x00FFFFFF ) < 0xFFFFFF ) {
-        _type = ACTIVE;
+        _type = WorldGridNodeType.ACTIVE;
       } else {
-        _type = INACTIVE;
+        _type = WorldGridNodeType.INACTIVE;
       }
       
       generateDetails();      
@@ -194,7 +194,7 @@ package com.boomtown.modules.worldmap {
       graphics.clear();
       _details.removeChild( _map );
       _map = null;
-      _type = UNDEFINED;
+      _type = WorldGridNodeType.UNDEFINED;
       if ( _loader ) {
         cancel();
       }
@@ -225,20 +225,8 @@ package com.boomtown.modules.worldmap {
       return _hy;
     }
     
-    public function get type():uint {
-      return _type;
-    }
-    
-    public static function get UNDEFINED():uint {
-      return 0;
-    }
-    
-    public static function get ACTIVE():uint {
-      return 1;
-    }
-    
-    public static function get INACTIVE():uint {
-      return 2;
+    public function get type():WorldGridNodeType {
+      return _type ? _type : WorldGridNodeType.UNDEFINED;
     }
     
   }

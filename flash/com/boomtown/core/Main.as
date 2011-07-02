@@ -1,4 +1,5 @@
 ﻿package com.boomtown.core {
+  import com.boomtown.events.GetCommanderEvent;
   import com.boomtown.events.OpenModuleEvent;
   import com.boomtown.events.PromptEvent;
   import com.boomtown.loader.GraphicLoader;
@@ -174,6 +175,7 @@
         if ( currentModule ) {
           KuroExpress.addListener( currentModule, Event.CLOSE, moduleClosed, currentModule, newModule );
           currentModule.removeEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
+          currentModule.removeEventListener( GetCommanderEvent.GET_COMMANDER, commanderRequested );
           currentModule.close();
         } else {
           addChild( newModule );
@@ -181,7 +183,12 @@
         }
         currentModule = newModule;
         currentModule.addEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
+        currentModule.addEventListener( GetCommanderEvent.GET_COMMANDER, commanderRequested );
       }
+    }
+    
+    private function commanderRequested( e:GetCommanderEvent ):void {
+      e.commander = _commander;
     }
     
     private function moduleRequested( e:OpenModuleEvent ):void {

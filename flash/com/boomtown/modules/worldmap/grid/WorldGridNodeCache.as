@@ -1,9 +1,26 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.grid {
   import com.kuro.kuroexpress.KuroExpress;
   import flash.display.BitmapData;
 	/**
-   * ...
+   * A class that caches information about WorldGridNode objects and their loaded information
+   * 
    * @author David Talley
+   * 
+   * @usage
+   * The bits are as follows,
+   * starting from the most significant bit:
+   * 
+   * 01 02 03 04
+   * 05 06 07 08
+   * 09 10 11 12
+   * 13 14 15 16
+   * 17 18 19 20
+   * 21 22 23 24
+   * 25 26 27 28
+   * 29 30 31 32
+   * 
+   * 01-02  = UINT, the numeric ID of the status of the node, locked, open, or disputed
+   * 03-04  = UINT, the numeric ID of the faction that owns the node
    */
   public class WorldGridNodeCache {
     

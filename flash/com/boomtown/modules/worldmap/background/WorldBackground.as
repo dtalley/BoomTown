@@ -1,4 +1,4 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.background {
   import com.boomtown.modules.worldmap.events.WorldBackgroundEvent;
   import com.boomtown.modules.worldmap.events.WorldGridEvent;
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
@@ -15,7 +15,7 @@ package com.boomtown.modules.worldmap {
    * ...
    * @author David Talley
    */
-  internal class WorldBackground extends Sprite { 
+  public class WorldBackground extends Sprite { 
     
     private var _width:Number = 200;
     private var _height:Number = 200;

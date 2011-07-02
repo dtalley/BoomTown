@@ -1,4 +1,4 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.grid {
   import com.boomtown.modules.worldmap.events.WorldGridEvent;
   import com.boomtown.modules.worldmap.events.WorldGridNodeEvent;
   import com.boomtown.utils.Hexagon;
@@ -15,7 +15,7 @@ package com.boomtown.modules.worldmap {
    * ...
    * @author David Talley
    */
-  internal class WorldGrid extends Sprite { 
+  public class WorldGrid extends Sprite { 
     
     private var _width:Number = 72;
     private var _height:Number = 78;
@@ -71,7 +71,7 @@ package com.boomtown.modules.worldmap {
       }
     }
     
-    internal function position( x:int, y:int ):void {
+    public function position( x:int, y:int ):void {
       this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
       this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
     }
@@ -91,7 +91,7 @@ package com.boomtown.modules.worldmap {
     
     private var _prevSX:int = NaN;
     private var _prevSY:int = NaN;
-    internal function populate():void {
+    public function populate():void {
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
       var hX:int = HexagonAxisGrid.calculateHexX( sX, sY );
@@ -186,17 +186,15 @@ package com.boomtown.modules.worldmap {
         newNode = WorldGridNode( _pool.getObject() );
         WorldGridCache.addNode( x, y );
         newNode.init( HexagonAxisGrid.metrics, x, y );
-        if ( newNode.type != WorldGridNode.INACTIVE ) {
+        if ( newNode.type == WorldGridNodeType.ACTIVE ) {
           addChild( newNode );
           newNode.x = HexagonAxisGrid.calculateX( x, y );
           newNode.y = HexagonAxisGrid.calculateY( x, y );
-        } else {
-          _pool.returnObject( newNode );
-        }
-        if ( newNode.type == WorldGridNode.ACTIVE ) {
           newNode.addEventListener( WorldGridNodeEvent.OVER, nodeOver );
           newNode.addEventListener( WorldGridNodeEvent.CLICKED, nodeClicked );
           _queue.add( newNode );
+        } else {
+          _pool.returnObject( newNode );
         }
       }
     }
@@ -209,7 +207,7 @@ package com.boomtown.modules.worldmap {
       _queue.remove( node );
       removeChild( node );
       node.clear();
-      if ( node.type == WorldGridNode.ACTIVE ) {
+      if ( node.type == WorldGridNodeType.ACTIVE ) {
         node.removeEventListener( WorldGridNodeEvent.OVER, nodeOver );
         node.removeEventListener( WorldGridNodeEvent.CLICKED, nodeClicked );
       }
@@ -233,11 +231,11 @@ package com.boomtown.modules.worldmap {
       dispatchEvent( new WorldGridEvent( WorldGridEvent.CLICK_REQUESTED ) );
     }
     
-    internal function cancelClick():void {
+    public function cancelClick():void {
       _potential = null;
     }
     
-    internal function confirmClick():void {
+    public function confirmClick():void {
       if ( _clicked ) {
         _clicked.deselect();
       }
@@ -249,23 +247,31 @@ package com.boomtown.modules.worldmap {
     }
     
     private function createMenu():void {
-      _menu = new WorldGridNodeMenu();
+      _menu = new WorldGridNodeMenu( _clicked );
       addChildAt( _menu, getChildIndex( _clicked ) );
       _menu.x = _clicked.x;
       _menu.y = _clicked.y;
       _menu.filters = [new GlowFilter( 0, .6, 10, 10, 2, 1 )];
+      KuroExpress.addListener( _menu, Event.CLOSE, menuClosed, _menu );
     }
     
     private function closeMenu():void {
       if( _menu ) {
         _menu.close();
-        KuroExpress.addListener( _menu, Event.CLOSE, menuClosed, _menu );
       }
     }
     
     private function menuClosed( menu:WorldGridNodeMenu ):void {
       removeChild( menu );
-      KuroExpress.removeListener( _menu, Event.CLOSE, menuClosed );
+      KuroExpress.removeListener( menu, Event.CLOSE, menuClosed );
+      if ( menu == _menu ) {
+        _menu = null;
+        if ( _clicked ) {
+          _clicked.deselect();
+        }
+        _clicked = null;
+        _potential = null;
+      }
     }
     
   }

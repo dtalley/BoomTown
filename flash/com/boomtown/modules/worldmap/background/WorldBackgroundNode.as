@@ -1,4 +1,4 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.background {
   import com.boomtown.utils.BlockMetrics;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;

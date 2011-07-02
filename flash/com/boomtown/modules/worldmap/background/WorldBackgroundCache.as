@@ -1,9 +1,25 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.background {
   import com.kuro.kuroexpress.KuroExpress;
   import flash.display.BitmapData;
-	/**
-   * ...
+	
+  /**
    * @author David Talley
+   * 
+   * @usage
+   * A class that allows the tracking of WorldBackgroundNode objects.  Stores 4 BitmapData objects
+   * that serve as a coordinate plane for storing data on each Node position.  The bits are as follows,
+   * starting from the most significant bit:
+   * 
+   * 01 02 03 04
+   * 05 06 07 08
+   * 09 10 11 12
+   * 13 14 15 16
+   * 17 18 19 20
+   * 21 22 23 24
+   * 25 26 27 28
+   * 29 30 31 32
+   * 
+   * 08 - Boolean, true if the position has been checked by the grid constructor, false otherwise
    */
   public class WorldBackgroundCache {
     

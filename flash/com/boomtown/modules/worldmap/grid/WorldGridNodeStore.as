@@ -1,4 +1,4 @@
-package com.boomtown.modules.worldmap {
+package com.boomtown.modules.worldmap.grid {
 	
   internal class WorldGridNodeStore {
     
