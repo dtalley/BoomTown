@@ -8,6 +8,7 @@ package com.boomtown.modules.worldmap.grid {
 	import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.MouseEvent;
+  import flash.text.TextField;
 	
   internal class WorldGridNodeMenu extends Sprite {
     
@@ -31,33 +32,60 @@ package com.boomtown.modules.worldmap.grid {
     
     private var _close:Sprite;
     private var _admin:Sprite;
+    private var _zoom:Sprite;
     
     private function showMenu():void {
       var commanderEvent:GetCommanderEvent = new GetCommanderEvent();
       dispatchEvent( commanderEvent );
       
       var buttonSize:Number = 27;      
+      var text:TextField;
+      
       _close = new Sprite();
       drawButton( _close, buttonSize );
+      text = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:14, color:0x000000 } );
+      text.text = "C";
+      _close.addChild( text );
       addChildAt( _close, 0 );
       _close.x = Math.cos( _metrics.radians2 ) * ( _metrics.size2 + buttonSize * .75 );
       _close.y = Math.sin( _metrics.radians2 ) * ( _metrics.size2 + buttonSize * .75 );
       _close.buttonMode = true;
+      _close.mouseChildren = false;
       KuroExpress.addListener( _close, MouseEvent.MOUSE_OVER, drawButton, _close, buttonSize, true );
       KuroExpress.addListener( _close, MouseEvent.MOUSE_OUT, drawButton, _close, buttonSize );
       KuroExpress.addListener( _close, MouseEvent.CLICK, closeClicked );
       
       _admin = new Sprite();
       drawButton( _admin, buttonSize );
+      text = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:14, color:0x000000 } );
+      text.text = "A";
+      _admin.addChild( text );
       addChildAt( _admin, 0 );
       _admin.x = Math.cos( _metrics.radians1 ) * ( _metrics.size1 + buttonSize * .75 );
       _admin.y = Math.sin( _metrics.radians1 ) * ( _metrics.size1 + buttonSize * .75 );
+      _admin.buttonMode = true;
+      _admin.mouseChildren = false;
       KuroExpress.addListener( _admin, MouseEvent.MOUSE_OVER, drawButton, _admin, buttonSize, true );
       KuroExpress.addListener( _admin, MouseEvent.MOUSE_OUT, drawButton, _admin, buttonSize );
       KuroExpress.addListener( _admin, MouseEvent.CLICK, adminClicked );
       
+      _zoom = new Sprite();
+      drawButton( _zoom, buttonSize );
+      text = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:14, color:0x000000 } );
+      text.text = "Z";
+      _zoom.addChild( text );
+      addChildAt( _zoom, 0 );
+      _zoom.x = Math.cos( _metrics.radians1 + ( _metrics.radians1 - _metrics.radians2 ) ) * ( _metrics.size2 + buttonSize * .75 );
+      _zoom.y = Math.sin( _metrics.radians1 + ( _metrics.radians1 - _metrics.radians2 ) ) * ( _metrics.size2 + buttonSize * .75 );
+      _zoom.buttonMode = true;
+      _zoom.mouseChildren = false;
+      KuroExpress.addListener( _zoom, MouseEvent.MOUSE_OVER, drawButton, _zoom, buttonSize, true );
+      KuroExpress.addListener( _zoom, MouseEvent.MOUSE_OUT, drawButton, _zoom, buttonSize );
+      KuroExpress.addListener( _zoom, MouseEvent.CLICK, zoomClicked );
+      
       TweenLite.from( _close, .2, { x:0, y:0 } );
-      TweenLite.from( _admin, .2, { delay:.1, x:0, y:0 } );
+      TweenLite.from( _admin, .2, { delay:.05, x:0, y:0 } );
+      TweenLite.from( _zoom, .2, { delay:.1, x:0, y:0 } );
     }
     
     private function drawButton( button:Sprite, size:Number = 24, over:Boolean = false ):void {
@@ -78,12 +106,17 @@ package com.boomtown.modules.worldmap.grid {
       close();
     }
     
+    private function zoomClicked():void {
+      close();
+    }
+    
     internal function close():void {
       KuroExpress.removeListener( _close, MouseEvent.CLICK, closeClicked );
       var scale:Number = HexagonAxisGrid.metrics.width / ( HexagonAxisGrid.metrics.width + 20 );
       TweenLite.to( _close, .2, { x:0, y:0 } );
-      TweenLite.to( _admin, .2, { delay:.1, x:0, y:0 } );
-      TweenLite.to( _background, .3, { delay:.1, scaleX:scale, scaleY:scale, onComplete:closed } );
+      TweenLite.to( _admin, .2, { delay:.05, x:0, y:0 } );
+      TweenLite.to( _zoom, .2, { delay:.1, x:0, y:0 } );
+      TweenLite.to( _background, .2, { delay:.15, scaleX:scale, scaleY:scale, onComplete:closed } );
     }
     
     private function closed():void {

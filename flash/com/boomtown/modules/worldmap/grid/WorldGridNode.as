@@ -68,12 +68,12 @@ package com.boomtown.modules.worldmap.grid {
       } else {
         _map.bitmapData.fillRect( new Rectangle( 0, 0, _map.width, _map.height ), 0x00000000 );
       }
-      var metrics:HexagonMetrics = new HexagonMetrics( 12, 8, 0 );
+      var metrics:HexagonMetrics = new HexagonMetrics( 9, 7, 0 );
       _details.graphics.clear();
       for ( var i:int = 0; i < 37; i++ ) {
         _details.graphics.beginFill( 0x444444, 1 );
         var offset:Point = HexagonLevelGrid.offset( i, metrics );
-        Hexagon.drawHexagon( _details, 11, 7, offset.x, offset.y );
+        Hexagon.drawHexagon( _details, 8, 6, offset.x, offset.y );
         _details.graphics.endFill();
       }
       var matr:Matrix = new Matrix();

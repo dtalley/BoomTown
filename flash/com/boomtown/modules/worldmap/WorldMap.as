@@ -10,6 +10,7 @@
   import com.boomtown.utils.HexagonAxisGrid;
   import com.greensock.TweenLite;
   import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.PostGenerator;
   import flash.display.Bitmap;
   import flash.display.Sprite;
   import flash.events.Event;
@@ -124,27 +125,40 @@
     
     private function mouseDown( e:MouseEvent ):void {
       _offset = new Point( _grid.mouseX, _grid.mouseY );
-      var timer:Timer = new Timer(30,1);
-      timer.addEventListener( TimerEvent.TIMER_COMPLETE, enableNav );
-      KuroExpress.addListener( stage, MouseEvent.MOUSE_UP, interceptNav, timer );
-      timer.start();
-    }
-    
-    private function interceptNav( timer:Timer ):void {
-      timer.removeEventListener( TimerEvent.TIMER_COMPLETE, enableNav );
-    }
-    
-    private function enableNav( e:TimerEvent ):void {
-      _clicks = false;
-      KuroExpress.removeListener( stage, MouseEvent.MOUSE_UP, interceptNav );
-      stage.addEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
+      stage.addEventListener( MouseEvent.MOUSE_MOVE, checkNav );
       stage.addEventListener( MouseEvent.MOUSE_UP, mouseUp );
     }
     
+    private function checkNav( e:MouseEvent ):void {
+      var distance:Number = Math.sqrt( Math.pow( _grid.mouseX - _offset.x, 2 ) + Math.pow( _grid.mouseY - _offset.y, 2 ) );
+      if ( distance > 5 ) {
+        enableNav();
+        stage.removeEventListener( MouseEvent.MOUSE_MOVE, checkNav );
+      }
+    }
+    
+    private function enableNav():void {
+      _clicks = false;
+      stage.removeEventListener( MouseEvent.MOUSE_MOVE, checkNav );
+      stage.addEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
+      _grid.removeEventListener( WorldGridEvent.CLICK_REQUESTED, clickRequested );
+      trace( "Enabling nav..." );
+    }
+    
     private function mouseUp( e:MouseEvent ):void {
-      _clicks = true;
-      stage.removeEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
-      stage.removeEventListener( MouseEvent.MOUSE_UP, mouseUp );
+      if( !_clicks ) {
+        _clicks = true;
+        stage.removeEventListener( MouseEvent.MOUSE_MOVE, mouseMove );
+        stage.removeEventListener( MouseEvent.MOUSE_UP, mouseUp );
+        TweenLite.delayedCall( .05, enableGrid );
+      } else {
+        stage.removeEventListener( MouseEvent.MOUSE_MOVE, checkNav );
+      }
+    }
+    
+    private function enableGrid():void {
+      trace( "Enabling grid..." );
+      _grid.addEventListener( WorldGridEvent.CLICK_REQUESTED, clickRequested );
     }
     
     private function mouseMove( e:MouseEvent ):void {

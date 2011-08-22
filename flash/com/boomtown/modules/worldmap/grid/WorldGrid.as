@@ -18,7 +18,7 @@ package com.boomtown.modules.worldmap.grid {
   public class WorldGrid extends Sprite { 
     
     private var _width:Number = 72;
-    private var _height:Number = 78;
+    private var _height:Number = 68;
     private var _rotation:Number = 90;
     
     private var _queue:LoadQueue;
