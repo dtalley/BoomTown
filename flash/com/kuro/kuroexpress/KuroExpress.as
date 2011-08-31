@@ -44,165 +44,6 @@
 	import flash.utils.getDefinitionByName;
 	
 	public class KuroExpress {
-    
-    private static var fontList:Array;
-    
-    private static var currentFont:int;
-    private static var totalFonts:int;
-    private static var loadingFont:String;
-    
-    private static var fullURL:String = "";
-		
-		public function KuroExpress():void {
-			
-		}
-    
-    public static function setFullURL( url:String ):void {
-      var otherSplit:Array = url.split( "?" );
-      url = otherSplit[0];
-      otherSplit = url.split( "#" );
-      url = otherSplit[0];
-      var urlSplit:Array = url.split( "/" );
-      var totalSplits:Number = urlSplit.length;
-      fullURL = "";
-      for ( var i:int = 0; i < totalSplits-1; i++ ) {
-        fullURL += urlSplit[i] + "/";
-      }
-    }
-    
-    /* Load an array of font files one by one
-     */
-    public static function loadFonts( list:Array ):Sprite {
-      totalFonts = list.length;
-      fontList = new Array();
-      currentFont = 0;
-      for( var i:int = 0; i < totalFonts; i++ ) {
-        fontList.push( list.pop() );
-      }
-      var loader:Sprite = new Sprite();
-      beginLoadingFonts(null, loader);
-      return loader;
-    }
-    
-    private static function beginLoadingFonts( e:Event, holder:Sprite = null ):void {
-      if ( e ) {
-        e.target.removeEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        e.target.removeEventListener( Event.COMPLETE, beginLoadingFonts );
-      }
-      if ( currentFont < totalFonts ) {
-        var loader:Sprite = loadFont( fontList[currentFont] );
-        loader.addEventListener( ProgressEvent.PROGRESS, fontListProgress );
-        loader.addEventListener( Event.COMPLETE, beginLoadingFonts );
-        currentFont++;
-        if ( holder ) {
-          holder.addChild( loader );
-        } else if ( e ) {
-          Sprite( e.target.parent ).addChild( loader );
-        }
-      } else if ( e ) {
-        fontList = null;
-        currentFont = undefined;
-        Sprite( e.target.parent ).dispatchEvent( new Event( Event.COMPLETE ) );
-      }
-    }
-    
-    private static function fontListProgress( e:ProgressEvent ):void {
-      var bytesLoaded:Number = ( e.bytesLoaded * 100 ) + Math.round( ( e.bytesLoaded / e.bytesTotal ) * 100 );
-      var span:Number = 100 / totalFonts;
-      var currentSpan:Number = ( currentFont - 1 ) * span;
-      var totalLoaded:Number = currentSpan + ( span * e.bytesLoaded / e.bytesTotal );
-      trace( span + "/" + currentSpan + "/" + totalLoaded + "/100" );
-      Sprite( e.target.parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, totalLoaded, 100 ) );
-    }
-    
-    /* Load a font file and then register that particular
-     * font whenever it is finished loading.
-     */
-    public static function loadFont( font:String ):Sprite {
-      loadingFont = font;
-      var request:URLRequest = new URLRequest( "fonts/" + font + ".swf" );
-      var loader:Loader = new Loader();
-      var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
-      loader.load( request, context );
-      var loadDispatcher:Sprite = new Sprite();
-      loadDispatcher.addChild( loader );
-      loader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, fontProgress );
-			loader.contentLoaderInfo.addEventListener( Event.COMPLETE, fontComplete );
-      loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, fontError );
-			return loadDispatcher;
-    }
-    
-    private static function fontProgress( e:ProgressEvent ):void {
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, e.bytesLoaded, e.bytesTotal ) );
-		}
-		
-		private static function fontComplete( e:Event ):void {
-			e.target.removeEventListener( ProgressEvent.PROGRESS, fontProgress );
-			e.target.removeEventListener( Event.COMPLETE, fontComplete );
-      e.target.removeEventListener( IOErrorEvent.IO_ERROR, fontError );
-			var fontClass:Class = getDefinitionByName( loadingFont ) as Class;
-			Font.registerFont( fontClass );
-      loadingFont = null;
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
-      var fontList:Array = Font.enumerateFonts(false);
-      trace( "Current Font List: ---------------------------------------" );
-      for ( var i:int = 0; i < fontList.length; i++ ) {
-        trace( "Font Loaded: " + fontList[i].fontName );
-      }
-      trace( "----------------------------------------------------------" );
-      trace( "" );
-		}
-    
-    private static function fontError( e:IOErrorEvent ):void {
-      throw new Error( "The font '" + loadingFont + "' could not be loaded because it is either missing or corrupt." );
-    }
-		
-    /* Load a requested assets file into the current
-     * application domain and return a sprite that can be
-     * used to track the file's load progress.
-     */
-    private static var _assets:Array = [];
-		public static function loadAssetsFile( file:String ):Sprite {
-      if ( _assets.indexOf( file ) >= 0 ) {
-        return null;
-      }
-      KuroExpress.broadcast( "Loading assets file: " + fullURL + file,
-        { label:"KuroExpress::loadAssetsFile()" } );
-			var request:URLRequest = new URLRequest( fullURL + file );
-      _assets.push( file );
-			var loader:Loader = new Loader();
-			var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
-			loader.load( request, context );
-			var loadDispatcher:Sprite = new Sprite();
-			loadDispatcher.addChild( loader );
-      KuroExpress.addFullListener( loader.contentLoaderInfo, ProgressEvent.PROGRESS, assetsProgress, loadDispatcher );
-			KuroExpress.addListener( loader.contentLoaderInfo, Event.COMPLETE, assetsComplete, loader, loadDispatcher );
-      KuroExpress.addListener( loader.contentLoaderInfo, IOErrorEvent.IO_ERROR, assetsError, file );
-			return loadDispatcher;
-		}
-		
-    
-		private static function assetsProgress( dispatcher:Sprite, e:ProgressEvent ):void {
-			dispatcher.dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, e.bytesLoaded, e.bytesTotal ) );
-		}
-		
-		private static function assetsComplete( loader:Loader, dispatcher:Sprite ):void {
-			KuroExpress.removeListener( loader.contentLoaderInfo, ProgressEvent.PROGRESS, assetsProgress );
-			KuroExpress.removeListener( loader.contentLoaderInfo, Event.COMPLETE, assetsComplete );
-      KuroExpress.removeListener( loader.contentLoaderInfo, IOErrorEvent.IO_ERROR, assetsError );
-			dispatcher.dispatchEvent( new Event( Event.COMPLETE ) );
-		}
-    
-    private static function assetsError( file:String ):void {
-      throw new Error( "A requested assets file (" + file + ") could not be loaded because it is either missing or corrupt." );
-    }
-		
-		public static function createComment( comment:String ):void {
-			trace( comment );
-      if( ExternalInterface.available && ExternalInterface.objectID ) {
-        ExternalInterface.call( "createComment", comment );
-      }
-		}
 		
 		public static function fitToSize( obj:DisplayObject, fitWidth:Number, fitHeight:Number, fillSpace:Boolean = false ):void {
 			obj.scaleX = 1;
@@ -230,71 +71,6 @@
 			}
 		}
 		
-		public static function createTextField( properties:Object ):TextField {			
-			var format:TextFormat = new TextFormat();
-			var field:TextField = new TextField();
-			for( var key:String in properties ) {
-				try {
-					format[key] = properties[key];
-				} catch( e:Error ) {}
-				try {
-					field[key] = properties[key];
-				} catch( e:Error ) {}
-			}
-      field.antiAliasType = AntiAliasType.ADVANCED;
-			if( !properties.defaultTextFormat ) {
-				field.defaultTextFormat = format;
-			}
-			if( !properties.embedFonts ) {
-				field.embedFonts = true;
-			}
-			if( !properties.selectable ) {
-				field.selectable = false;
-			}
-			if( !properties.autoSize ) {
-				field.autoSize = TextFieldAutoSize.LEFT;
-			}
-      if ( !properties.sharpness ) {
-        field.sharpness = 0;
-      }
-      if ( !properties.thickness ) {
-        field.thickness = 0;
-      }
-			return field;
-		}
-    
-    public static function setTextFormat( field:TextField, properties:Object ):void {
-      var format:TextFormat = new TextFormat();
-			for( var key:String in properties ) {
-				try {
-					format[key] = properties[key];
-				} catch( e:Error ) {
-          try {
-            field[key] = properties[key];
-          } catch ( e:Error ) { }
-        }
-			}
-      field.setTextFormat( format, ( properties.start ) ? properties.start : -1, ( properties.end ) ? properties.end : -1 );
-      if ( properties.setDefault ) {
-        field.defaultTextFormat = format;
-      }
-    }
-		
-		public static function getAsset( id:String ):Class {
-			var assetClass:Class = getDefinitionByName( id ) as Class;
-			return assetClass;
-		}
-		
-		public static function createAsset( id:String ):Object {
-			var assetClass:Class = getDefinitionByName( id ) as Class;
-			return new assetClass();
-		}
-    
-    public static function createBitmap( id:String ):Bitmap {
-      var assetClass:Class = getDefinitionByName( id ) as Class;
-      return new Bitmap( new assetClass( 0, 0 ) );
-    }
-		
     public static function beginGradientFill( obj:Sprite, w:Number, h:Number, type:String, rotation:Number, colors:Array, alphas:Array, ratios:Array, tx:Number = 0, ty:Number = 0 ):void {
       var matr:Matrix = new Matrix();
       matr.createGradientBox( w, h, rotation, tx, ty );
@@ -320,18 +96,6 @@
 			}
 			return newPrice;			
 		}		
-    
-    public static function getLineMetrics( field:TextField, line:Number = 0 ):Object {
-      var metrics:TextLineMetrics = field.getLineMetrics( line );
-      var obj:Object = new Object();
-      obj.ascent = metrics.ascent;
-      obj.descent = metrics.descent;
-      obj.height = metrics.height;
-      obj.leading = metrics.leading;
-      obj.width = metrics.width;
-      obj.x = metrics.x;
-      return obj;
-    }
     
     private static var listeners:Object = {};
     
@@ -398,7 +162,7 @@
     
     public static function broadcast( text:String, perms:Object = null ):void {
       if ( !perms ) {
-        perms = { };
+        perms = {};
       }
       trace( ( perms.label ? perms.label + ": " : "" ) + text );
       if ( ApplicationDomain.currentDomain.hasDefinition( "com.demonsters.debugger.MonsterDebugger" ) ) {
@@ -406,7 +170,7 @@
         debuggerClass.trace( 
           perms.obj ? perms.obj : { }, 
           text, 
-          perms.person ? perms.persone : "David Talley", 
+          perms.person ? perms.person : "David Talley", 
           perms.label ? perms.label : "KuroExpress::broadcast()", 
           perms.color ? perms.color : 0x000000, 
           perms.depth ? perms.depth : 4 

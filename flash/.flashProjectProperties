@@ -6,12 +6,18 @@
   <classTemplate>file:///C|/Users/Stalefish/AppData/Local/Adobe/Flash CS5/en_US/Configuration/ActionScript 3.0/Templates/standardClass_as3.as</classTemplate>
   <classPath>.</classPath>
   <defaultApp/>
-  <rootURI>file:///C|/TestingRoot/Boomtown/source/flash/</rootURI>
+  <rootURI>file:///C|/TestingRoot/Dave/btown/flash/</rootURI>
   <flexSDK/>
   <sources editable="false"/>
   <libraries editable="false"/>
   <externalLibraries editable="false"/>
   <compileList editable="false"/>
-  <recentFiles editable="false"/>
+  <recentFiles editable="false">
+    <uri label="BorisBlackBloxx.fla">file:///C|/TestingRoot/Dave/btown/flash/fonts/BorisBlackBloxx.fla</uri>
+    <uri label="Warehouse.fla">file:///C|/TestingRoot/Dave/btown/flash/modules/Warehouse.fla</uri>
+    <uri label="CommanderCreator.fla">file:///C|/TestingRoot/Dave/btown/flash/modules/CommanderCreator.fla</uri>
+    <uri label="WorldMap.fla">file:///C|/TestingRoot/Dave/btown/flash/modules/WorldMap.fla</uri>
+    <uri label="main.fla">file:///C|/TestingRoot/Dave/btown/flash/main.fla</uri>
+  </recentFiles>
   <locations editable="false"/>
 </projectDescription>

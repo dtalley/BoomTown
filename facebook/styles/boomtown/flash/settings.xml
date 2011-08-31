@@ -10,7 +10,10 @@
   <default_token>202115116472856|2.d6nSg5fKgr6tOv8TMUNoHQ__.3600.1301907600-100002260212840|6HLc6s36ldzP-yWbjKOqa9aPCPU</default_token>
 
   <loader_fonts>
-    <font>BorisBlackBloxx</font>
+    <font>
+      <name>BorisBlackBloxx</name>
+      <key>mainFont</key>
+    </font>
   </loader_fonts>
 
   <all_fonts>    

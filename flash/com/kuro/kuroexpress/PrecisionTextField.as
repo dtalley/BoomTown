@@ -1,4 +1,5 @@
 ﻿package com.kuro.kuroexpress {
+  import com.kuro.kuroexpress.text.KuroText;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Sprite;
@@ -49,8 +50,8 @@
       _holder = new Sprite();
       _clip = new Sprite();
       _mask = new Sprite();
-      _field = KuroExpress.createTextField( properties );
-      _backup = KuroExpress.createTextField( properties );
+      _field = KuroText.createTextField( properties );
+      _backup = KuroText.createTextField( properties );
       _stage = new Bitmap( new BitmapData( 10, 10, true, 0x00000000 ), "auto", true );
       
       addChild( _holder );
@@ -67,8 +68,8 @@
     }
     
     public function applyInput( width:Number ):void {
-      KuroExpress.setTextFormat( _field, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
-      KuroExpress.setTextFormat( _backup, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
+      KuroText.setTextFormat( _field, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
+      KuroText.setTextFormat( _backup, { type:TextFieldType.INPUT, autoSize:TextFieldAutoSize.NONE, selectable:true } );
       _field.width = width;
       _backup.width = width;
       _input = true;
@@ -96,8 +97,8 @@
     }
     
     public function applyFormatting( properties:Object ):void {
-      KuroExpress.setTextFormat( _field, properties );
-      KuroExpress.setTextFormat( _backup, properties );
+      KuroText.setTextFormat( _field, properties );
+      KuroText.setTextFormat( _backup, properties );
       draw();
     }
     

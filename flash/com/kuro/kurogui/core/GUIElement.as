@@ -5,6 +5,7 @@ package com.kuro.kurogui.core {
 	import flash.display.Sprite;
   import flash.geom.Point;
   import flash.geom.Rectangle;
+  import flash.utils.getQualifiedClassName;
 	
   public class GUIElement extends Sprite {
     
@@ -29,7 +30,11 @@ package com.kuro.kurogui.core {
     
     private var _drawState:GUIDrawState;
     
-    public function GUIElement( lock:GUIElementLock ) {}
+    public function GUIElement() {
+      if ( getQualifiedClassName( this ).substr( -10, 10 ) == "GUIElement" ) {
+        throw new ArgumentError( "GUIElement$ class cannot be instantiated.", 2012 );
+      }
+    }
     
     public function disable():void {
       _enabled = false;
@@ -76,17 +81,19 @@ package com.kuro.kurogui.core {
     }
     
     public function focused():void {
-      _hasFocus = true;    
-      _drawState = GUIDrawState.FOCUSED;
-      draw();      
-      dispatchEvent( new GUIElementEvent( GUIElementEvent.GAINED_FOCUS ) );
+      if( !_hasFocus ) {
+        _hasFocus = true;    
+        _drawState = GUIDrawState.FOCUSED;
+        draw();      
+        dispatchEvent( new GUIElementEvent( GUIElementEvent.GAINED_FOCUS ) );
+      }
     }
     
     public function tabbed():void {
       _hasTab = true;
       if ( !_hasFocus ) {
-        _drawState = GUIDrawState.FOCUSED;
         _hasFocus = true;
+        _drawState = GUIDrawState.FOCUSED;
         draw();
       }
     }
@@ -100,7 +107,8 @@ package com.kuro.kurogui.core {
     }
     
     public function activated():void {
-      draw( GUIDrawState.ACTIVATED );
+      _drawState = GUIDrawState.ACTIVATED;
+      draw();
     }
     
     public function isAncestorOf( element:GUIElement ):Boolean {
@@ -142,7 +150,7 @@ package com.kuro.kurogui.core {
     }
     
     public function releaseChild( child:GUIElement ):GUIElement {
-      var index:int = _children.indexOf( element );
+      var index:int = _children.indexOf( child );
       if ( index >= 0 ) {
         _children.splice( index, 1 );
       }
@@ -175,9 +183,23 @@ package com.kuro.kurogui.core {
     
     public function position( x:Number, y:Number ):void {
       if ( _parent ) {
-        this.x = _parent.contentX + x;
-        this.y = _parent.contentY + y;
+        this.x = _parent.content.x +  x;
+        this.y = _parent.content.y +  y;
+      } else {
+        this.x = x;
+        this.y = y;
       }
+    }
+    
+    public function resize( width:Number, height:Number ):void {
+      _width = width;
+      _height = height;
+      draw();
+    }
+    
+    public function enclose( rect:Rectangle ):void {
+      position( rect.x, rect.y );
+      resize( rect.width, rect.height );
     }
     
     override public function set width( val:Number ):void {
@@ -200,14 +222,14 @@ package com.kuro.kurogui.core {
     
     public function get stageX():Number {
       if( stage ) {
-        return stage.globalToLocal(localToGlobal(new Point(0, 0)).x;
+        return stage.globalToLocal(stage.localToGlobal(new Point(0, 0))).x;
       }
       return 0;
     }
     
     public function get stageY():Number {
       if( stage ) {
-        return stage.globalToLocal(localToGlobal(new Point(0, 0)).y;
+        return stage.globalToLocal(stage.localToGlobal(new Point(0, 0))).y;
       }
       return 0;
     }

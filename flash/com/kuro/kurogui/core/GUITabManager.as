@@ -92,7 +92,7 @@ package com.kuro.kurogui.core {
           _element.unfocused();
         }
         _element = _elements[_current];
-        _element.tabbed();
+        _element.focused();
         _element.addEventListener( GUIElementEvent.LOST_FOCUS, elementLostFocus );
       }
     }

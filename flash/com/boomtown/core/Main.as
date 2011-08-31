@@ -7,6 +7,9 @@
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonLevelGrid;
   import com.greensock.TweenLite;
+  import com.kuro.kuroexpress.assets.AssetsLoader;
+  import com.kuro.kuroexpress.assets.KuroAssets;
+  import com.kuro.kuroexpress.text.FontLoader;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiErrorEvent;
@@ -39,7 +42,7 @@
       
       var style:String = loaderInfo.parameters && loaderInfo.parameters.style_dir ? loaderInfo.parameters.style_dir + "/flash/" : "";
       if ( style ) {
-        KuroExpress.setFullURL( style );
+        AssetsLoader.setFullURL( style );
       }
       XMLManager.loadFile( style + "settings.xml", "settings", settingsLoaded );
     }
@@ -60,12 +63,13 @@
       var total:int = loaderFonts.font.length();
       if ( total == 0 ) {
         loaderFontsLoaded(null);
+        return;
       }
       var fonts:Array = [];
       for ( var i:int = 0; i < total; i++ ) {
-        fonts.push( loaderFonts.font[i].toString() );
+        fonts.push( { name:loaderFonts.font[i].name.toString(), key:loaderFonts.font[i].key.toString() } );
       }
-      var fontLoader:Sprite = KuroExpress.loadFonts(fonts);
+      var fontLoader:Sprite = FontLoader.loadFonts(fonts);
       _loader = new GraphicLoader( 12, 8, null, { cycle:true, invert:true, color:0x98bfff } );
       addChild( _loader );
       KuroExpress.addListener( fontLoader, Event.COMPLETE, loaderFontsLoaded, fontLoader );
@@ -78,12 +82,13 @@
       var total:int = allFonts.font.length();
       if ( total == 0 ) {
         allFontsLoaded(null);
+        return;
       }
       var fonts:Array = [];
       for ( var i:int = 0; i < total; i++ ) {
-        fonts.push( allFonts.font[i].toString() );
+        fonts.push( { name:allFonts.font[i].name.toString(), key:allFonts.font[i].key.toString() } );
       }
-      var fontLoader:Sprite = KuroExpress.loadFonts(fonts);
+      var fontLoader:Sprite = FontLoader.loadFonts(fonts);
       fontLoader.addEventListener( Event.COMPLETE, allFontsLoaded );
     }
     
@@ -119,7 +124,7 @@
       PromptManager.dispatcher.addEventListener( PromptEvent.PROMPT_ISSUED, promptIssued );
       PromptManager.dispatcher.addEventListener( PromptEvent.CLOSE_PROMPT, closePrompt );
       if ( _commander.complete ) {
-        loadModule( "WorldMap" );
+        loadModule( "Warehouse" );
       } else {
         loadModule( "CommanderCreator" );
       }
@@ -151,7 +156,7 @@
     }
     
     private function loadModule( id:String ):void {
-      var moduleLoader:Sprite = KuroExpress.loadAssetsFile( "modules/" + id + ".swf" );
+      var moduleLoader:Sprite = AssetsLoader.loadAssetsFile( "modules/" + id + ".swf" );
       if( moduleLoader ) {
         KuroExpress.addListener( moduleLoader, Event.COMPLETE, moduleLoaded, moduleLoader, id );
       } else {
@@ -171,7 +176,7 @@
         return;
       }
       if ( !currentModule || currentModule.id != id ) {
-        var newModule:Module = Module( KuroExpress.createAsset( id ) );
+        var newModule:Module = Module( KuroAssets.createAsset( id ) );
         if ( currentModule ) {
           KuroExpress.addListener( currentModule, Event.CLOSE, moduleClosed, currentModule, newModule );
           currentModule.removeEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
