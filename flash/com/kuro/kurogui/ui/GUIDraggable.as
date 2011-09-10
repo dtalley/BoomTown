@@ -45,7 +45,7 @@ package com.kuro.kurogui.ui {
     }
     
     private function hitMove( e:MouseEvent ):void {
-      var delta:Point = new Point( ( _hit.mouseX - _prevMouse.x ) + ( x - _position.x ), ( _hit.mouseY - _prevMouse.y ) + ( y - _position.y ) );
+      var delta:Point = new Point( ( _hit.mouseX - _prevMouse.x ) + ( ex - _position.x ), ( _hit.mouseY - _prevMouse.y ) + ( ey - _position.y ) );
       var target:Point = new Point( _position.x + delta.x, _position.y + delta.y );
       if ( _restrict ) {
         if ( target.x < _restrict.x ) {
@@ -105,6 +105,14 @@ package com.kuro.kurogui.ui {
     
     public function get py():Number {
       return _prev.y;
+    }
+    
+    protected function get ex():Number {
+      return x;
+    }
+    
+    protected function get ey():Number {
+      return y;
     }
     
   }
