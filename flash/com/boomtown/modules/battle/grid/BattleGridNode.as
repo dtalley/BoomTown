@@ -59,34 +59,16 @@ package com.boomtown.modules.battle.grid {
     
     private function draw( over:Boolean = false ):void {
       graphics.clear();
-      if( !_loaded ) {
-        graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
-        Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
-        graphics.endFill();
-        graphics.beginFill( over ? 0x222222 : 0x444444 );
-        Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
-        graphics.endFill();
-      } else {
-        var factionColor:uint = _faction ? 0xFF0000 : 0xFFFFFF;
-        var factionOverColor:uint = _faction ? 0x550000 : 0xDDDDDD;
-        graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
-        Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
-        graphics.endFill();
-        graphics.beginFill( over || _selected ? factionOverColor : factionColor );
-        Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
-        graphics.endFill();
-      }
+      graphics.beginFill( over ? 0x8888FF : 0xAAAAAA );
+      Hexagon.drawHexagon( this, _metrics.width - ( over ? -10 : 2 ), _metrics.height - ( over ? -10 : 2 ), 0, 0, _metrics.rotation );
+      graphics.endFill();
+      graphics.beginFill( over ? 0x222222 : 0x444444 );
+      Hexagon.drawHexagon( this, _metrics.width - 6, _metrics.height - 6, 0, 0, _metrics.rotation );
+      graphics.endFill();
     }
     
     public function clear():void {
-      graphics.clear();
-      
-      _type = WorldGridNodeType.UNDEFINED;
-      if ( _loader ) {
-        cancel();
-      }
-      _loaded = false;
-      
+      graphics.clear();      
       _hit.graphics.clear();
       _hit.removeEventListener( MouseEvent.MOUSE_OVER, nodeOver );
       _hit.removeEventListener( MouseEvent.MOUSE_OUT, nodeOut );

@@ -1,4 +1,5 @@
 package com.boomtown.modules.battle.grid {
+  import com.kuro.kuroexpress.assets.KuroAssets;
   import com.kuro.kuroexpress.KuroExpress;
   import flash.display.BitmapData;
 	/**
@@ -31,7 +32,7 @@ package com.boomtown.modules.battle.grid {
     
     public static function init():void {
       _initialized = true;
-      _key = KuroExpress.createBitmap("BattleMapKey").bitmapData;
+      _key = KuroAssets.createBitmap("BattleMapKey").bitmapData;
       _data = new BitmapData( _key.width, _key.height, true, 0x00000000 );
     }
     

@@ -21,7 +21,6 @@ package com.boomtown.modules.battle.grid {
     private var _height:Number = 68;
     private var _rotation:Number = 90;
     
-    private var _queue:LoadQueue;
     private var _pool:ObjectPool;
     
     internal function setMetrics( width:Number, height:Number, rotation:Number ):void {
@@ -39,10 +38,8 @@ package com.boomtown.modules.battle.grid {
     
     private function init():void {
       resetMetrics();
-      WorldGridCache.init();
-      WorldGridNodeCache.init();
-      _queue = new LoadQueue(20,true);
-      _pool = new ObjectPool( 100, new  );
+      BattleGridCache.init();
+      _pool = new ObjectPool( 100, BattleGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Beginning pool population", 
         { obj:this, label:"BattleGrid::init()" } );
@@ -69,19 +66,6 @@ package com.boomtown.modules.battle.grid {
     public function position( x:int, y:int ):void {
       this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
       this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
-    }
-    
-    internal function startLoading():void {
-      var total:uint = numChildren;
-      for ( var i:int = 0; i < total; i++ ) {
-        if ( getChildAt(i) is WorldGridNode ) {
-          _queue.add( BattleGridNode( getChildAt(i) ) );
-        }
-      }
-    }
-    
-    internal function stopLoading():void {
-      _queue.flush();
     }
     
     private var _prevSX:int = NaN;
@@ -169,9 +153,6 @@ package com.boomtown.modules.battle.grid {
         createGrid( sx, sy, level + 1, tLX, tLY, bRX, bRY );
       } else {
         dispatchEvent( new BattleGridEvent( BattleGridEvent.POPULATED ) );
-        if ( !_queue.loading ) {
-          _queue.load();
-        }
       }
     }
     
@@ -187,16 +168,14 @@ package com.boomtown.modules.battle.grid {
         newNode.y = HexagonAxisGrid.calculateY( x, y );
         newNode.addEventListener( BattleGridNodeEvent.OVER, nodeOver );
         newNode.addEventListener( BattleGridNodeEvent.CLICKED, nodeClicked );
-        _queue.add( newNode );
       }
     }
     
     
     
-    private function destroyNode( node:WorldGridNode ):void {
-      WorldGridCache.removeNode( node.hX, node.hY );
+    private function destroyNode( node:BattleGridNode ):void {
+      BattleGridCache.removeNode( node.hX, node.hY );
       _pool.returnObject( node );
-      _queue.remove( node );
       removeChild( node );
       node.clear();
       
@@ -206,9 +185,6 @@ package com.boomtown.modules.battle.grid {
     
     private function nodeOver( e:BattleGridNodeEvent ):void {
       addChild( BattleGridNode( e.target ) );
-      if ( _menu ) {
-        addChild( _menu );
-      }
     }
     
     private function nodeClicked( e:BattleGridNodeEvent ):void {

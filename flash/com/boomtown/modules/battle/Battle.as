@@ -34,7 +34,7 @@ package com.boomtown.modules.battle {
       _grid.addEventListener( BattleGridEvent.READY, gridReady );
     }
     
-    private function gridReady( e:WorldGridEvent ):void {
+    private function gridReady( e:BattleGridEvent ):void {
       KuroExpress.broadcast( "Grid has signaled that it is ready for population", 
         { obj:this, label:"Battle::gridReady()" } );
       _grid.removeEventListener( BattleGridEvent.READY, gridReady );
@@ -50,7 +50,7 @@ package com.boomtown.modules.battle {
       _grid.populate();
     }
     
-    private function gridPopulated( e:WorldGridEvent ):void {
+    private function gridPopulated( e:BattleGridEvent ):void {
       KuroExpress.broadcast( "Grid has signaled that it is populated.",
         { obj:this, label:"Battle::gridPopulated()" } );
       _grid.removeEventListener( BattleGridEvent.POPULATED, gridPopulated );
