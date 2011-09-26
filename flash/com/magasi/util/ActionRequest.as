@@ -1,5 +1,4 @@
 ﻿package com.magasi.util {
-  import com.adobe.crypto.SHA256;
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.PostGenerator;
   import com.magasi.events.MagasiActionEvent;

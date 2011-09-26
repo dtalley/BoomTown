@@ -8,6 +8,8 @@ package com.boomtown.modules.battle.grid {
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.LoadQueue;
   import com.kuro.kuroexpress.ObjectPool;
+  import flash.display.Bitmap;
+  import flash.display.BitmapData;
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.filters.GlowFilter;
@@ -38,7 +40,6 @@ package com.boomtown.modules.battle.grid {
     
     private function init():void {
       resetMetrics();
-      BattleGridCache.init();
       _pool = new ObjectPool( 100, BattleGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
       KuroExpress.broadcast( "Beginning pool population", 
@@ -50,6 +51,12 @@ package com.boomtown.modules.battle.grid {
       KuroExpress.broadcast( "Pool has been populated", 
         { obj:this, label:"BattleGrid::poolReady()" } );
       dispatchEvent( new BattleGridEvent( BattleGridEvent.READY ) );
+      
+      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      var map:BitmapData = BattleGridCache.init();
+      addChild( new Bitmap( map ) );
+      BattleGridCache.populateKey();
+      dispatchEvent( new BattleGridEvent( BattleGridEvent.POPULATED ) );
     }
     
     internal function resetMetrics():void {
@@ -71,6 +78,9 @@ package com.boomtown.modules.battle.grid {
     private var _prevSX:int = NaN;
     private var _prevSY:int = NaN;
     public function populate():void {
+      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      return;
+      
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
       var hX:int = HexagonAxisGrid.calculateHexX( sX, sY );

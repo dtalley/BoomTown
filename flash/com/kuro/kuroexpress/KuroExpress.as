@@ -178,6 +178,11 @@
       }
     }
     
+    public static function setBits( val:uint, start:uint, end:uint, entry:uint ):uint {
+      
+      
+    }
+    
 	}
 	
 }

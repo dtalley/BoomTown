@@ -22,17 +22,26 @@
   import com.boomtown.modules.core.Module;
   import com.demonsters.debugger.MonsterDebugger;
   
+  /**
+   * Our main document class that ignites the firestorm that is BoomTown!
+   */
+  
   public class Main extends Sprite {
     
-    private var _background:HexGridBackground;
-    private var _commander:Commander;
+    private var _background:HexGridBackground; //A fancy background!
+    private var _commander:Commander; //The main Commander object representing the player
     
-    private var _loader:GraphicLoader;
+    private var _loader:GraphicLoader; //An animated preloader for all of the things we need to load at first
     
     public function Main():void {      
+      //Don't do anything until the player actually initializes this object
       addEventListener( Event.ADDED_TO_STAGE, init );
     }
     
+    /**
+     * Initializes the game, not called until this object is added to the stage
+     * @param	e The calling ADDED_TO_STAGE event
+     */
     private function init( e:Event ):void {
       removeEventListener( Event.ADDED_TO_STAGE, init );
       
@@ -124,7 +133,7 @@
       PromptManager.dispatcher.addEventListener( PromptEvent.PROMPT_ISSUED, promptIssued );
       PromptManager.dispatcher.addEventListener( PromptEvent.CLOSE_PROMPT, closePrompt );
       if ( _commander.complete ) {
-        loadModule( "Warehouse" );
+        loadModule( "Battle" );
       } else {
         loadModule( "CommanderCreator" );
       }

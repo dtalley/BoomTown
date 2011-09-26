@@ -39,7 +39,11 @@ package com.boomtown.modules.battle {
         { obj:this, label:"Battle::gridReady()" } );
       _grid.removeEventListener( BattleGridEvent.READY, gridReady );
       
-      populateGrid();
+      //populateGrid();
+      
+      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      addChild( _grid );
+      _grid.visible = true;
     }
     
     private function populateGrid():void {
