@@ -49,22 +49,11 @@ package com.boomtown.modules.battle.grid {
     private static var _placed:uint = 0;
     private static var _total:uint = 200 * 200;
     public static function populateKey():void {
-      var timer:Timer = new Timer(200);
+      var timer:Timer = new Timer(10);
       timer.addEventListener( TimerEvent.TIMER, stepAutomata );
       timer.start();
       
       _points = [];
-      plantSeeds();
-    }
-    
-    private static function plantSeeds():void {
-      for ( var i:uint = 0; i < 5; i++ ) {
-        var point:Point = new Point( Math.round( Math.random() * 199 ), Math.round( Math.random() * 199 ) );
-        var type:uint = Math.round( Math.random() * 3 ) + 1;
-        var color:uint = setType( setColor( 0, type ), type );
-        _key.setPixel32( point.x, point.y, color );
-        addPoints( point );
-      }
     }
     
     private static function addPoints( point:Point ):void {
@@ -97,7 +86,7 @@ package com.boomtown.modules.battle.grid {
     }
     
     private static function setSeed( color:uint, seed:uint ):uint {
-      
+      return 0;
     }
     
     private static function setColor( color:uint, type:uint ):uint {

@@ -36,6 +36,7 @@ package com.boomtown.modules.battle.grid {
     
     public function BattleGrid() { 
       init();
+      
     }
     
     private function init():void {

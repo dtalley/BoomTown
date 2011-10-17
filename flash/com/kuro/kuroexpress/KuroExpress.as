@@ -179,8 +179,48 @@
     }
     
     public static function setBits( val:uint, start:uint, end:uint, entry:uint ):uint {
-      
-      
+      if ( start > end ) {
+        throw new Error( "Tried to set bits in the wrong order." );
+      }
+      var offset:uint = end - start;
+      var add:uint = 0xFFFFFFFF << end + 1;
+      var sub:uint = start == 0 ? 0 : ( 0xFFFFFFFF >>> ( 32 - start ) );
+      add |= sub;
+      val &= add;
+      if( entry > 0 ) {
+        var mask:uint = 0xFFFFFFFF >>> 32 - offset - 1;
+        entry &= mask;
+        entry <<= start;
+        val |= entry;
+      }
+      return val;
+    }
+    
+    public static function getBits( val:uint, start:uint, end:uint ):uint {
+      val = val >> start;
+      var sub:uint = 0xFFFFFFFF >>> ( 31 - ( end - start ) );
+      val = val & sub;
+      return val;
+    }
+    
+    public static function printBits( val:uint ):String {
+      var ret:String = "";
+      for ( var i:uint = 0; i < 32; i++ ) {
+        if ( val & 1 > 0 ) {
+          ret = "1" + ret;
+        } else {
+          ret = "0" + ret;
+        }
+        val = val >> 1;
+      }
+      return ret;
+    }
+    
+    public static function pointInBounds( x:Number, y:Number, width:Number, height:Number ):Boolean {
+      if ( x >= 0 && x < width && y >= 0 && y < height ) {
+        return true;
+      }
+      return false;
     }
     
 	}

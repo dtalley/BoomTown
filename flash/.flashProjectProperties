@@ -6,17 +6,15 @@
   <classTemplate>file:///C|/Users/Stalefish/AppData/Local/Adobe/Flash CS5/en_US/Configuration/ActionScript 3.0/Templates/standardClass_as3.as</classTemplate>
   <classPath>.</classPath>
   <defaultApp/>
-  <rootURI>file:///D|/Work/boomtown/flash/</rootURI>
+  <rootURI>file:///D|/Work/boomtown/source/flash/</rootURI>
   <flexSDK/>
   <sources editable="false"/>
   <libraries editable="false"/>
   <externalLibraries editable="false"/>
   <compileList editable="false"/>
   <recentFiles editable="false">
-    <uri label="Battle.fla">file:///D|/Work/boomtown/flash/modules/Battle.fla</uri>
-    <uri label="main.fla">file:///D|/Work/boomtown/flash/main.fla</uri>
-    <uri label="Workshop.fla">file:///D|/Work/boomtown/flash/modules/Workshop.fla</uri>
-    <uri label="WorldMap.fla">file:///D|/Work/boomtown/flash/modules/WorldMap.fla</uri>
+    <uri label="Battle.fla">file:///D|/Work/boomtown/source/flash/modules/Battle.fla</uri>
+    <uri label="main.fla">file:///D|/Work/boomtown/source/flash/main.fla</uri>
   </recentFiles>
   <locations editable="false"/>
 </projectDescription>
