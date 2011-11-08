@@ -116,6 +116,8 @@
     }
     
     private function loadCommander():void {
+      begin();
+      return;
       _commander = new Commander( loaderInfo.parameters.token );
       _commander.addEventListener( Event.COMPLETE, commanderReady );
       if ( loaderInfo.parameters.user_id ) {
@@ -132,11 +134,11 @@
     private function begin():void {
       PromptManager.dispatcher.addEventListener( PromptEvent.PROMPT_ISSUED, promptIssued );
       PromptManager.dispatcher.addEventListener( PromptEvent.CLOSE_PROMPT, closePrompt );
-      if ( _commander.complete ) {
+      //if ( _commander.complete ) {
         loadModule( "Battle" );
-      } else {
-        loadModule( "CommanderCreator" );
-      }
+      //} else {
+        //loadModule( "CommanderCreator" );
+      //}
     }
     
     private var _prompts:uint = 0;

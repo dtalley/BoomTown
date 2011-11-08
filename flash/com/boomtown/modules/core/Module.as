@@ -1,5 +1,5 @@
 ﻿package com.boomtown.modules.core {
-  import com.boomtown.core.Commander;
+  import com.boomtown.game.Commander;
   import flash.display.MovieClip;
   import flash.events.Event;
   

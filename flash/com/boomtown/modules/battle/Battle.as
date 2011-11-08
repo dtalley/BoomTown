@@ -39,11 +39,7 @@ package com.boomtown.modules.battle {
         { obj:this, label:"Battle::gridReady()" } );
       _grid.removeEventListener( BattleGridEvent.READY, gridReady );
       
-      //populateGrid();
-      
-      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      addChild( _grid );
-      _grid.visible = true;
+      populateGrid();
     }
     
     private function populateGrid():void {
@@ -51,7 +47,7 @@ package com.boomtown.modules.battle {
       _grid.position( 10, 10 );
       _grid.visible = false;
       _grid.addEventListener( BattleGridEvent.POPULATED, gridPopulated );
-      _grid.populate();
+      _grid.populateKey();
     }
     
     private function gridPopulated( e:BattleGridEvent ):void {

@@ -1,4 +1,5 @@
 package com.kuro.kuroexpress.text {
+  import com.kuro.kuroexpress.KuroExpress;
   import flash.display.Loader;
   import flash.display.Sprite;
   import flash.events.Event;
@@ -77,7 +78,7 @@ package com.kuro.kuroexpress.text {
       var loadDispatcher:Sprite = new Sprite();
       loadDispatcher.addChild( loader );
       loader.contentLoaderInfo.addEventListener( ProgressEvent.PROGRESS, fontProgress );
-			loader.contentLoaderInfo.addEventListener( Event.COMPLETE, fontComplete );
+      KuroExpress.addListener( loader.contentLoaderInfo, Event.COMPLETE, fontComplete, loader, font, key );
       loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, fontError );
 			return loadDispatcher;
     }
@@ -86,22 +87,21 @@ package com.kuro.kuroexpress.text {
 			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new ProgressEvent( ProgressEvent.PROGRESS, false, false, e.bytesLoaded, e.bytesTotal ) );
 		}
 		
-		private static function fontComplete( e:Event ):void {
-			e.target.removeEventListener( ProgressEvent.PROGRESS, fontProgress );
-			e.target.removeEventListener( Event.COMPLETE, fontComplete );
-      e.target.removeEventListener( IOErrorEvent.IO_ERROR, fontError );
+		private static function fontComplete( loader:Loader, font:String, key:String ):void {
+			loader.contentLoaderInfo.removeEventListener( ProgressEvent.PROGRESS, fontProgress );
+			KuroExpress.removeListener( loader.contentLoaderInfo, Event.COMPLETE, fontComplete );
+      loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, fontError );
 			var fontClass:Class = getDefinitionByName( loadingFont ) as Class;
 			Font.registerFont( fontClass );
       loadingFont = null;
-			Sprite( Loader( e.target.loader ).parent ).dispatchEvent( new Event( Event.COMPLETE ) );
       var fontList:Array = Font.enumerateFonts(false);
       for ( var i:int = 0; i < fontList.length; i++ ) {
         if ( loadedFonts.indexOf( fontList[i].fontName ) < 0 ) {
-          FontMapper.addFont( loadingKey, fontList[i].fontName );
+          FontMapper.add( key, fontList[i].fontName );
           loadedFonts.push( fontList[i].fontName );
         }
       }
-      trace( "" );
+      Sprite( loader.parent ).dispatchEvent( new Event( Event.COMPLETE ) );
 		}
     
     private static function fontError( e:IOErrorEvent ):void {

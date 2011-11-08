@@ -19,8 +19,8 @@ package com.boomtown.modules.battle.grid {
    */
   public class BattleGrid extends Sprite { 
     
-    private var _width:Number = 72;
-    private var _height:Number = 68;
+    private var _width:Number = 24;
+    private var _height:Number = 50;
     private var _rotation:Number = 90;
     
     private var _pool:ObjectPool;
@@ -52,12 +52,7 @@ package com.boomtown.modules.battle.grid {
       KuroExpress.broadcast( "Pool has been populated", 
         { obj:this, label:"BattleGrid::poolReady()" } );
       dispatchEvent( new BattleGridEvent( BattleGridEvent.READY ) );
-      
-      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      var map:BitmapData = BattleGridCache.init();
-      addChild( new Bitmap( map ) );
-      BattleGridCache.populateKey();
-      dispatchEvent( new BattleGridEvent( BattleGridEvent.POPULATED ) );
+      return;
     }
     
     internal function resetMetrics():void {
@@ -76,12 +71,23 @@ package com.boomtown.modules.battle.grid {
       this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
     }
     
+    public function populateKey():void {
+      KuroExpress.broadcast( "Populating battle grid key.", 
+        { obj:this, label:"BattleGrid::populateKey()" } );
+      BattleGridCache.dispatcher.addEventListener( Event.COMPLETE, continuePopulation );
+      BattleGridCache.populateKey();
+    }
+    
+    private function continuePopulation( e:Event ):void {
+      KuroExpress.broadcast( "Key has been populated.", 
+        { obj:this, label:"BattleGrid::continuePopulation()" } );
+      BattleGridCache.dispatcher.removeEventListener( Event.COMPLETE, continuePopulation );
+      populate();
+    }
+    
     private var _prevSX:int = NaN;
     private var _prevSY:int = NaN;
-    public function populate():void {
-      //REMOVE LATER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      return;
-      
+    public function populate():void {      
       var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
       var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
       var hX:int = HexagonAxisGrid.calculateHexX( sX, sY );
@@ -171,7 +177,7 @@ package com.boomtown.modules.battle.grid {
       var newNode:BattleGridNode = null;
       if ( !BattleGridCache.checkNode( x, y ) ) {
         newNode = BattleGridNode( _pool.getObject() );
-        BattleGridCache.addNode( x, y );
+        BattleGridCache.addNode( x, y, newNode.index );
         newNode.init( HexagonAxisGrid.metrics, x, y );
         
         addChild( newNode );

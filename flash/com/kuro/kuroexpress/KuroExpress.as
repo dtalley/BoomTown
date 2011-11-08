@@ -160,6 +160,11 @@
       return tAngle;
     }
     
+    /**
+     * A simple utility function to broadcast a message to all parties listening to the playing movie.
+     * @param	text The text to broadcast
+     * @param	perms Object containg the following possible members: label, obj, person, color, depth
+     */
     public static function broadcast( text:String, perms:Object = null ):void {
       if ( !perms ) {
         perms = {};

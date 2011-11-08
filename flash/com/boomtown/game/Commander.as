@@ -1,4 +1,4 @@
-﻿package com.boomtown.core {
+﻿package com.boomtown.game {
   import com.adobe.images.JPGEncoder;
   import com.boomtown.events.CommanderEvent;
   import com.boomtown.events.PromptEvent;

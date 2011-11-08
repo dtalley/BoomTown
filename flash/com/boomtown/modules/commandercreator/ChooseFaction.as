@@ -2,6 +2,7 @@
   import com.boomtown.core.Commander;
   import com.boomtown.core.Faction;
   import com.kuro.kuroexpress.KuroExpress;
+  import com.kuro.kuroexpress.text.FontMapper;
   import com.kuro.kuroexpress.XMLManager;
   import com.magasi.events.MagasiRequestEvent;
   import com.magasi.util.ActionRequest;
@@ -21,7 +22,7 @@
     private var _factions:Object;
     
     override public function open():void {
-      _title = KuroExpress.createTextField( { font:"BorisBlackBloxx", size:22, color:0xFFFFFF } );
+      _title = KuroExpress.createTextField( { font:FontMapper.font("mainFont"), size:22, color:0xFFFFFF } );
       _title.text = "STEP 1: FACTION ALLEGIANCE";
       addChild( _title );
       _title.x = 50;

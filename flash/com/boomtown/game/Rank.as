@@ -1,4 +1,4 @@
-﻿package com.boomtown.core {
+﻿package com.boomtown.game {
   import flash.display.Bitmap;
   
   public class Rank {

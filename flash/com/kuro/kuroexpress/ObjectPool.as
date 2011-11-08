@@ -1,13 +1,12 @@
 package com.kuro.kuroexpress {
+  import com.kuro.kuroexpress.struct.Queue;
+  import com.kuro.kuroexpress.util.IObjectNode;
   import flash.events.Event;
   import flash.events.EventDispatcher;
   import flash.events.ProgressEvent;
   import flash.events.TimerEvent;
   import flash.utils.Timer;
-	/**
-   * ...
-   * @author David Talley
-   */
+	
   public class ObjectPool extends EventDispatcher {
     
     private var _object:Class;
@@ -17,12 +16,15 @@ package com.kuro.kuroexpress {
     
     private var _createTimer:Timer;
     
-    public var _available:Array = new Array();
+    private var _queue:Queue;
     
     public function ObjectPool( count:uint, object:Class ) {
+      _queue = new Queue();
+      
       _object = object;
       _count = count;
       _used = 0;
+      
       _createTimer = new Timer( 1 );
       _createTimer.addEventListener( TimerEvent.TIMER, createObject );
       _createTimer.start();
@@ -33,9 +35,10 @@ package com.kuro.kuroexpress {
      * @param	e
      */
     private function createObject( e:TimerEvent ):void {
-      if ( _available.length < _count ) {
-        _available.push( new _object() );
-        var event:ProgressEvent = new ProgressEvent( ProgressEvent.PROGRESS, false, false, _available.length, _count );
+      if ( _objects.length < _count ) {
+        var node:IObjectNode = IObjectNode( new _object() );
+        _queue.add( node );
+        var event:ProgressEvent = new ProgressEvent( ProgressEvent.PROGRESS, false, false, _objects.length, _count );
         dispatchEvent( event );
       } else {
         _createTimer.stop();
@@ -44,22 +47,19 @@ package com.kuro.kuroexpress {
       }
     }
     
-    public function getObject():Object {
-      _used++;
-      if ( _available.length == 0 ) {
-        _available.push( new _object() );
+    public function getObject():IObjectNode {
+      var node:IObjectNode = _queue.shift();
+      if ( !node ) {
+        _count++;
+        createObject( null );
+        node = _queue.shift();
       }
-      return _available.shift();
+      _used++;
+      return node;
     }
     
-    public function returnObject( obj:Object ):void {
-      if ( !( obj is _object ) ) {
-        throw new Error( "That is not the correct type of object for this pool." );
-      }
-      if ( _available.indexOf( obj ) >= 0 ) {
-        throw new Error( "That object is already in the pool." );
-      }
-      _available.unshift( obj );
+    public function returnObject( obj:IObjectNode ):void {
+      _queue.add( obj );
       _used--;
     }
     
