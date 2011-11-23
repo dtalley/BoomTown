@@ -35,15 +35,19 @@ package com.kuro.kuroexpress {
      * @param	e
      */
     private function createObject( e:TimerEvent ):void {
-      if ( _objects.length < _count ) {
+      if ( _queue.size < _count ) {
         var node:IObjectNode = IObjectNode( new _object() );
         _queue.add( node );
-        var event:ProgressEvent = new ProgressEvent( ProgressEvent.PROGRESS, false, false, _objects.length, _count );
-        dispatchEvent( event );
+        if( _createTimer.running ) {
+          var event:ProgressEvent = new ProgressEvent( ProgressEvent.PROGRESS, false, false, _queue.size, _count );
+          dispatchEvent( event );
+        }
       } else {
-        _createTimer.stop();
-        _createTimer.removeEventListener( TimerEvent.TIMER, createObject );
-        dispatchEvent( new Event( Event.COMPLETE ) );
+        if( _createTimer.running ) {
+          _createTimer.stop();
+          _createTimer.removeEventListener( TimerEvent.TIMER, createObject );
+          dispatchEvent( new Event( Event.COMPLETE ) );
+        }
       }
     }
     

@@ -1,10 +1,13 @@
 package com.boomtown.render {
   import flash.display.Bitmap;
   import flash.display.BitmapData;
-  import flash.display.DisplayObjectContainer;
+  import flash.display.IBitmapDrawable;
+  import flash.display.Sprite;
+  import flash.geom.ColorTransform;
+  import flash.geom.Matrix;
   import flash.geom.Rectangle;
 	
-  public class BasicFrame extends DisplayObjectContainer {
+  public class BasicFrame extends Sprite {
     
     private var _layers:Array;
     private var _width:uint;
@@ -35,6 +38,17 @@ package com.boomtown.render {
       for ( var i:uint = 0; i < totalLayers; i++ ) {
         Bitmap( _layers[i] ).bitmapData = new BitmapData( _width, _height, i == 0 ? false : true, 0 );
       }
+    }
+    
+    public function draw( layer:uint, source:IBitmapDrawable, matrix:Matrix = null, transform:ColorTransform = null, blend:String = null, clip:Rectangle = null, smoothing:Boolean = false ) {
+      if ( _layers.length <= layer ) {
+        var totalLayers:uint = _layers.length;
+        for ( var i:uint = totalLayers; i < layer + 1 - totalLayers; i++ ) {
+          _layers[i] = new Bitmap( new BitmapData( _width, _height, true, 0 ) );
+        }
+      }
+      var drawLayer:BitmapData = Bitmap( _layers[layer] ).bitmapData; 
+      drawLayer.draw( source, matrix, transform, blend, clip, smoothing );
     }
     
   }

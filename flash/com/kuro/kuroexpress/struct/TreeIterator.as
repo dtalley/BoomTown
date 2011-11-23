@@ -1,4 +1,5 @@
 package com.kuro.kuroexpress.struct {
+  import com.kuro.kuroexpress.util.IObjectNode;
   import com.kuro.kuroexpress.util.ITreeNode;
   
   public class TreeIterator {
@@ -39,13 +40,16 @@ package com.kuro.kuroexpress.struct {
       }
     }    
     private function getInOrder( root:ITreeNode ):ITreeNode {
-      _stack.add( root );
+      /*if ( !root || root.level == 0 ) {
+        return root;
+      }*/
+      _stack.add( root as IObjectNode );
       var node:ITreeNode = root;
       while ( node.left && node.left.level > 0 ) {
-        _stack.add( node );
         node = node.left;
+        _stack.add( node as IObjectNode );
       }
-      return root;
+      return node;
     }
     
     private function getNextPreOrder():ITreeNode {
@@ -57,10 +61,10 @@ package com.kuro.kuroexpress.struct {
     }
     private function getPreOrder( root:ITreeNode ):ITreeNode {
       if( root.right && root.right.level > 0 ) {
-        _stack.add( root.right );
+        _stack.add( root.right as IObjectNode );
       }
       if( root.left && root.left.level > 0 ) {
-        _stack.add( root.left );
+        _stack.add( root.left as IObjectNode );
       }
       return root;
     }
@@ -74,7 +78,7 @@ package com.kuro.kuroexpress.struct {
       } else if ( root.right && root.right.level > 0 ) {
         
       }
-      _stack.add( root );
+      _stack.add( root as IObjectNode );
       return null;
     }
     

@@ -1,6 +1,9 @@
 package com.boomtown.modules.battle.grid {
   import com.boomtown.modules.battle.events.BattleGridEvent;
   import com.boomtown.modules.battle.events.BattleGridNodeEvent;
+  import com.boomtown.render.BasicCamera;
+  import com.boomtown.render.BasicFrame;
+  import com.boomtown.render.IRenderable;
   import com.boomtown.utils.Hexagon;
   import com.boomtown.utils.HexagonAxisGrid;
   import com.boomtown.utils.HexagonMetrics;
@@ -8,16 +11,23 @@ package com.boomtown.modules.battle.grid {
   import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.LoadQueue;
   import com.kuro.kuroexpress.ObjectPool;
+  import com.kuro.kuroexpress.struct.AnderssonTree;
+  import com.kuro.kuroexpress.struct.TreeIterator;
+  import com.kuro.kuroexpress.util.IObjectNode;
+  import com.kuro.kuroexpress.util.ITreeNode;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
   import flash.display.Sprite;
   import flash.events.Event;
+  import flash.events.EventDispatcher;
   import flash.filters.GlowFilter;
+  import flash.geom.Matrix;
+  import flash.geom.Point;
 	/**
    * ...
    * @author David Talley
    */
-  public class BattleGrid extends Sprite { 
+  public class BattleGrid extends EventDispatcher implements IRenderable { 
     
     private var _width:Number = 24;
     private var _height:Number = 50;
@@ -25,21 +35,25 @@ package com.boomtown.modules.battle.grid {
     
     private var _pool:ObjectPool;
     
+    private var _tree:AnderssonTree;
+    private var _nodes:Array = [];
+    
     internal function setMetrics( width:Number, height:Number, rotation:Number ):void {
       _width = width;
       _height = height;
       _rotation = rotation;
       KuroExpress.broadcast( "Setting BattleGrid metrics.", 
         { obj:this, label:"BattleGrid::setMetrics()" } );
-      populate();
     }
     
     public function BattleGrid() { 
-      init();
-      
+      init();      
     }
     
     private function init():void {
+      _tree = new AnderssonTree();
+      _nodes = [];
+      
       resetMetrics();
       _pool = new ObjectPool( 100, BattleGridNode );
       _pool.addEventListener( Event.COMPLETE, poolReady );
@@ -66,9 +80,9 @@ package com.boomtown.modules.battle.grid {
       }
     }
     
-    public function position( x:int, y:int ):void {
-      this.x = 0 - HexagonAxisGrid.calculateX( x, y ) + ( stage.stageWidth / 2 );
-      this.y = 0 - HexagonAxisGrid.calculateY( x, y ) + ( stage.stageWidth / 2 );
+    public function positionCamera( camera:BasicCamera, x:int, y:int ):void {
+      camera.x = HexagonAxisGrid.calculateX( x, y );
+      camera.y = HexagonAxisGrid.calculateY( x, y );
     }
     
     public function populateKey():void {
@@ -82,14 +96,39 @@ package com.boomtown.modules.battle.grid {
       KuroExpress.broadcast( "Key has been populated.", 
         { obj:this, label:"BattleGrid::continuePopulation()" } );
       BattleGridCache.dispatcher.removeEventListener( Event.COMPLETE, continuePopulation );
-      populate();
+      dispatchEvent( new BattleGridEvent( BattleGridEvent.POPULATED ) );
+    }
+    
+    public function render( frame:BasicFrame, camera:BasicCamera ):void {
+      populate( camera );
+      var obj:BattleGridNode;
+      var iterator:TreeIterator = _tree.createIterator();
+      var circle:Sprite = new Sprite();
+      circle.graphics.beginFill( 0xFF0000 );
+      circle.graphics.drawCircle( 5, 5, 5 );
+      circle.graphics.endFill();
+      var matr:Matrix = new Matrix();
+      /*var total:uint = _nodes.length;
+      for ( var i:uint = 0; i < total; i++ ) {
+        matr.identity();
+        var obj:BattleGridNode = BattleGridNode( _nodes[i] );
+        var local:Point = camera.localize( new Point( obj.x, obj.y ) );
+        matr.translate( local.x, local.y );
+        frame.draw( 0, circle, matr );
+      }*/
+      while ( obj = iterator.getNext() as BattleGridNode ) {
+        matr.identity();
+        var local:Point = camera.localize( new Point( obj.x, obj.y ) );
+        matr.translate( local.x, local.y );
+        frame.draw( 0, circle, matr );
+      }
     }
     
     private var _prevSX:int = NaN;
     private var _prevSY:int = NaN;
-    public function populate():void {      
-      var sX:int = Math.round( ( stage.stageWidth / 2 ) - this.x );
-      var sY:int = Math.round( ( stage.stageHeight / 2 ) - this.y );
+    public function populate( camera:BasicCamera ):void {      
+      var sX:int = camera.x;
+      var sY:int = camera.y;
       var hX:int = HexagonAxisGrid.calculateHexX( sX, sY );
       var hY:int = HexagonAxisGrid.calculateHexY( sX, sY );
       if ( _prevSX == hX && _prevSY == hY ) {
@@ -99,24 +138,36 @@ package com.boomtown.modules.battle.grid {
       resetMetrics();
       _prevSX = hX;
       _prevSY = hY;
-      var tLX:int = Math.floor( sX - ( stage.stageWidth / 2 ) - _width );
-      var tLY:int = Math.floor( sY - ( stage.stageHeight / 2 ) - _height );
-      var bRX:int = Math.ceil( sX + ( stage.stageWidth / 2 ) + _width );
-      var bRY:int = Math.ceil( sY + ( stage.stageHeight / 2 ) + _height );
-      var totalChildren:uint = numChildren;
-      for ( var i:uint = 0; i < totalChildren; i++ ) {
-        if ( getChildAt(i) is BattleGridNode ) {
-          var node:BattleGridNode = BattleGridNode( getChildAt( i ) );
-          node.x = HexagonAxisGrid.calculateX( node.hX, node.hY );
-          node.y = HexagonAxisGrid.calculateY( node.hX, node.hY );
-          if ( node.x < tLX || node.x > bRX || node.y < tLY || node.y > bRY ) {
-            destroyNode( node );
-            i--;
-            totalChildren--;
-          } else {
-            node.metrics = HexagonAxisGrid.metrics;
-          }
+      var tLX:int = camera.tl.x - HexagonAxisGrid.metrics.width * 2;
+      var tLY:int = camera.tl.y - HexagonAxisGrid.metrics.height * 2;
+      var bRX:int = camera.br.x + HexagonAxisGrid.metrics.width * 2;
+      var bRY:int = camera.br.y + HexagonAxisGrid.metrics.height * 2;
+      /*var total:uint = _nodes.length;
+      for ( var i:uint = 0; i < total; i++ ) {
+        var node:BattleGridNode = BattleGridNode( _nodes[i] );
+        if ( node.x < tLX || node.x > bRX || node.y < tLY || node.y > bRY ) {
+          destroyNode( node );
+          i--;
+          total--;
+        } else {
+          node.metrics = HexagonAxisGrid.metrics;
         }
+      }*/
+      var iterator:TreeIterator = _tree.createIterator();
+      var removals:Array = [];
+      var totalRemovals:uint = 0;
+      var node:BattleGridNode;
+      while ( node = iterator.getNext() as BattleGridNode ) {
+        if ( node.x < tLX || node.x > bRX || node.y < tLY || node.y > bRY ) {
+          removals.push( node );
+          totalRemovals++;
+        } else {
+          node.metrics = HexagonAxisGrid.metrics;
+        }
+      }
+      while ( totalRemovals > 0 ) {
+        destroyNode( removals.shift() );
+        totalRemovals--;
       }
       createGrid( Math.round( hX ), 
                   Math.round( hY ), 
@@ -177,35 +228,22 @@ package com.boomtown.modules.battle.grid {
       var newNode:BattleGridNode = null;
       if ( !BattleGridCache.checkNode( x, y ) ) {
         newNode = BattleGridNode( _pool.getObject() );
-        BattleGridCache.addNode( x, y, newNode.index );
+        BattleGridCache.addNode( x, y );
         newNode.init( HexagonAxisGrid.metrics, x, y );
         
-        addChild( newNode );
-        newNode.x = HexagonAxisGrid.calculateX( x, y );
-        newNode.y = HexagonAxisGrid.calculateY( x, y );
-        newNode.addEventListener( BattleGridNodeEvent.OVER, nodeOver );
-        newNode.addEventListener( BattleGridNodeEvent.CLICKED, nodeClicked );
+        _tree.add( newNode );
+        //_nodes.push( newNode );
       }
     }
     
-    
-    
     private function destroyNode( node:BattleGridNode ):void {
       BattleGridCache.removeNode( node.hX, node.hY );
-      _pool.returnObject( node );
-      removeChild( node );
+      _pool.returnObject( node as IObjectNode );
+      _tree.rem( node );
+      /*if ( _nodes.indexOf( node ) >= 0 ) {
+        _nodes.splice( _nodes.indexOf( node ), 1 );
+      }*/
       node.clear();
-      
-      node.removeEventListener( BattleGridNodeEvent.OVER, nodeOver );
-      node.removeEventListener( BattleGridNodeEvent.CLICKED, nodeClicked );
-    }
-    
-    private function nodeOver( e:BattleGridNodeEvent ):void {
-      addChild( BattleGridNode( e.target ) );
-    }
-    
-    private function nodeClicked( e:BattleGridNodeEvent ):void {
-      
     }
     
   }

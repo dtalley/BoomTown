@@ -443,7 +443,7 @@ package com.boomtown.modules.battle.grid {
       return _key.read( pos, 31, 31 ) > 0;
     }
     
-    public static function addNode( x:uint, y:uint, index:uint ):void {
+    public static function addNode( x:uint, y:uint ):void {
       if ( x < 0 || x > _width - 2 || y < 0 || y > _height - 1 ) {
         return;
       }

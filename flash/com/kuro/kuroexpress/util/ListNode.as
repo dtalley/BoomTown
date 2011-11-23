@@ -4,7 +4,7 @@ package com.kuro.kuroexpress.util {
   public class ListNode implements ILinkedObjectNode {
     
     private var _next:IObjectNode;
-    private var _prev:IObjectNode;
+    private var _prev:ILinkedObjectNode;
     private var _list:LinkedList;
     
     public function get next():IObjectNode {
@@ -13,16 +13,16 @@ package com.kuro.kuroexpress.util {
     public function set next( val:IObjectNode ):void {
       _next = val;
     }   
-    public function get prev():IObjectNode {
+    public function get prev():ILinkedObjectNode {
       return _prev;
     }
-    public function set prev( val:IObjectNode ):void {
+    public function set prev( val:ILinkedObjectNode ):void {
       _prev = val;
     }   
-    public function get list():IObjectNode {
+    public function get list():LinkedList {
       return _list;
     }
-    public function set list( val:IObjectNode ):void {
+    public function set list( val:LinkedList ):void {
       _list = val;
     }   
     

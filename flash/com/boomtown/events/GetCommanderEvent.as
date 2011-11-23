@@ -1,6 +1,6 @@
 package com.boomtown.events 
 {
-  import com.boomtown.core.Commander;
+  import com.boomtown.game.Commander;
 	import flash.events.Event;
 	
   public class GetCommanderEvent extends Event {

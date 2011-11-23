@@ -9,6 +9,8 @@ package com.boomtown.render {
     private var _y:Number;
     private var _px:Number;
     private var _py:Number;
+    private var _tx:Number;
+    private var _ty:Number;
     private var _tl:Point;
     private var _br:Point;
     
@@ -19,27 +21,51 @@ package com.boomtown.render {
     }
     
     private function generateBounds():void {
-      _tl = new Point( _x - ( _width / 2 ), _y - ( _height / 2 ) );
-      _br = new Point( _x + ( _width / 2 ), _y + ( _height / 2 ) );
+      _tl = new Point( Math.floor( _x - ( _width / 2 ) ), Math.floor( _y - ( _height / 2 ) ) );
+      _br = new Point( Math.ceil( _x + ( _width / 2 ) ), Math.ceil( _y + ( _height / 2 ) ) );
     }
     
     public function set width( val:Number ):void {
-      _width = val;
+      _width = Math.ceil( val );
       generateBounds();
     }
     public function set height( val:Number ):void {
-      _height = val;
+      _height = Math.ceil( val );
       generateBounds();
     }
     public function set x( val:Number ):void {
       _px = _x;
-      _x = val;
+      _x = Math.round( val );
       generateBounds();
     }
     public function set y( val:Number ):void {
       _py = _y;
-      _y = val;
+      _y = Math.round( val );
       generateBounds();
+    }
+    
+    public function set tx( val:Number ):void {
+      _tx = val;
+    }
+    
+    public function set ty( val:Number ):void {
+      _ty = val;
+    }
+    
+    public function get width():Number {
+      return _width;
+    }
+    
+    public function get height():Number {
+      return _height;
+    }
+    
+    public function get x():Number {
+      return _x;
+    }
+    
+    public function get y():Number {
+      return _y;
     }
     
     public function get dx():Number {
@@ -47,6 +73,14 @@ package com.boomtown.render {
     }
     public function get dy():Number {
       return _y - _py;
+    }
+    
+    public function get tx():Number {
+      return _tx;
+    }
+    
+    public function get ty():Number {
+      return _ty;
     }
     
     public function get tl():Point {
@@ -65,14 +99,16 @@ package com.boomtown.render {
     }
     
     public function focus( x:Number, y:Number ):void {
-      _x = x;
-      _y = y;
+      _x = Math.round( x );
+      _y = Math.round( y );
+      _tx = _x;
+      _ty = _y;
       generateBounds();
     }
     
     public function resize( width:Number, height:Number ):void {
-      _width = width;
-      _height = height;
+      _width = Math.ceil( width );
+      _height = Math.ceil( height );
       generateBounds();
     }
     

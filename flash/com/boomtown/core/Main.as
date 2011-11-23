@@ -2,6 +2,7 @@
   import com.boomtown.events.GetCommanderEvent;
   import com.boomtown.events.OpenModuleEvent;
   import com.boomtown.events.PromptEvent;
+  import com.boomtown.game.Commander;
   import com.boomtown.loader.GraphicLoader;
   import com.boomtown.prompts.PromptManager;
   import com.boomtown.utils.Hexagon;
@@ -30,6 +31,7 @@
     
     private var _background:HexGridBackground; //A fancy background!
     private var _commander:Commander; //The main Commander object representing the player
+    private var _driver:GameDriver;
     
     private var _loader:GraphicLoader; //An animated preloader for all of the things we need to load at first
     
@@ -117,7 +119,8 @@
     
     private function loadCommander():void {
       begin();
-      return;
+      return; //REMOVE THIS LATER
+      
       _commander = new Commander( loaderInfo.parameters.token );
       _commander.addEventListener( Event.COMPLETE, commanderReady );
       if ( loaderInfo.parameters.user_id ) {
@@ -132,6 +135,8 @@
     }
     
     private function begin():void {
+      _driver = new GameDriver( this );
+      
       PromptManager.dispatcher.addEventListener( PromptEvent.PROMPT_ISSUED, promptIssued );
       PromptManager.dispatcher.addEventListener( PromptEvent.CLOSE_PROMPT, closePrompt );
       //if ( _commander.complete ) {
@@ -195,7 +200,7 @@
           currentModule.close();
         } else {
           addChild( newModule );
-          newModule.open( _commander );
+          newModule.open( _commander, _driver );
         }
         currentModule = newModule;
         currentModule.addEventListener( OpenModuleEvent.OPEN_MODULE, moduleRequested );
@@ -217,7 +222,7 @@
         removeChild( oldModule );
       }
       addChild( newModule );
-      newModule.open(_commander);
+      newModule.open(_commander,_driver);
     }
     
   }

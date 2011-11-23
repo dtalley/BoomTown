@@ -1,20 +1,22 @@
 ﻿package com.boomtown.modules.core {
+  import com.boomtown.core.GameDriver;
   import com.boomtown.game.Commander;
   import flash.display.MovieClip;
   import flash.events.Event;
   
   public class Module extends MovieClip {
     
+    protected var _driver:GameDriver;
+    
     protected var _commander:Commander;
     protected var _closing:Boolean = false;
     protected var _id:String = "module";
     
-    public function Module():void {
-      
-    }
+    public function Module():void {}
     
-    public function open( commander:Commander ):void {
+    public function open( commander:Commander, driver:GameDriver ):void {
       _commander = commander;
+      _driver = driver;
     }
     
     public function close():void {

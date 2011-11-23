@@ -1,8 +1,12 @@
 package com.boomtown.exp.andersson {
+  import com.kuro.kuroexpress.KuroExpress;
   import com.kuro.kuroexpress.struct.AnderssonTree;
   import com.kuro.kuroexpress.struct.TreeIterator;
   import com.kuro.kuroexpress.text.KuroText;
+  import com.kuro.kuroexpress.util.ITreeNode;
 	import flash.display.Sprite;
+  import flash.display.StageAlign;
+  import flash.display.StageScaleMode;
   import flash.events.MouseEvent;
   import flash.events.TimerEvent;
   import flash.text.TextField;
@@ -17,7 +21,12 @@ package com.boomtown.exp.andersson {
     private var _details:Sprite;
     private var _list:TextField;
     
+    private var _existed:Array = [];
+    
     public function Main() {
+      stage.scaleMode = StageScaleMode.NO_SCALE;
+      stage.align = StageAlign.TOP_LEFT;
+      
       _tree = new AnderssonTree();      
       
       _details = new Sprite();
@@ -38,7 +47,7 @@ package com.boomtown.exp.andersson {
       
       var timer:Timer = new Timer( 1 );
       timer.addEventListener( TimerEvent.TIMER, startPhase );
-      timer.start();
+      //timer.start();
     }
     
     private function buttonClicked( e:MouseEvent ):void {
@@ -52,18 +61,43 @@ package com.boomtown.exp.andersson {
     
     private function startPhase( e:TimerEvent ):void {
       addValue( Math.round( Math.random() * 199 + 1 ) );
+      //addValue( _phase );
       
+      reposition();
+      
+      //_list.text = "";
+      //_list.text = _values.length + "";
+    }
+    
+    private function reposition():void {
+      _existed = [];
       _details.graphics.clear();
       AnderssonNode( _tree.root ).scaleX = AnderssonNode( _tree.root ).scaleY = 1;
       AnderssonNode( _tree.root ).x = stage.stageWidth / 2 - AnderssonNode( _tree.root ).width / 2;
       AnderssonNode( _tree.root ).y = 20;
       positionNode( AnderssonNode( _tree.root ), 1 );
+      var total:uint = numChildren;
+      for ( var i:uint = 0; i < total; i++ ) {
+        if ( getChildAt(i) == _details || getChildAt(i) == _button || getChildAt(i) == _list ) {
+          continue;
+        }
+        if ( _existed.indexOf( getChildAt(i) ) < 0 ) {
+          removeChildAt(i);
+          i--;
+          total--;
+        }
+      }
       
+      var iterator:TreeIterator = _tree.createIterator();
+      var obj:AnderssonNode;
       _list.text = "";
-      _list.text = _values.length + "";
+      while ( obj = iterator.getNext() as AnderssonNode ) {
+        _list.appendText( obj.value + ", " );
+      }
     }
     
     private function positionNode( node:AnderssonNode, scale:Number ):void {
+      _existed.push( node.sprite );
       if ( node.left && node.left.level > 0 ) {
         AnderssonNode( node.left ).scaleX = AnderssonNode( node.left ).scaleY = scale;
         AnderssonNode( node.left ).x = node.x + ( node.width / 2 ) - AnderssonNode( node.left ).width - ( 150 * scale * 2 );
@@ -85,10 +119,24 @@ package com.boomtown.exp.andersson {
     }
     
     private function addValue( val:uint ):void {
+      if ( _values.indexOf( val ) >= 0 ) {
+        return;
+      }
       var node:AnderssonNode = new AnderssonNode( val );
-      addChild( node );
-      _values.push( node );
+      addChild( node.sprite );
+      _values.push( val );
       _tree.add( node );
+      KuroExpress.addListener( node.sprite, MouseEvent.CLICK, removeValue, node );
+    }
+    
+    private function removeValue( node:AnderssonNode ):void {
+      if ( _values.indexOf( node.value ) >= 0 ) {
+        _values.splice( _values.indexOf( node.value ), 1 );
+      }
+      trace( "Removing " + node.value );
+      //removeChild( node.sprite );
+      _tree.rem( node );
+      reposition();
     }
     
   }

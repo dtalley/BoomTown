@@ -30,10 +30,10 @@ package com.kuro.kuroexpress.struct {
       }
       if ( obj.prev && obj.next ) {
         obj.prev.next = obj.next;
-        obj.next.prev = obj.prev;
+        ( obj.next as ILinkedObjectNode ).prev = obj.prev;
       } else if ( obj == _first ) {
-        _first = obj.next;
-        obj.next.prev = null;
+        _first = ( obj.next as ILinkedObjectNode );
+        ( obj.next as ILinkedObjectNode ).prev = null;
       } else if ( obj == _last ) {
         _last = obj.prev;
         obj.prev.next = null;
@@ -58,7 +58,7 @@ package com.kuro.kuroexpress.struct {
     public function shift():ILinkedObjectNode {
       var node:ILinkedObjectNode = _first as ILinkedObjectNode;
       if ( node.next ) {
-        _first = node.next;
+        _first = ( node.next as ILinkedObjectNode );
       }
       if ( node == _last ) {
         _last = null;
@@ -67,7 +67,7 @@ package com.kuro.kuroexpress.struct {
       return node;
     }
     
-    public function createIterator( type:uint = ListIterator.FORWARD ):ListIterator {
+    public function createIterator( type:uint = 0 ):ListIterator {
       return new ListIterator( this, type );
     }
     
@@ -77,12 +77,14 @@ package com.kuro.kuroexpress.struct {
       _size = 0;
     }
     
-    public function get first():IExpandedObjectNode {
+    public function get first():ILinkedObjectNode {
       return _first;
     }
-    public function get last():IExpandedObjectNode {
+    
+    public function get last():ILinkedObjectNode {
       return _last;
     }
+    
     public function get size():uint {
       return _size;
     }

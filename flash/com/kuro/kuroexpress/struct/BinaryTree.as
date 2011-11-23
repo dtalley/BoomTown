@@ -4,6 +4,7 @@ package com.kuro.kuroexpress.struct {
   public class BinaryTree {
     
     protected var _root:ITreeNode;
+    protected var _size:uint = 0;
     
     public function BinaryTree() { }
     
@@ -19,7 +20,7 @@ package com.kuro.kuroexpress.struct {
       return _root;
     }
     
-    public function createIterator( type:uint = TreeIterator.IN_ORDER ):TreeIterator {
+    public function createIterator( type:uint = 0 ):TreeIterator {
       return new TreeIterator( this, type );
     }
     

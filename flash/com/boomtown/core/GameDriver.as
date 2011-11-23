@@ -68,8 +68,8 @@ package com.boomtown.core {
         delayedCall( this, addObject, [obj, priority, list] );
         return;
       }
-      var obj:DrivenObject = new DrivenObject( obj, priority );
-      list.add( obj );
+      var add:DrivenObject = new DrivenObject( obj, priority );
+      list.add( add );
       if ( !_running ) {
         start();
       }
@@ -80,10 +80,11 @@ package com.boomtown.core {
     }
     
     private function removeObject( obj:Object, list:LinkedList ):void {
+      var check:DrivenObject;
       var iterator:ListIterator = list.createIterator();
-      while ( var obj:DrivenObject = ( iterator.getNext() as DrivenObject ) ) {
-        if ( obj.listener == obj ) {
-          list.remove( obj );
+      while ( check = ( iterator.getNext() as DrivenObject ) ) {
+        if ( check.listener == obj ) {
+          list.remove( check );
           return;
         }
       }
@@ -102,13 +103,14 @@ package com.boomtown.core {
     
     private var elapsed:Number = 0;
     private function advance( delta:Number, safety:Boolean = true ):void {
+      var obj:DrivenObject;
       var tickCount:uint = 0;
       while ( elapsed > TICK_RATE_MS && tickCount < MAX_TICKS_PER_FRAME ) {
         processQueues();
         
         _advancing = true;
         var iterator:ListIterator = _tickedObjects.createIterator();
-        while ( var obj:DrivenObject = ( iterator.getNext() as DrivenObject ) ) {
+        while ( obj = ( iterator.getNext() as DrivenObject ) ) {
           (obj.listener as ITickedObject).onTick(TICK_RATE);
         }
         _advancing = false;
@@ -132,8 +134,8 @@ package com.boomtown.core {
       }
       
       _advancing = true;
-      var iterator:ListIterator = _tickedObjects.createIterator();
-      while ( var obj:DrivenObject = ( iterator.getNext() as DrivenObject ) ) {
+      iterator = _tickedObjects.createIterator();
+      while ( obj = ( iterator.getNext() as DrivenObject ) ) {
         (obj.listener as IAnimatedObject).onFrame(elapsed/TICK_RATE_MS);
       }
       _advancing = false;
@@ -147,7 +149,8 @@ package com.boomtown.core {
       var queue:Queue = _queuedMethods;
       if ( queue.size > 0 ) {
         _queuedMethods = new Queue();
-        while ( var method:QueuedMethod = (queue.shift() as QueuedMethod) ) {
+        var method:QueuedMethod;
+        while ( method = (queue.shift() as QueuedMethod) ) {
           method.act();
         }
         queue.clear();

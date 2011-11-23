@@ -1,5 +1,5 @@
 package com.kuro.kuroexpress.util {	
-  public class TreeNode implements ITreeNode {    
+  public class TreeNode extends OrderedListNode implements ITreeNode {    
     private var _left:ITreeNode;
     private var _right:ITreeNode;
     private var _level:uint;
@@ -22,14 +22,8 @@ package com.kuro.kuroexpress.util {
     public function set level( val:uint ):void {
       _level = val;
     }    
-    public function get next():IObjectNode {
-      return _next;
-    }
-    public function set next( val:IObjectNode ):void {
-      _next = val;
-    }   
-    public function compare( obj:ITreeNode ):int {
-      return 0;
+    public function copy( obj:ITreeNode ):void {
+      
     }
   }
 }

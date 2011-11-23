@@ -1,11 +1,11 @@
 package com.kuro.kuroexpress.struct {
-  import com.kuro.kuroexpress.util.IExpandedObjectNode;
+  import com.kuro.kuroexpress.util.ILinkedObjectNode;
   
   public class ListIterator {
     
     private var _list:LinkedList;
     private var _type:uint;
-    private var _current:IExpandedObjectNode;
+    private var _current:ILinkedObjectNode;
     
     public function ListIterator( list:LinkedList, type:uint = ListIterator.FORWARD ) {
       _type = type;
@@ -17,27 +17,23 @@ package com.kuro.kuroexpress.struct {
       }
     }
     
-    public function getNext():IExpandedObjectNode {
-      switch( _type ) {
-        case ListIterator.FORWARD:
-          return getNextForward();
-          break;
-        default:
-          return getNextReverse();
-          break;
+    public function getNext():ILinkedObjectNode {
+      if ( _type == ListIterator.FORWARD ) {
+        return getNextForward();
       }
+      return getNextReverse();
     }
     
-    private function getNextForward():IExpandedObjectNode {
-      var node:IExpandedObjectNode = _current;
+    private function getNextForward():ILinkedObjectNode {
+      var node:ILinkedObjectNode = _current;
       if( node ) {
-        _current = node.next;
+        _current = ( node.next as ILinkedObjectNode );
       }
       return node;
     }
     
-    private function getNextReverse():IExpandedObjectNode {
-      var node:IExpandedObjectNode = _current;
+    private function getNextReverse():ILinkedObjectNode {
+      var node:ILinkedObjectNode = _current;
       if( node ) {
         _current = node.prev;
       }
